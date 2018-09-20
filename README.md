@@ -14,7 +14,7 @@ Do this once on your machine (assuming you have `ruby` and `gem`, Ruby's
 package manager)
 
 ```
-gen install bundler
+gem install bundler
 bundle install
 ```
 
