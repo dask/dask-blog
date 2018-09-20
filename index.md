@@ -1,7 +1,6 @@
 ---
 layout: page
-title: Working Notes
-tagline: from Matthew Rocklin
+title: Dask Working Notes
 ---
 {% include JB/setup %}
 

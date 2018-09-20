@@ -8,18 +8,12 @@ highlighter: rouge
 # Themes are encouraged to use these universal variables
 # so be sure to set them if your theme uses them.
 #
-title : Matthew Rocklin
-tagline: Notes from a computational scientist
-author :
-  name : Matthew Rocklin
-  email : mrocklin@gmail.com
-  github : mrocklin
-  twitter : mrocklin
-  feedburner : feedname
+title : Dask Working Notes
+tagline: Writing about Scaling Python
 
-name: Working notes by Matthew Rocklin
-description: Working notes by Matthew Rocklin
-url: https://matthewrocklin.com/blog/
+name: Dask Working Notes
+description: Writing about Scaling Python
+url: https://blog.dask.org
 
 # The production_url is only used when full-domain names are needed
 # such as sitemap.txt
@@ -29,7 +23,7 @@ url: https://matthewrocklin.com/blog/
 # Else if you are pushing to username.github.com, replace with your username.
 # Finally if you are pushing to a GitHub project page, include the project name at the end.
 #
-production_url : https://mrocklin.github.com/blog
+production_url : https://blog.dask.org
 
 # All Jekyll-Bootstrap specific configurations are namespaced into this hash
 #
@@ -58,7 +52,7 @@ JB :
   #   - Only the following values are falsy: ["", null, false]
   #   - When setting BASE_PATH it must be a valid url.
   #     This means always setting the protocol (http|https) or prefixing with "/"
-  BASE_PATH : https://mrocklin.github.com/blog
+  BASE_PATH : https://blog.dask.org
 
   # By default, the asset_path is automatically defined relative to BASE_PATH plus the enabled theme.
   # ex: [BASE_PATH]/assets/themes/[THEME-NAME]
@@ -84,7 +78,7 @@ JB :
   comments :
     provider : disqus
     disqus :
-      short_name : mrocklinblog
+      short_name : dask-blog
     livefyre :
       site_id : 123
     intensedebate :
@@ -102,7 +96,7 @@ JB :
   analytics :
     provider : google
     google :
-        tracking_id : 'UA-18218894-4'
+        tracking_id : 'UA-18218894-5'  # main dask token
     getclicky :
       site_id :
     mixpanel :
