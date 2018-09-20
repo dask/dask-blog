@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Dask Distributed Release 1.13.0
-category: work
+
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---

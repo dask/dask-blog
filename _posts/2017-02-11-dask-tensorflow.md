@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Experiment with Dask and TensorFlow
-category: work
+
 tags: [Programming, Python, scipy]
 theme: twitter
 ---

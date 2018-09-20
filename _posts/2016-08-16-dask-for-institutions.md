@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Dask for Institutions
-category: work
+
 tags: [Programming, scipy, Python, dask]
 theme: twitter
 ---

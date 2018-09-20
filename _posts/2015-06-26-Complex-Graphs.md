@@ -2,7 +2,7 @@
 layout: post
 title: Write Complex Parallel Algorithms
 tagline: Fancy graphs, Mathematicians, and SVD
-category : work
+
 theme: twitter
 tags : [scipy, Python, Programming, dask, blaze]
 ---

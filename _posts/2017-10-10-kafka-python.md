@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Notes on Kafka in Python
-category: work
+
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---

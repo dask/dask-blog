@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Towards Out-of-core ND-Arrays -- Spilling to Disk
-category : work
+
 tags : [scipy, Python, Programming, Blaze, dask]
 theme: twitter
 ---

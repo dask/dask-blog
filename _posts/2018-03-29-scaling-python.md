@@ -2,7 +2,7 @@
 layout: post
 title: Scaling Python
 tagline: a high level introduction
-category: work
+
 draft: true
 tags: [Programming, scipy, Python]
 theme: twitter

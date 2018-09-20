@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Distributed NumPy on a Cluster with Dask Arrays
-category: work
+
 tags: [Programming, Python, scipy]
 theme: twitter
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Distributed Pandas on a Cluster with Dask DataFrames
-category: work
+
 tags: [Programming, Python, scipy]
 theme: twitter
 ---

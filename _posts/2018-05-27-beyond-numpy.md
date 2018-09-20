@@ -2,7 +2,7 @@
 layout: post
 title: Beyond Numpy Arrays in Python
 tagline: Preparing the ecosystem for GPU, distributed, and sparse arrays
-category: work
+
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---

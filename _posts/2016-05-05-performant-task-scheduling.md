@@ -2,7 +2,7 @@
 layout: post
 title: High Performance Task Scheduling
 tagline: when arrays and dataframes aren't flexible enough
-category : work
+
 draft: true
 tags : [Programming, scipy, Python, dask]
 theme: twitter

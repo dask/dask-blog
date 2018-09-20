@@ -2,7 +2,7 @@
 layout: post
 title: Fast Message Serialization
 tagline:
-category : work
+
 tags : [Programming, scipy, Python, dask]
 theme: twitter
 ---

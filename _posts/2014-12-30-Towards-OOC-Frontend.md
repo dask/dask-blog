@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Towards Out-of-core ND-Arrays -- Frontend
-category : work
+
 tags : [scipy, Python, Programming, Blaze, dask]
 theme: twitter
 ---

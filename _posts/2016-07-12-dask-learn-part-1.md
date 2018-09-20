@@ -3,7 +3,7 @@ layout: post
 title: Dask and Scikit-Learn -- Model Parallelism
 tagline: Parallelizing Grid Search with Dask
 author: Jim Crist
-category : work
+
 tags : [Programming, dask]
 theme: twitter
 ---

@@ -3,7 +3,7 @@ layout: post
 title: Dask Acknowledgements
 tagline: credit is due
 draft: true
-category: work
+
 tags: [Programming, scipy, Python, dask]
 theme: twitter
 ---

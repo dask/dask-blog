@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Streaming Dataframes
-category: work
+
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---

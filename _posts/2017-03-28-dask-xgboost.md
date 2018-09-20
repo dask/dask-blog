@@ -2,7 +2,7 @@
 layout: post
 title: Dask and Pandas and XGBoost
 tagline: Playing nicely between distributed systems
-category: work
+
 tags: [Programming, Python, scipy]
 theme: twitter
 ---

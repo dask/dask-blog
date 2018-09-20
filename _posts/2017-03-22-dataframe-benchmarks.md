@@ -3,7 +3,7 @@ layout: post
 title: Dask and Spark DataFrames
 tagline: a small performance comparison
 draft: true
-category: work
+
 tags: [Programming, Python, scipy]
 theme: twitter
 ---

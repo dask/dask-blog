@@ -2,7 +2,7 @@
 layout: post
 title: Credit Modeling with Dask
 tagline: complex task graphs in the real world
-category: work
+
 tags: [Programming, Python]
 theme: twitter
 author: Richard Postelnik

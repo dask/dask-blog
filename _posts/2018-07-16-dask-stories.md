@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Who uses Dask?
-category: work
+
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Use Apache Parquet
-category: work
+
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---

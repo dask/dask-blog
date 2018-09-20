@@ -2,7 +2,7 @@
 layout: post
 title: Dask EC2 Startup Script
 tagline: The hardest step is standing up
-category : work
+
 draft: true
 tags : [Programming, scipy, Python, dask]
 theme: twitter

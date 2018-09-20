@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Ad-hoc Distributed Computation
-category : work
+
 draft: true
 theme: twitter
 tags : [scipy, Python, Programming, dask, blaze]

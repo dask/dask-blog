@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Dask Cluster Deployments
-category: work
+
 tags: [Programming, Python, scipy]
 theme: twitter
 ---

@@ -1,7 +1,7 @@
 ---
 layout: widepost
 title: Scikit-Image and Dask Performance
-category: work
+
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---

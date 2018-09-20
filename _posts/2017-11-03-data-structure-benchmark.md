@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Optimizing Data Structure Access in Python
-category: work
+
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---

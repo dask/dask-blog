@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Two Easy Ways to Use Scikit Learn and Dask
-category: work
+
 tags: [Programming, Python, scipy]
 theme: twitter
 ---

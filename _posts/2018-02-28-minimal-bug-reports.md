@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Craft Minimal Bug Reports
-category: work
+
 tags: [Programming, scipy, Python]
 theme: twitter
 ---

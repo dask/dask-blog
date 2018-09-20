@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Dask Scaling Limits
-category: work
+
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Pandas on HDFS with Dask Dataframes
-category : work
+
 tags : [Programming, scipy, Python, dask]
 theme: twitter
 ---

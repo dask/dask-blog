@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Dask and Celery
-category: work
+
 tags: [Programming, Python, scipy]
 theme: twitter
 ---

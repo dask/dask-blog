@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Distributed Scheduling
-category : work
+
 tags : [scipy, Python, Programming, dask, blaze]
 theme: twitter
 ---
