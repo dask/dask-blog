@@ -18,14 +18,15 @@ gen install bundler
 bundle install
 ```
 
-Then do this whenever you want to build-and-host your docs
+Then do this from the root of this project directory whenever you want to
+build-and-host your docs:
 
 ```
 bundle exec jekyll serve
 ```
 
 That should also watch for changes and rebuild automatically.  Built pages live
-in `_site`.
+in `_site/`.
 
 
 
@@ -35,10 +36,23 @@ Add a new page
 Content lives in `_posts` as individual markdown files.  These markdown files
 have a few expectations on them.
 
-1.  They should be named according to the date of publication
+1.  They should be named according to the date of publication like the
+    following:
+
+    ```
+    YYYY-MM-DD-brief-title-url.md
+    ```
+
+    like
+
+    ```
+    2018-12-31-dask-in-the-new-year.md
+    ```
+
 2.  They should have the following front-matter
 
     ```
+    ---
     layout: post
     title: Your Title
     tagline: an optional tagline
@@ -50,11 +64,20 @@ have a few expectations on them.
     ```
 
     You can copy-paste this from any existing post
+
 3.  You can also optionally add the following element to the front-matter to
     avoid placing this article in the table of contents and on RSS feeds.
 
     ```
     draft: true
+    ```
+
+4.  Images should go in the `images/` directory and be referred to as
+    `/images/my-image.svg` with normal HTML or markdown syntax like the
+    following:
+
+    ```html
+    <img src="/images/my-image.svg">
     ```
 
 
