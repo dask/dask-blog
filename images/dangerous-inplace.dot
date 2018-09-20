@@ -1,0 +1,9 @@
+digraph{
+    rankdir=LR;
+    B [shape=box];
+    C [shape=box];
+    "(x, x)" -> B;
+    "(x, x)" -> C;
+    B -> "(y, x)";
+    C -> "(z, x)";
+}

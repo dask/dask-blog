@@ -1,0 +1,8 @@
+digraph{
+    rankdir=LR;
+    MinMax [shape=box];
+    "(x, x)" -> MinMax;
+    "(y, y)" -> MinMax;
+    MinMax -> "(Min(x, y), _1)";
+    MinMax -> "(Max(x, y), _2)";
+}

@@ -1,0 +1,6 @@
+digraph{
+    rankdir=LR;
+    A [shape=box];
+    w -> A;
+    A -> x;
+}

@@ -1,0 +1,11 @@
+digraph{
+    rankdir = TD;
+    "SymPy Expr" -> "SymPy Expr" [label="sympy simplify"];
+    "SymPy Expr" -> "Stochastic Expr" [label="add random variables"];
+    "Stochastic Expr" -> "Integral Expr" [label="sympy.stats"];
+    "Integral Expr" -> "Integral Expr" [label="integration simplify"];
+    "Integral Expr" -> "symbolic result" [label=Risch];
+    "symbolic result" -> "symbolic result" [label="sympy simplify"];
+    "Integral Expr" -> "symbolic result" [label="Meijer-G"];
+    "Integral Expr" -> "numeric result" [label="Monte Carlo"];
+}

@@ -1,0 +1,18 @@
+graph {
+    overlap=False;
+    splines=True;
+    
+A -- "Common Format"
+B -- "Common Format"
+C -- "Common Format"
+D -- "Common Format"
+E -- "Common Format"
+F -- "Common Format"
+G -- "Common Format"
+H -- "Common Format"
+I -- "Common Format"
+J -- "Common Format"
+K -- "Common Format"
+    labelloc="t";
+    label="Centralized scheme.  Robust but inefficient";
+}

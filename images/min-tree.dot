@@ -1,0 +1,6 @@
+digraph{
+    rankdir=TD;
+    Min;
+    Min->x;
+    Min->y;
+}

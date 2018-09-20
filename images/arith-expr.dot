@@ -1,0 +1,7 @@
+digraph{
+    rankdir = TD;
+    mul -> y;
+    mul -> add;
+    add -> 1;
+    add -> x;
+}
