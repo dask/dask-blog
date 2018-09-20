@@ -4,7 +4,7 @@ title: Custom Parallel Workflows
 tagline: dask graphs <3 for loops
 
 theme: twitter
-tags : [scipy, Python, Programming, dask, blaze]
+tags : [scipy, Python, Programming, dask]
 ---
 {% include JB/setup %}
 

@@ -2,7 +2,7 @@
 layout: post
 title: Towards Out-of-core ND-Arrays -- Benchmark MatMul
 
-tags : [scipy, Python, Programming, Blaze, dask]
+tags : [scipy, Python, Programming, dask]
 theme: twitter
 ---
 {% include JB/setup %}

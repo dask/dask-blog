@@ -4,7 +4,7 @@ title: Ad-hoc Distributed Computation
 
 draft: true
 theme: twitter
-tags : [scipy, Python, Programming, dask, blaze]
+tags : [scipy, Python, Programming, dask]
 ---
 {% include JB/setup %}
 

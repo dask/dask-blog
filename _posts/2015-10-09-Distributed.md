@@ -2,7 +2,7 @@
 layout: post
 title: Distributed Prototype
 
-tags : [scipy, Python, Programming, dask, blaze]
+tags : [scipy, Python, Programming, dask]
 theme: twitter
 ---
 {% include JB/setup %}

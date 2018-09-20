@@ -2,7 +2,7 @@
 layout: post
 title: State of Dask
 
-tags : [scipy, Programming, Blaze, dask]
+tags : [scipy, Programming, dask]
 theme: twitter
 ---
 {% include JB/setup %}
