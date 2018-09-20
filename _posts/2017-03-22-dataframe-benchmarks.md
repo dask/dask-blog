@@ -83,7 +83,7 @@ First though, some important disclaimers:
     and are not representative of the capabilities of either project.
     Any generalizations of results here is likely to be misleading
 3.  Benchmarking is very hard to do well.  See this [recent
-    blocpost](http://matthewrocklin.com/blog/work/2017/03/09/biased-benchmarks)
+    blocpost](/2017/03/09/biased-benchmarks)
     about how even very honest authors can make several mistakes in the
     benchmarking process.
 
@@ -109,7 +109,7 @@ To address some of these failings I've done the following:
 
 3.  To address the problem of omitting negative results I [pre-announced my
     intent to release
-    benchmarks](http://matthewrocklin.com/blog/work/2017/03/09/biased-benchmarks)
+    benchmarks](/2017/03/09/biased-benchmarks)
     before I ever ran anything on a cluster (though I admit that I had done a
     day or two of initial testing beforehand.)
 

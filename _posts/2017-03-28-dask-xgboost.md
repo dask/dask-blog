@@ -306,7 +306,7 @@ plt.legend(loc="lower right")
 plt.show()
 ```
 
-<img src="{{ BASE_PATH }}/images/dask-xgboost-roc-curve.png" width="50%">
+<img src="/images/dask-xgboost-roc-curve.png" width="50%">
 
 We might want to play with our parameters above or try different data to
 improve our solution.  The point here isn't that we predicted airline delays
@@ -358,7 +358,7 @@ frameworks.
 ### Connecting to Other distributed systems
 
 A while ago I wrote
-[a similar blogpost](http://matthewrocklin.com/blog/work/2017/02/11/dask-tensorflow)
+[a similar blogpost](/2017/02/11/dask-tensorflow)
 about hosting TensorFlow from Dask in exactly the same way that we've done
 here.  It was similarly easy to setup TensorFlow alongside Dask, feed it data,
 and let TensorFlow do its thing.

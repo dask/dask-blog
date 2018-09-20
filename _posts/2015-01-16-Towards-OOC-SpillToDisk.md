@@ -20,10 +20,10 @@ Introduction
 This is the fifth in a sequence of posts constructing an out-of-core nd-array
 using NumPy, Blaze, and dask.  You can view these posts here:
 
-1. [Simple task scheduling](http://matthewrocklin.com/blog/work/2014/12/27/Towards-OOC/),
-2. [Frontend usability](http://matthewrocklin.com/blog/work/2014/12/30/Towards-OOC-Frontend/)
-3. [A multi-threaded scheduler](http://matthewrocklin.com/blog/work/2015/01/06/Towards-OOC-Scheduling/)
-4. [Matrix Multiply Benchmark](http://matthewrocklin.com/blog/work/2015/01/14/Towards-OOC-MatMul/)
+1. [Simple task scheduling](/2014/12/27/Towards-OOC/),
+2. [Frontend usability](/2014/12/30/Towards-OOC-Frontend/)
+3. [A multi-threaded scheduler](/2015/01/06/Towards-OOC-Scheduling/)
+4. [Matrix Multiply Benchmark](/2015/01/14/Towards-OOC-MatMul/)
 
 We now present `chest` a `dict` type that spills to disk when we run out of
 memory.  We show how it prevents large computations from flooding memory.
@@ -32,13 +32,13 @@ memory.  We show how it prevents large computations from flooding memory.
 Intermediate Data
 -----------------
 
-<img src="{{ BASE_PATH }}/images/dask/fail-case.gif"
+<img src="/images/dask/fail-case.gif"
       align="right"
       width="50%"
       alt="A case where our scheduling algorithm fails to avoid intermediates">
 
 If you read the
-[post on scheduling](http://matthewrocklin.com/blog/work/2015/01/06/Towards-OOC-Scheduling/)
+[post on scheduling](/2015/01/06/Towards-OOC-Scheduling/)
 you may recall our goal to minimize intermediate storage during a multi-worker
 computation.  The image on the right shows a trace of our scheduler as it
 traverses a task dependency graph.  We want to compute the entire graph quickly
@@ -97,7 +97,7 @@ with the `dump/load` interface (`pickle`, `json`, `cbor`, `joblib`, ....)
 
 A quick point about `pickle`.  Frequent readers of my blog may know of my
 sadness at how this library
-[serializes functions](http://matthewrocklin.com/blog/work/2013/12/05/Parallelism-and-Serialization/)
+[serializes functions](/2013/12/05/Parallelism-and-Serialization/)
 and the crippling effect on multiprocessing.
 That sadness does not extend to normal data.  Pickle is fine for data if you
 use the `protocol=` keyword to `pickle.dump` correctly .  Pickle isn't a good

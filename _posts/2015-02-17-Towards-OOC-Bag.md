@@ -19,12 +19,12 @@ Introduction
 This is the seventh in a sequence of posts constructing an out-of-core nd-array
 using NumPy, and dask.  You can view these posts here:
 
-1. [Simple task scheduling](http://matthewrocklin.com/blog/work/2014/12/27/Towards-OOC/),
-2. [Frontend usability](http://matthewrocklin.com/blog/work/2014/12/30/Towards-OOC-Frontend/)
-3. [A multi-threaded scheduler](http://matthewrocklin.com/blog/work/2015/01/06/Towards-OOC-Scheduling/)
-4. [Matrix Multiply Benchmark](http://matthewrocklin.com/blog/work/2015/01/14/Towards-OOC-MatMul/)
-5. [Spilling to disk](http://matthewrocklin.com/blog/work/2015/01/16/Towards-OOC-SpillToDisk/)
-6. [Slicing and Stacking](http://matthewrocklin.com/blog/work/2015/02/13/Towards-OOC-Slicing-and-Stacking/)
+1. [Simple task scheduling](/2014/12/27/Towards-OOC/),
+2. [Frontend usability](/2014/12/30/Towards-OOC-Frontend/)
+3. [A multi-threaded scheduler](/2015/01/06/Towards-OOC-Scheduling/)
+4. [Matrix Multiply Benchmark](/2015/01/14/Towards-OOC-MatMul/)
+5. [Spilling to disk](/2015/01/16/Towards-OOC-SpillToDisk/)
+6. [Slicing and Stacking](/2015/02/13/Towards-OOC-Slicing-and-Stacking/)
 
 Today we take a break from ND-Arrays and show how task scheduling can attack
 other collections like the simple `list` of Python objects.
@@ -190,7 +190,7 @@ requires significant communication.  Notably we don't have any concept of
 We [use dill](http://trac.mystic.cacr.caltech.edu/project/pathos/wiki/dill) to
 take care to serialize functions properly and collect/report errors, two issues
 that [plague naive use of
-`multiprocessing`](http://matthewrocklin.com/blog/work/2013/12/05/Parallelism-and-Serialization/) in Python.
+`multiprocessing`](/2013/12/05/Parallelism-and-Serialization/) in Python.
 
 {% highlight Python %}
 >>> list(b.map(lambda x: x * 10))  # This works!

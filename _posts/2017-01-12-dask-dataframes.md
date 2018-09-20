@@ -45,7 +45,7 @@ computation `read_csv` computation produces the following profile:
 
 *If you are reading this through a syndicated website like planet.python.org or
 through an RSS reader then these plots will not show up.  You may want to visit
-[http://matthewrocklin.com/blog/work/2017/01/12/dask-dataframes](http://matthewrocklin.com/blog/work/2017/01/12/dask-dataframes)
+[/2017/01/12/dask-dataframes](/2017/01/12/dask-dataframes)
 directly.*
 
 <iframe src="https://cdn.rawgit.com/mrocklin/ade9d1e3b0f44b17a84a551e39946e58/raw/1c3345848d5313cc1c0ea827d66089bf200edaac/task-stream-read-csv.html"
@@ -80,7 +80,7 @@ to deliver a faithful "big data" version of Pandas operating in parallel over a
 cluster.
 
 [I've written about this topic
-before](http://matthewrocklin.com/blog/work/2016/02/22/dask-distributed-part-2).
+before](/2016/02/22/dask-distributed-part-2).
 This blogpost is newer and will focus on performance and newer features like
 fast shuffles and the Parquet format.
 
@@ -371,8 +371,8 @@ hour      = (df2.groupby(df2.tpep_pickup_datetime.dt.hour)
 <iframe src="https://cdn.rawgit.com/mrocklin/ade9d1e3b0f44b17a84a551e39946e58/raw/1c3345848d5313cc1c0ea827d66089bf200edaac/task-stream-groupby-datetime.html"
         width="800" height="400"></iframe>
 
-<a href="{{ BASE_PATH }}/images/tip-fraction-hourly.png">
-    <img src="{{ BASE_PATH }}/images/tip-fraction-hourly.png"
+<a href="/images/tip-fraction-hourly.png">
+    <img src="/images/tip-fraction-hourly.png"
          alt="tip fraction by hour"
          width="80%"></a>
 
@@ -883,8 +883,8 @@ For example we can resample by day:
        .plot())
 ```
 
-<a href="{{ BASE_PATH }}/images/resample-day.png">
-    <img src="{{ BASE_PATH }}/images/resample-day.png"
+<a href="/images/resample-day.png">
+    <img src="/images/resample-day.png"
          alt="resample by day"
          width="60%"></a>
 

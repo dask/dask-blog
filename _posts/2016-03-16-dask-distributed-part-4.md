@@ -63,9 +63,9 @@ In February we introduced dask.distributed, a lightweight distributed computing
 framework for Python.  We focused on processing data with high level
 abstractions like dataframes and arrays in the following blogposts:
 
-1.  [Analyze GitHub JSON record data in S3](http://matthewrocklin.com/blog/work/2016/02/17/dask-distributed-part1)
-2.  [Use Dask DataFrames on CSV data in HDFS](http://matthewrocklin.com/blog/work/2016/02/22/dask-distributed-part-2)
-3.  [Process NetCDF data with Dask arrays on a traditional cluster](http://matthewrocklin.com/blog/work/2016/02/26/dask-distributed-part-3)
+1.  [Analyze GitHub JSON record data in S3](/2016/02/17/dask-distributed-part1)
+2.  [Use Dask DataFrames on CSV data in HDFS](/2016/02/22/dask-distributed-part-2)
+3.  [Process NetCDF data with Dask arrays on a traditional cluster](/2016/02/26/dask-distributed-part-3)
 
 Today we present a simple setup script to launch dask.distributed on EC2,
 enabling any user with AWS credentials to repeat these experiments easily.
@@ -155,7 +155,7 @@ a better solution.
 ### Public datasets
 
 We repeat the experiments from our
-[earlier blogpost](http://matthewrocklin.com/blog/work/2016/02/22/dask-distributed-part-2)
+[earlier blogpost](/2016/02/22/dask-distributed-part-2)
 on NYCTaxi data.
 
 ```python

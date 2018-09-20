@@ -247,7 +247,7 @@ task. Each is categorized by color:
 - Blue means finished or released. These are already finished tasks, or data
   that's been released from memory because it's no longer needed
 
-<img src="{{ BASE_PATH }}/images/grid_search_schedule.gif" alt="Dask Graph Execution" style="width:100%">
+<img src="/images/grid_search_schedule.gif" alt="Dask Graph Execution" style="width:100%">
 
 
 Looking at the trace, a few things stand out:
@@ -260,7 +260,7 @@ Looking at the trace, a few things stand out:
   release data. This doesn't matter as much here (none of the intermediates
   take up much memory), but for other workloads this is very useful. See Matt
   Rocklin's [excellent blogpost
-  here](http://matthewrocklin.com/blog/work/2015/01/06/Towards-OOC-Scheduling)
+  here](/2015/01/06/Towards-OOC-Scheduling)
   for more discussion on this.
 
 ## Distributed grid search using dask-learn

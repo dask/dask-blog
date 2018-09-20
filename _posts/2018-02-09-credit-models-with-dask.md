@@ -25,8 +25,8 @@ Rich was kind enough to write up this description of their problem and share it 
 
 Thanks Rich!
 
-<a href="{{BASE_PATH}}/images/credit_models/simple-model.svg">
-  <img src="{{BASE_PATH}}/images/credit_models/simple-model.svg"
+<a href="/images/credit_models/simple-model.svg">
+  <img src="/images/credit_models/simple-model.svg"
        alt="zoomed model section"
        width="100%"></a>
 
@@ -54,7 +54,7 @@ This boils down to a dependency and ordering problem known as task scheduling.
 
 ## DAGs to the rescue
 
-<img style="margin: 0 auto; display: block;" src="{{BASE_PATH}}/images/credit_models/snatch.jpg" alt="snatch joke">
+<img style="margin: 0 auto; display: block;" src="/images/credit_models/snatch.jpg" alt="snatch joke">
 
 A [directed acyclic graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph) (DAG) is commonly used to solve task scheduling problems. Dask is a library for delayed task computation that makes use of directed graphs at its core. [dask.delayed](http://dask.pydata.org/en/latest/delayed.html) is a simple decorator that turns a Python function into a graph vertex. If I pass the output from one delayed function as a parameter to another delayed function, Dask creates a directed edge between them. Let's look at an example:
 
@@ -87,7 +87,7 @@ Delayed('add-f6204fac-b067-40aa-9d6a-639fc719c3ce')
 
 Below we can see how the DAG starts to come together.
 
-<img style="margin: 0 auto; display: block;" src="{{BASE_PATH}}/images/credit_models/four.png" alt="four graph">
+<img style="margin: 0 auto; display: block;" src="/images/credit_models/four.png" alt="four graph">
 
 
 ## Mock credit example
@@ -166,7 +166,7 @@ To see the computation graph that Dask will use, we call `visualize`:
 avg_default.visualize()
 ```
 
-<img src="{{BASE_PATH}}/images/credit_models/dummy_graph.png"
+<img src="/images/credit_models/dummy_graph.png"
      style="margin: 0 auto; display: block;"
      alt="default graph"
      width="100%">
@@ -190,23 +190,23 @@ class Default(Equation):
 
 This allows us to write each equation as its own isolated function and mark its inputs and outputs. With this set of equation objects, we can determine the order of computation (with a [topological sort](https://en.wikipedia.org/wiki/Topological_sorting)) and let Dask handle the graph generation and computation. This eliminates the onerous task of manually passing around the arguments in the code base. Below is an example task graph for one particular model that the bank actually does.
 
-<a href="{{BASE_PATH}}/images/credit_models/simple.svg">
-  <img src="{{BASE_PATH}}/images/credit_models/simple.svg"
+<a href="/images/credit_models/simple.svg">
+  <img src="/images/credit_models/simple.svg"
        alt="calc task graph"
        width="100%">
   </a>
 
 This graph was a bit too large to render with the normal `my_task.visualize()` method, so instead we rendered it with [Gephi](https://gephi.org) to make the pretty colored graph above. The chaotic upper region of this graph is the individual equation calculations. Zooming in we can see the entry point, our input pandas DataFrame, as the large orange circle at the top and how it gets fed into many of the equations.
 
-<a href="{{BASE_PATH}}/images/credit_models/simple-model.svg">
-  <img src="{{BASE_PATH}}/images/credit_models/simple-model.svg"
+<a href="/images/credit_models/simple-model.svg">
+  <img src="/images/credit_models/simple-model.svg"
        alt="zoomed model section"
        width="100%"></a>
 
 The output of the model is about 100 times the size of the input so we do some aggregation at the end via tree reduction. This accounts for the more structured bottom half of the graph. The large green node at the bottom is our final output.
 
-<a href="{{BASE_PATH}}/images/credit_models/simple-agg.svg">
-  <img src="{{BASE_PATH}}/images/credit_models/simple-agg.svg"
+<a href="/images/credit_models/simple-agg.svg">
+  <img src="/images/credit_models/simple-agg.svg"
        alt="zoomed agg section"
        width="100%"></a>
 

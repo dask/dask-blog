@@ -61,7 +61,7 @@ implemented software.  Forgive me for describing yet-another system.
 `dask`
 ------
 
-<img src="{{ BASE_PATH }}/images/dask-simple.png"
+<img src="/images/dask-simple.png"
      align="right">
 
 We use a low-tech representation of a task dependency graph.

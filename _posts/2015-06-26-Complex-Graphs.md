@@ -31,8 +31,8 @@ Most parallel workloads today are fairly trivial:
 
 Graphs for these computations look like the following:
 
-<a href="{{ BASE_PATH }}/images/dask-bag-embarassing.png">
-<img src="{{ BASE_PATH }}/images/dask-bag-embarassing.png"
+<a href="/images/dask-bag-embarassing.png">
+<img src="/images/dask-bag-embarassing.png"
      width="70%"
      alt="Embarrassingly parallel dask graph"></a>
 
@@ -69,8 +69,8 @@ Really I just want to show off this pretty graph.
 >>> u, s, v = da.linalg.svd(x)
 {% endhighlight %}
 
-<a href="{{ BASE_PATH }}/images/dask-svd.png">
-<img src="{{ BASE_PATH }}/images/dask-svd.png"
+<a href="/images/dask-svd.png">
+<img src="/images/dask-svd.png"
      width="60%"
      alt="Parallel SVD dask graph"></a>
 
@@ -122,7 +122,7 @@ The dask schedulers take care of executing this graph in parallel using
 multiple threads.  Here is a profile result of a larger computation on a
 30000x1000 array:
 
-<iframe src="{{ BASE_PATH }}/images/svd.profile.html"
+<iframe src="/images/svd.profile.html"
         marginwidth="0" marginheight="0" scrolling="no"
         width="800" height="300"></iframe>
 
@@ -139,8 +139,8 @@ up to the dask schedulers.
 You can see the source code that generates the above graphs
 [on GitHub](https://github.com/ContinuumIO/dask/blob/master/dask/array/linalg.py).
 
-<a href="{{ BASE_PATH }}/images/dask-svd-random.png">
-<img src="{{ BASE_PATH }}/images/dask-svd-random.png"
+<a href="/images/dask-svd-random.png">
+<img src="/images/dask-svd-random.png"
      align="right"
      alt="Approximate SVD dask graph"
      width="40%"></a>

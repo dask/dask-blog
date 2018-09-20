@@ -13,7 +13,7 @@ and the Data Driven Discovery Initiative from the [Moore
 Foundation](https://www.moore.org/)*
 
 *This page includes embedded large profiles.  It may look better on the [actual
-site](http://matthewrocklin.com/blog/work/2017/01/17/dask-images) rather than
+site](/2017/01/17/dask-images) rather than
 through syndicated pages like planet.python and it may take a while to load on
 non-broadband connections (total size is around 20MB)*
 
@@ -53,8 +53,8 @@ sample = skimage.io.imread('http://emdata.janelia.org/api/node/bf1/grayscale/raw
 skimage.io.imshow(sample)
 ```
 
-<a href="{{ BASE_PATH }}/images/dask-imaging-sample.png">
-  <img src="{{ BASE_PATH }}/images/dask-imaging-sample.png"
+<a href="/images/dask-imaging-sample.png">
+  <img src="/images/dask-imaging-sample.png"
          alt="Sample electron microscopy image from stack"
                 width="60%"></a>
 
@@ -69,8 +69,8 @@ for i, sample in enumerate(samples):
     axarr[i].imshow(sample, cmap='gray')
 ```
 
-<a href="{{ BASE_PATH }}/images/dask-imaging-row.png">
-  <img src="{{ BASE_PATH }}/images/dask-imaging-row.png"
+<a href="/images/dask-imaging-row.png">
+  <img src="/images/dask-imaging-row.png"
          alt="Sample electron microscopy images over time"
                 width="100%"></a>
 
@@ -193,8 +193,8 @@ averaging across time:
 skimage.io.imshow(stack.mean(axis=0).compute())
 ```
 
-<a href="{{ BASE_PATH }}/images/dask-imaging-time-mean.png">
-  <img src="{{ BASE_PATH }}/images/dask-imaging-time-mean.png"
+<a href="/images/dask-imaging-time-mean.png">
+  <img src="/images/dask-imaging-time-mean.png"
          alt="Avergage image over time"
                 width="100%"></a>
 
@@ -208,8 +208,8 @@ by averaging across x and y
 plt.plot(stack.mean(axis=[1, 2]).compute())
 ```
 
-<a href="{{ BASE_PATH }}/images/dask-imaging-spatial-mean.png">
-  <img src="{{ BASE_PATH }}/images/dask-imaging-spatial-mean.png"
+<a href="/images/dask-imaging-spatial-mean.png">
+  <img src="/images/dask-imaging-spatial-mean.png"
          alt="Image brightness over time"
                 width="100%"></a>
 
@@ -274,8 +274,8 @@ plt.figure(figsize=(8, 8))
 skimage.io.imshow(recenter(sample))
 ```
 
-<a href="{{ BASE_PATH }}/images/dask-imaging-recentered-sample.png">
-  <img src="{{ BASE_PATH }}/images/dask-imaging-recentered-sample.png"
+<a href="/images/dask-imaging-recentered-sample.png">
+  <img src="/images/dask-imaging-recentered-sample.png"
        alt="Recentered image"
        width="40%"></a>
 
@@ -317,8 +317,8 @@ as expected.
 skimage.io.imshow(recentered.mean(axis=0))
 ```
 
-<a href="{{ BASE_PATH }}/images/dask-imaging-recentered-time-mean.png">
-  <img src="{{ BASE_PATH }}/images/dask-imaging-recentered-time-mean.png"
+<a href="/images/dask-imaging-recentered-time-mean.png">
+  <img src="/images/dask-imaging-recentered-time-mean.png"
        alt="Recentered time average"
        width="40%"></a>
 
@@ -390,8 +390,8 @@ access.
 
 Here is a real time plot of the computation finishing over time:
 
-<a href="{{ BASE_PATH }}/images/task-stream-fft.gif">
-  <img src="{{ BASE_PATH }}/images/task-stream-fft.gif"
+<a href="/images/task-stream-fft.gif">
+  <img src="/images/task-stream-fft.gif"
          alt="Dask task stream of rechunk + fft"
                 width="100%"></a>
 
@@ -405,12 +405,12 @@ get more information.  Remember that red is communication.
 Screenshots of the diagnostic dashboard of a single worker during this
 computation.
 
-<a href="{{ BASE_PATH }}/images/worker-state-fft.png">
-  <img src="{{ BASE_PATH }}/images/worker-state-fft.png"
+<a href="/images/worker-state-fft.png">
+  <img src="/images/worker-state-fft.png"
          alt="Worker communications during FFT"
                 width="45%"></a>
-<a href="{{ BASE_PATH }}/images/worker-communications-fft.png">
-  <img src="{{ BASE_PATH }}/images/worker-communications-fft.png"
+<a href="/images/worker-communications-fft.png">
+  <img src="/images/worker-communications-fft.png"
          alt="Worker communications during FFT"
                 width="45%"></a>
 
@@ -431,8 +431,8 @@ boring in the corner, and has typical activity towards the center of the image.
 plt.semilogy(1 + power[:, 0, 0].compute())
 ```
 
-<a href="{{ BASE_PATH }}/images/dask-imaging-fft-0.png">
-  <img src="{{ BASE_PATH }}/images/dask-imaging-fft-0.png"
+<a href="/images/dask-imaging-fft-0.png">
+  <img src="/images/dask-imaging-fft-0.png"
          alt="Power spectrum near edge"
                 width="70%"></a>
 
@@ -440,8 +440,8 @@ plt.semilogy(1 + power[:, 0, 0].compute())
 plt.semilogy(1 + power[:, 500, 500].compute())
 ```
 
-<a href="{{ BASE_PATH }}/images/dask-imaging-fft-center.png">
-  <img src="{{ BASE_PATH }}/images/dask-imaging-fft-center.png"
+<a href="/images/dask-imaging-fft-center.png">
+  <img src="/images/dask-imaging-fft-center.png"
          alt="Power spectrum at center"
                 width="70%"></a>
 

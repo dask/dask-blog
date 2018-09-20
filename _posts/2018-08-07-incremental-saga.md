@@ -223,8 +223,8 @@ However, they didn't work *that well*.  When we took a look at the dask
 dashboard we find that there is a lot of dead space, a sign that we're still
 doing a lot of computation on the client side.
 
-<a href="{{BASE_PATH}}/images/saga-1.png">
-  <img src="{{BASE_PATH}}/images/saga-1.png" width="90%">
+<a href="/images/saga-1.png">
+  <img src="/images/saga-1.png" width="90%">
 </a>
 
 
@@ -282,8 +282,8 @@ def full_saga(data, max_iter=100, callback=None):
     return x
 ```
 
-<a href="{{BASE_PATH}}/images/saga-2.png">
-  <img src="{{BASE_PATH}}/images/saga-2.png" width="90%">
+<a href="/images/saga-2.png">
+  <img src="/images/saga-2.png" width="90%">
 </a>
 
 From a dask perspective this now looks good.  We see that one `partial_fit`
@@ -304,16 +304,16 @@ However, when we look at the profile plot of the computation across all of our
 cores (Dask constantly runs a profiler on all threads on all workers to get
 this information) we see that most of our time is spent compiling Numba code.
 
-<a href="{{BASE_PATH}}/images/saga-profile.png">
-  <img src="{{BASE_PATH}}/images/saga-profile.png" width="100%">
+<a href="/images/saga-profile.png">
+  <img src="/images/saga-profile.png" width="100%">
 </a>
 
 We started a conversation for this on the [numba issue
 tracker](https://github.com/numba/numba/issues/3026) which has since been
 resolved.  That same computation over the same time now looks like this:
 
-<a href="{{BASE_PATH}}/images/saga-3.png">
-  <img src="{{BASE_PATH}}/images/saga-3.png" width="90%">
+<a href="/images/saga-3.png">
+  <img src="/images/saga-3.png" width="90%">
 </a>
 
 The tasks, which used to take seconds, now take tens of milliseconds, so we can

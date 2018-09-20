@@ -31,9 +31,9 @@ Motivation
 
 In the past few posts we analyzed data on a cluster with Dask collections:
 
-1.  [Dask.bag on JSON records](http://matthewrocklin.com/blog/work/2016/02/17/dask-distributed-part1)
-2.  [Dask.dataframe on CSV data](http://matthewrocklin.com/blog/work/2016/02/22/dask-distributed-part-2)
-3.  [Dask.array on HDF5 data](http://matthewrocklin.com/blog/work/2016/02/26/dask-distributed-part-3)
+1.  [Dask.bag on JSON records](/2016/02/17/dask-distributed-part1)
+2.  [Dask.dataframe on CSV data](/2016/02/22/dask-distributed-part-2)
+3.  [Dask.array on HDF5 data](/2016/02/26/dask-distributed-part-3)
 
 Often our computations don't fit neatly into the bag, dataframe, or array
 abstractions.  In these cases we want the flexibility of normal code with for
@@ -62,7 +62,7 @@ Data: NYC Taxi 2015
 -------------------
 
 As in our [blogpost on distributed
-dataframes](http://matthewrocklin.com/blog/work/2016/02/22/dask-distributed-part-2)
+dataframes](/2016/02/22/dask-distributed-part-2)
 we use the data on all NYC Taxi rides in 2015.  This is around 20GB on disk and
 60GB in RAM.
 

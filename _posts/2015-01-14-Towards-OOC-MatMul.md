@@ -51,9 +51,9 @@ Introduction
 This is the fourth in a sequence of posts constructing an out-of-core nd-array
 using NumPy, Blaze, and dask.  You can view these posts here:
 
-1. [Simple task scheduling](http://matthewrocklin.com/blog/work/2014/12/27/Towards-OOC/),
-2. [Frontend usability](http://matthewrocklin.com/blog/work/2014/12/30/Towards-OOC-Frontend/)
-3. [A multi-threaded scheduler](http://matthewrocklin.com/blog/work/2015/01/06/Towards-OOC-Scheduling/)
+1. [Simple task scheduling](/2014/12/27/Towards-OOC/),
+2. [Frontend usability](/2014/12/30/Towards-OOC-Frontend/)
+3. [A multi-threaded scheduler](/2015/01/06/Towards-OOC-Scheduling/)
 
 We now give performance numbers on out-of-core matrix-matrix multiplication.
 

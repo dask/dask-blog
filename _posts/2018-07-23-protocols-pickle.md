@@ -53,7 +53,7 @@ However before we solved this problem we discussed things a bit.  This comment
 stuck with me:
 
 <a href="https://github.com/pytorch/pytorch/issues/9168#issuecomment-402514019">
-  <img src="{{BASE_PATH}}/images/pytorch-pickle-is-slow-comment.png"
+  <img src="/images/pytorch-pickle-is-slow-comment.png"
      alt="Github Image of maintainer saying that PyTorch's pickle implementation is slow"
      width="100%"></a>
 

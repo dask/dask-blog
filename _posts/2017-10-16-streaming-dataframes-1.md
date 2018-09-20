@@ -14,8 +14,8 @@ Driven Discovery Initiative from the [Moore Foundation](https://www.moore.org/)*
 *This post is about experimental software.  This is not ready for public use.
 All code examples and API in this post are subject to change without warning.*
 
-<a href="{{BASE_PATH}}/images/streaming-dataframes-plot.gif">
-  <img src="{{BASE_PATH}}/images/streaming-dataframes-plot.gif"
+<a href="/images/streaming-dataframes-plot.gif">
+  <img src="/images/streaming-dataframes-plot.gif"
      align="right"
      width="70%"></a>
 
@@ -141,11 +141,11 @@ Jupyter.
 Usually when we evaluate code in Jupyter we have static inputs and static
 outputs:
 
-<img src="{{BASE_PATH}}/images/jupyter-output-static.png" width="40%">
+<img src="/images/jupyter-output-static.png" width="40%">
 
 However now both our inputs and our outputs are live:
 
-<img src="{{BASE_PATH}}/images/jupyter-output-streaming.gif" width="70%">
+<img src="/images/jupyter-output-streaming.gif" width="70%">
 
 We accomplish this using a combination of
 [ipywidgets](https://ipywidgets.readthedocs.io/en/stable/) and [Bokeh
@@ -158,8 +158,8 @@ In the following example we build our CSV to dataframe pipeline that updates
 whenever new files appear in a directory.  Whenever we drag files to the data
 directory on the left we see that all of our outputs update on the right.
 
-<a href="{{BASE_PATH}}/images/streaming-dataframes-files.gif">
-  <img src="{{BASE_PATH}}/images/streaming-dataframes-files.gif"
+<a href="/images/streaming-dataframes-files.gif">
+  <img src="/images/streaming-dataframes-files.gif"
      width="100%"></a>
 
 
@@ -202,8 +202,8 @@ Real time plotting with [Bokeh](https://bokeh.pydata.org) (one of my favorite fe
 sdf.plot()
 ```
 
-<a href="{{BASE_PATH}}/images/streaming-dataframes-plot.gif">
-  <img src="{{BASE_PATH}}/images/streaming-dataframes-plot.gif"
+<a href="/images/streaming-dataframes-plot.gif">
+  <img src="/images/streaming-dataframes-plot.gif"
      width="100%"></a>
 
 What's missing?

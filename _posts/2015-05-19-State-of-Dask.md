@@ -30,7 +30,7 @@ Collections, graphs, and schedulers
 
 Dask modules can be separated as follows:
 
-<img src="{{ BASE_PATH }}/images/collections-schedulers.png"
+<img src="/images/collections-schedulers.png"
      width="70%"
      align="right"
      alt="Partitioned Frame design">

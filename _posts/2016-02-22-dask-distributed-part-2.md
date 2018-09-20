@@ -15,7 +15,7 @@ In this post we use Pandas in parallel across an HDFS cluster to read CSV data.
 We coordinate these computations with dask.dataframe.  A screencast version of
 this blogpost is available [here](https://www.youtube.com/watch?v=LioaeHsZDBQ)
 and the previous post in this series is available
-[here](http://matthewrocklin.com/blog/work/2016/02/17/dask-distributed-part1).
+[here](/2016/02/17/dask-distributed-part1).
 
 To start, we connect to our scheduler, import the `hdfs` module from the
 `distributed` library, and read our CSV data from HDFS.
@@ -37,7 +37,7 @@ To start, we connect to our scheduler, import the `hdfs` module from the
 >>> progress(nyc2014, nyc2015)
 ```
 
-<img src="{{ BASE_PATH }}/images/distributed-hdfs-read-csv.gif">
+<img src="/images/distributed-hdfs-read-csv.gif">
 
 Our data comes from the New York City Taxi and Limousine Commission which
 publishes [all yellow cab taxi rides in
@@ -409,7 +409,7 @@ datetime handling of Pandas makes these operations trivial.
 >>> progress(dayofweek, hour)
 ```
 
-<img src="{{ BASE_PATH }}/images/distributed-hdfs-groupby-tip-fraction.gif">
+<img src="/images/distributed-hdfs-groupby-tip-fraction.gif">
 
 
 Grouping by day-of-week doesn't show anything too striking to my eye.  However
@@ -466,7 +466,7 @@ In [24]:
 We plot this with matplotlib and see a nice trough during business hours with a
 surge in the early morning with an astonishing peak of 34% at 4am:
 
-<img src="{{ BASE_PATH }}/images/nyctaxi-2015-hourly-tips.png">
+<img src="/images/nyctaxi-2015-hourly-tips.png">
 
 
 Performance
@@ -483,7 +483,7 @@ Wall time: 20.9 ms
 
 This head computation is about as fast as a film projector.  You could perform
 this roundtrip computation between every consecutive frame of a movie; to a
-human eye this appears fluid.  In the [last post](http://matthewrocklin.com/blog/work/2016/02/17/dask-distributed-part1)
+human eye this appears fluid.  In the [last post](/2016/02/17/dask-distributed-part1)
 we asked about how low we could bring latency.  In that post we were running
 computations from my laptop in California and so were bound by transcontinental
 latencies of 200ms.  This time, because we're operating from the cluster, we
@@ -559,7 +559,7 @@ Links
 *   [NYC Taxi Data Downloads](http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml)
 *   [hdfs3](https://hdfs3.readthedocs.org/en/latest): Python library we use for
     HDFS interations.
-*   The [previous post](http://matthewrocklin.com/blog/work/2016/02/17/dask-distributed-part1) in this blog series.
+*   The [previous post](/2016/02/17/dask-distributed-part1) in this blog series.
 
 
 Setup and Data

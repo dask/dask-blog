@@ -35,7 +35,7 @@ Custom Workloads
 
 However, many workloads are too complex for these collections.  Workloads might
 be complex either because they come from sophisticated algorithms
-(as we saw in a [recent post on SVD]({{ BASE_PATH }}/work/2015/06/26/Complex-Graphs/)) or because they come from the real world,
+(as we saw in a [recent post on SVD](/work/2015/06/26/Complex-Graphs/)) or because they come from the real world,
 where problems tend to be messy.
 
 In these cases I tend to see people do two things
@@ -54,7 +54,7 @@ workloads that then use the dask schedulers to execute in parallel.
 The [dask docs](dask.pydata.org/en/latest/custom-graphs.html) hold the
 following example of a simple data processing pipeline:
 
-<img src="{{ BASE_PATH }}/images/pipeline.png" align="right" width="15%">
+<img src="/images/pipeline.png" align="right" width="15%">
 
 {% highlight Python %}
 def load(filename):
@@ -133,7 +133,7 @@ You can safely skip reading this code in depth.  The take-away is that it's
 somewhat involved but that the addition of parallelism is light.
 
 <a href="https://github.com/mrocklin/dask-crossval">
-<img src="{{BASE_PATH}}/images/do.gif" alt="parallized cross validation code"
+<img src="/images/do.gif" alt="parallized cross validation code"
      width="80%">
 </a>
 
@@ -147,8 +147,8 @@ parallelizable dask graph.  We visualize that graph below.
 
     test_score.visualize()
 
-<a href="{{BASE_PATH}}/images/crossval.png">
-  <img src="{{BASE_PATH}}/images/crossval.png"
+<a href="/images/crossval.png">
+  <img src="/images/crossval.png"
        alt="Cross validation dask graph">
 </a>
 

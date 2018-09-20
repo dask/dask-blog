@@ -26,12 +26,12 @@ Over the last two months we've watched the creation of
 [`dask.array`](http://dask.pydata.org/en/latest/array.html) a project to
 implement the out-of-core nd-arrays using blocked algorithms.
 (blogposts:
-[1](http://matthewrocklin.com/blog/work/2014/12/27/Towards-OOC/),
-[2](http://matthewrocklin.com/blog/work/2014/12/30/Towards-OOC-Frontend/),
-[3](http://matthewrocklin.com/blog/work/2015/01/06/Towards-OOC-Scheduling/),
-[4](http://matthewrocklin.com/blog/work/2015/01/14/Towards-OOC-MatMul/),
-[5](http://matthewrocklin.com/blog/work/2015/01/16/Towards-OOC-SpillToDisk/),
-[6](http://matthewrocklin.com/blog/work/2015/02/13/Towards-OOC-Slicing-and-Stacking/)).
+[1](/2014/12/27/Towards-OOC/),
+[2](/2014/12/30/Towards-OOC-Frontend/),
+[3](/2015/01/06/Towards-OOC-Scheduling/),
+[4](/2015/01/14/Towards-OOC-MatMul/),
+[5](/2015/01/16/Towards-OOC-SpillToDisk/),
+[6](/2015/02/13/Towards-OOC-Slicing-and-Stacking/)).
 This worked pretty well.  Dask.array is available on the main conda channel and on PyPI
 and, for the most part, is a pleasant drop-in replacement for a subset of NumPy
 operations.  I'm really happy with it.
@@ -68,8 +68,8 @@ represent a dask.frame as a 1-d grid of Pandas DataFrames; they're kind of like 
 </th>
 <tr>
 <td></td>
-<td><img src="{{ BASE_PATH }}/images/array.png"></td>
-<td><img src="{{ BASE_PATH }}/images/naive-frame.png"></td>
+<td><img src="/images/array.png"></td>
+<td><img src="/images/naive-frame.png"></td>
 </tr>
 </table>
 
@@ -109,8 +109,8 @@ value ranges of the index.
 </th>
 <tr>
 <td></td>
-<td><img src="{{ BASE_PATH }}/images/naive-frame.png"></td>
-<td><img src="{{ BASE_PATH }}/images/frame.png"></td>
+<td><img src="/images/naive-frame.png"></td>
+<td><img src="/images/frame.png"></td>
 </tr>
 </table>
 
@@ -202,7 +202,7 @@ We do this in two steps
     step one.
 
 
-<img src="{{ BASE_PATH }}/images/frame-sort.png"
+<img src="/images/frame-sort.png"
      align="right"
      width="30%">
 
@@ -240,7 +240,7 @@ This could be accelerated through one of the following options:
     solutions.
 
 
-<img src="{{ BASE_PATH }}/images/frame-shuffle.png"
+<img src="/images/frame-shuffle.png"
      align="right"
      width="30%">
 
@@ -354,7 +354,7 @@ serialization of DataFrames and sorting being hard.
 reach the stage of "just use a database"?
 
 *  Pandas doesn't yet release the GIL, so this is all single-core.  See post on
-[PyData and the GIL]({{BASE_PATH}}/work/2015/03/10/PyData-GIL/).
+[PyData and the GIL](/work/2015/03/10/PyData-GIL/).
 
 *  My current solution lacks basic functionality.  I've skipped
    the easy things to first ensure sure that the hard stuff is doable.

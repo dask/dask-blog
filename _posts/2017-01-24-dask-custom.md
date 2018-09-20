@@ -208,8 +208,8 @@ best = reduction(compared)
 Here is an image of that graph for a smaller input of only 10 files and 20
 random pairs
 
-<a href="{{ BASE_PATH }}/images/custom-etl.png">
-    <img src="{{ BASE_PATH }}/images/custom-etl.png"
+<a href="/images/custom-etl.png">
+    <img src="/images/custom-etl.png"
          alt="Custom ETL Dask Graph"
          width="80%"></a>
 
@@ -227,8 +227,8 @@ time.
 result = best.compute()
 ```
 
-<a href="{{ BASE_PATH }}/images/task-stream-custom-etl.gif">
-    <img src="{{ BASE_PATH }}/images/task-stream-custom-etl.gif"
+<a href="/images/task-stream-custom-etl.gif">
+    <img src="/images/task-stream-custom-etl.gif"
          alt="Custom ETL Task Stream"
          width="80%"></a>
 

@@ -99,7 +99,7 @@ parallel, communicating over ZeroMQ.
 This system has a single centralized scheduler, several workers, and
 potentially several clients.
 
-![]({{ BASE_PATH }}/images/distributed-layout.png)
+![](/images/distributed-layout.png)
 
 Clients send graphs to the central scheduler which farms out those tasks to
 workers and coordinates the execution of the graph.  While the scheduler

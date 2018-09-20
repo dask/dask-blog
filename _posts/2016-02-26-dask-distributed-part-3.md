@@ -27,8 +27,8 @@ more fun than this text version.
 
 This is the third in a sequence of blogposts about dask.distributed:
 
-1.  [Dask Bags on GitHub Data](http://matthewrocklin.com/blog/work/2016/02/17/dask-distributed-part1)
-2.  [Dask DataFrames on HDFS](http://matthewrocklin.com/blog/work/2016/02/22/dask-distributed-part-2)
+1.  [Dask Bags on GitHub Data](/2016/02/17/dask-distributed-part1)
+2.  [Dask DataFrames on HDFS](/2016/02/22/dask-distributed-part-2)
 3.  Dask Arrays on NetCDF data
 
 Setup
@@ -133,7 +133,7 @@ then map our function on our filenames:
 >>> progress(futures)
 ```
 
-<img src="{{ BASE_PATH }}/images/load-netcdf.gif">
+<img src="/images/load-netcdf.gif">
 
 After this completes we have several numpy arrays scattered about the memory of
 each of our four workers.
@@ -173,7 +173,7 @@ plt.imshow(x[100, :, :].compute(), cmap='viridis')
 plt.colorbar()
 ```
 
-<img src="{{ BASE_PATH }}/images/temperature-viridis.png">
+<img src="/images/temperature-viridis.png">
 
 In the [screencast version of this
 post](https://www.youtube.com/watch?v=ZpMXEVp-iaY) we hook this up to an
@@ -238,7 +238,7 @@ def f(time):
     return x[time, :, :].mean().compute()
 ```
 
-<img src="{{ BASE_PATH }}/images/mean-time.gif">
+<img src="/images/mean-time.gif">
 
 This second example is less fluid because we index across our NumPy chunks.
 Each computation touches all of our data.  It's still not bad though and quite
@@ -251,7 +251,7 @@ def f(lat):
     return x[:, lat, :].mean().compute()
 ```
 
-<img src="{{ BASE_PATH }}/images/mean-latitude.gif">
+<img src="/images/mean-latitude.gif">
 
 
 Normalize Data
@@ -273,14 +273,14 @@ z = e.persist(z)
 progress(z)
 ```
 
-<img src="{{ BASE_PATH }}/images/normalize.gif">
+<img src="/images/normalize.gif">
 
 ```python
 plt.imshow(z[slice].compute(), cmap='RdBu_r')
 plt.colorbar()
 ```
 
-<img src="{{ BASE_PATH }}/images/temperature-denormalized.png">
+<img src="/images/temperature-denormalized.png">
 
 We can now see much more fine structure of the currents of the day.  In the
 [screencast version](https://www.youtube.com/watch?v=ZpMXEVp-iaY) we hook this
@@ -302,7 +302,7 @@ def f(time):
     plt.xlabel("Latitude (degrees)")
 ```
 
-<img src="{{ BASE_PATH }}/images/latitude-plot.gif">
+<img src="/images/latitude-plot.gif">
 
 
 Conclusion

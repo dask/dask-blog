@@ -39,7 +39,7 @@ We can combine both together in a few applications:
 2.  **Deployment:** A common pain point with TensorFlow is that setup isn't
     well automated.  This plagues all distributed systems, especially those
     that are run on a wide variety of cluster managers (see [cluster deployment
-    blogpost](http://matthewrocklin.com/blog/work/2016/09/22/cluster-deployments)
+    blogpost](/2016/09/22/cluster-deployments)
     for more information).  Fortunately, if you already have a Dask cluster
     running it's trivial to stand up a distributed TensorFlow network on
     top of it running within the same processes.
@@ -137,7 +137,7 @@ which uses multiple machines to train a model that fits in memory using
 parameter servers for coordination.  Our TensorFlow network will have three
 different kinds of servers:
 
-<img src="{{ BASE_PATH }}/images/tensorflow-distributed-network.svg"
+<img src="/images/tensorflow-distributed-network.svg"
      width="50%"
      align="right"
      alt="distributed TensorFlow training graph">
@@ -204,7 +204,7 @@ im = images[1].compute().reshape((28, 28))
 plt.imshow(im, cmap='gray')
 ```
 
-<img src="{{ BASE_PATH }}/images/tf-images-one.png"
+<img src="/images/tf-images-one.png"
      width="20%"
      alt="mnist number 3">
 
@@ -214,7 +214,7 @@ im = images.mean(axis=0).compute().reshape((28, 28))
 plt.imshow(im, cmap='gray')
 ```
 
-<img src="{{ BASE_PATH }}/images/tf-images-mean.png"
+<img src="/images/tf-images-mean.png"
      width="20%"
      alt="mnist mean">
 
@@ -223,7 +223,7 @@ im = images.var(axis=0).compute().reshape((28, 28))
 plt.imshow(im, cmap='gray')
 ```
 
-<img src="{{ BASE_PATH }}/images/tf-images-var.png"
+<img src="/images/tf-images-var.png"
      width="20%"
      alt="mnist var">
 
@@ -556,7 +556,7 @@ scorer_task = c.submit(scoring_task, workers=dask_spec['scorer'][0])
 This starts long-running tasks that just sit there, waiting for external
 stimulation:
 
-<img src="{{ BASE_PATH }}/images/tf-long-running-task.png"
+<img src="/images/tf-long-running-task.png"
      width="70%"
      alt="long running TensorFlow tasks">
 

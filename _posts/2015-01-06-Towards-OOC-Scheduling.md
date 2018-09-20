@@ -23,8 +23,8 @@ Setup
 -----
 
 My last two posts
-([post 1](http://matthewrocklin.com/blog/work/2014/12/27/Towards-OOC/),
-[post 2](http://matthewrocklin.com/blog/work/2014/12/30/Towards-OOC-Frontend/))
+([post 1](/2014/12/27/Towards-OOC/),
+[post 2](/2014/12/30/Towards-OOC-Frontend/))
 construct an ND-Array library out of a simple task scheduler, NumPy, and Blaze.
 
 In this post we discuss a more sophisticated scheduler.
@@ -86,7 +86,7 @@ To keep a small memory footprint we avoid holding on to unnecessary
 intermediate data.  The full computation graph of a smaller problem
 might look like the following:
 
-<img src="{{ BASE_PATH }}/images/dask/uninlined.png"
+<img src="/images/dask/uninlined.png"
      alt="Un-inlined dask">
 
 Boxes represent data, circles represent functions that run on that data ,
@@ -116,7 +116,7 @@ won't have to store the result.  We trade computation for memory.
 The result of the graph above with all access and transpose operations
 inlined looks like the following:
 
-<img src="{{ BASE_PATH }}/images/dask/inlined.png"
+<img src="/images/dask/inlined.png"
      alt="inlined dask">
 
 Now our tasks nest (see below).  We run all functions within a nested task as
@@ -145,7 +145,7 @@ Scheduler
 Now that we have a nice dask to crunch on, we run those tasks with multiple
 worker threads.  This is the job of a *scheduler*.
 
-<img src="{{ BASE_PATH }}/images/threads.jpg"
+<img src="/images/threads.jpg"
       align="right"
       alt="Thread pool, courtesy of sewingmantra.com"
       width="20%">
@@ -195,7 +195,7 @@ were taken from live runs.
 Example: Embarrassingly parallel computation
 -------------------------------------------
 
-<img src="{{ BASE_PATH }}/images/dask/embarrassing.gif"
+<img src="/images/dask/embarrassing.gif"
       align="right"
       width="50%"
       alt="Embarassingly parallel dask">
@@ -230,7 +230,7 @@ for each of our four threads.
 Example: More complex computation with Reductions
 -------------------------------------------------
 
-<img src="{{ BASE_PATH }}/images/dask/normalized-b.gif"
+<img src="/images/dask/normalized-b.gif"
       align="right"
       width="35%"
       alt="More complex dask">
@@ -255,7 +255,7 @@ boxes covers the entire image; fortunately the dataset is small.
 Example: Fail Case
 ------------------
 
-<img src="{{ BASE_PATH }}/images/dask/fail-case.gif"
+<img src="/images/dask/fail-case.gif"
       align="right"
       width="50%"
       alt="A case where our scheduling algorithm fails to avoid intermediates">
