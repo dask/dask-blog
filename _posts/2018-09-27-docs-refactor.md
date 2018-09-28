@@ -39,8 +39,8 @@ a different team for a different sub-project:
 This split in documentation matches the split in development teams.  Each of
 sub-project's team manages its own docs in its own way.  They release at their
 own pace and make their own decisions about technology.  This makes it much
-more likely that developers documentation as they develop and change software
-libraries.
+more likely that developers maintain the documentation as they develop and
+change software libraries.
 
 *We make it easy to write documentation.  This choice causes many different documentation systems to emerge.*
 
