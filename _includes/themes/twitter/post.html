@@ -2,6 +2,7 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <h1>{{ page.title }} <small>{{ page.tagline }}</small></h1>
+      {% if page.author %} <p><i>By {{ page.author }} </i></p> {% endif %}
     </div>
   </div>
 </div>
