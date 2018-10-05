@@ -2,7 +2,7 @@
 layout: post
 title: Dask-jobqueue
 author: Joe Hamman
-tagline: Dask-jobqueue: Easily deploy Dask on job queuing systems like PBS, Slurm, MOAB, SGE, and LSF.
+tagline: Easily deploy Dask on job queuing systems like PBS, Slurm, MOAB, SGE, and LSF.
 tags: [HPC, distributed, jobqueue]
 theme: twitter
 draft: true
@@ -30,7 +30,7 @@ And checkout the dask-jobqueue documentation: [http://jobqueue.dask.org](http://
 
 ## Introduction
 
-Large high-performance computer (HPC) clusters are ubiquitous throughout the computational sciences. These HPC systems include powerful hardware, including many large compute nodes, high-speed interconnects, and parallel file systems. An example of such systems that we use at [NCAR](https://ncar.ucar.edu/) is named [Cheyenne](https://www2.cisl.ucar.edu/resources/computational-systems/cheyenne). Cheyenne is a fairly large machine, with about 150k cores and over 300 TB of total memory. 
+Large high-performance computer (HPC) clusters are ubiquitous throughout the computational sciences. These HPC systems include powerful hardware, including many large compute nodes, high-speed interconnects, and parallel file systems. An example of such systems that we use at [NCAR](https://ncar.ucar.edu/) is named [Cheyenne](https://www2.cisl.ucar.edu/resources/computational-systems/cheyenne). Cheyenne is a fairly large machine, with about 150k cores and over 300 TB of total memory.
 
 ![Cheyenne is a 5.34-petaflops, high-performance computer operated by NCAR.](https://cdn-images-1.medium.com/max/2000/1*Jqm612rTcdWFkmcZWhcrTw.jpeg)*Cheyenne is a 5.34-petaflops, high-performance computer operated by NCAR.*
 
@@ -81,8 +81,8 @@ from dask_jobqueue import PBSCluster
 from dask.distributed import Client
 
 cluster = PBSCluster(cores=36,
-                        memory="108GB", 
-                        queue="premium")
+                     memory="108GB",
+                     queue="premium")
 cluster.scale(10)
 client = Client(cluster)
 ```
@@ -133,7 +133,7 @@ The autoscaling functionality allows for a fundamentally different way to do sci
 
 Finally, in developing dask-jobqueue, we’ve run into a few challenges that are worth mentioning.
 
-* Queueing systems are highly customizable. System administrators seem to have a lot of control over their particularly implementation of each queueing system. In practice, this means that it is often difficult to simultaneously cover all permutations of a particular queueing system. We’ve generally found that things seem to be flexible enough and welcome feedback in the cases where they are not. 
+* Queueing systems are highly customizable. System administrators seem to have a lot of control over their particularly implementation of each queueing system. In practice, this means that it is often difficult to simultaneously cover all permutations of a particular queueing system. We’ve generally found that things seem to be flexible enough and welcome feedback in the cases where they are not.
 
 * CI testing has required a fair bit of work to setup. The target environment for using dask-jobqueue is on existing HPC clusters. In order to facilitate continuous integration testing of dask-jobqueue, we’ve had to configure multiple queueing systems (PBS, Slurm, SGE) to run in docker using Travis CI. This has been a laborious task and one we’re still working on.
 
