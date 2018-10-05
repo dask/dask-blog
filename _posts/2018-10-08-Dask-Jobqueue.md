@@ -76,7 +76,7 @@ One of the aims of the Pangeo project is to facilitate interactive data on very 
 
 * *Dask-jobqueue* is a new Python package that we’ve built to facilitate the deployment of *dask* on HPC clusters and interfacing with a number of job queuing systems. Its usage is concise and Pythonic.
 
-```Python
+```python
 from dask_jobqueue import PBSCluster
 from dask.distributed import Client
 
@@ -97,7 +97,7 @@ client = Client(cluster)
 
 Dask-jobqueue is easily customizable to help users capitalize on advanced HPC features. A more complicated example that would work on NCAR’s Cheyenne super computer is:
 
-```Python
+```python
 cluster = PBSCluster(cores=36,
                     processes=18,
                     memory="108GB",
@@ -113,7 +113,7 @@ In this example, we instruct the PBSCluster to 1) use up to 36 cores per job, 2)
 
 Finally, Dask offers the ability to “autoscale” clusters based on a set of heuristics. When the cluster needs more CPU or memory, it will scale up. When the cluster has unused resources, it will scale down. Dask-jobqueue supports this with a simple interface:
 
-```Python
+```python
 cluster.adapt(minimum=18, maximum=360)
 ```
 
