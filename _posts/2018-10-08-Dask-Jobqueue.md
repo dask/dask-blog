@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Scalable interactive analysis workflows using dask-distributed on HPC Systems
+title: Dask-jobqueue
 author: Joe Hamman
 tagline: Dask-jobqueue: Easily deploy Dask on job queuing systems like PBS, Slurm, MOAB, SGE, and LSF.
 tags: [HPC, distributed, jobqueue]
