@@ -55,6 +55,7 @@ have a few expectations on them.
     ---
     layout: post
     title: Your Title
+    author: Your Name
     tagline: an optional tagline
     tags: [A, list, of tags]
     theme: twitter
