@@ -10,7 +10,7 @@ draft: true
 
 {% include JB/setup %}
 
-*This work was done in collaboration with [Matthew Rocklin](https://github.com/mrocklin) (Anaconda), Jim Edwards (NCAR), [Guillaume Eynard-Bontemps](https://github.com/guillaumeeb) (CNES), and [Loïc Estève](https://github.com/lesteve) (INRIA), and is supported, in part, by the US National Science Foundation [Earth Cube program](https://www.earthcube.org/). The dask-jobqueue package is a spinoff of the [Pangeo Project](https://medium.com/pangeo). This blogpost was previously published [here](https://medium.com/pangeo/scalable-interactive-analysis-workflows-using-dask-distributed-on-hpc-systems-d7754e42ca53
+*This work was done in collaboration with [Matthew Rocklin](https://github.com/mrocklin) (Anaconda), Jim Edwards (NCAR), [Guillaume Eynard-Bontemps](https://github.com/guillaumeeb) (CNES), and [Loïc Estève](https://github.com/lesteve) (INRIA), and is supported, in part, by the US National Science Foundation [Earth Cube program](https://www.earthcube.org/). The dask-jobqueue package is a spinoff of the [Pangeo Project](https://medium.com/pangeo). This blogpost was previously published [here](https://medium.com/pangeo/dask-jobqueue-d7754e42ca53
 )*
 
 **TLDR;** *Dask-jobqueue* allows you to seamlessly deploy [dask](https://dask.org/) on HPC clusters that use a variety of job queuing systems such as PBS, Slurm, SGE, or LSF. Dask-jobqueue provides a *Pythonic* user interface that manages dask workers/clusters through the submission, execution, and deletion of individual jobs on a HPC system. It gives users the ability to interactively scale workloads across large HPC systems; turning an interactive [Jupyter](http://jupyter.org/) Notebook into a powerful tool for scalable computation on very large datasets.
@@ -74,7 +74,7 @@ One of the aims of the Pangeo project is to facilitate interactive data on very 
 
 * *Dask* is a library for parallel computing that coordinates well with Python’s existing scientific software ecosystem, including libraries like [NumPy](http://www.numpy.org/), [Pandas](https://pandas.pydata.org/), [Scikit-Learn](http://scikit-learn.org/stable/), and xarray. In many cases, it offers users the ability to take existing workflows and quickly scale them to much larger applications. [*Dask-distributed](http://distributed.dask.org)* is an extension of dask that facilitates parallel execution across many computers.
 
-* *Dask-jobqueue* is a new Python package that we’ve built to facilitate the deployment of *dask-distributed *on HPC clusters and interfacing with a number of job queuing systems. Its usage is concise and Pythonic.
+* *Dask-jobqueue* is a new Python package that we’ve built to facilitate the deployment of *dask* on HPC clusters and interfacing with a number of job queuing systems. Its usage is concise and Pythonic.
 
 ```Python
 from dask_jobqueue import PBSCluster
