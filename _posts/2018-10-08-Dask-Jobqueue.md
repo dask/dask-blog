@@ -5,7 +5,6 @@ author: Joe Hamman
 tagline: Easily deploy Dask on job queuing systems like PBS, Slurm, MOAB, SGE, and LSF.
 tags: [HPC, distributed, jobqueue]
 theme: twitter
-draft: true
 ---
 
 {% include JB/setup %}
