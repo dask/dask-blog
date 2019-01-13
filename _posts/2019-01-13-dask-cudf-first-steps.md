@@ -8,8 +8,8 @@ theme: twitter
 ---
 {% include JB/setup %}
 
-Summary
--------
+Executive Summary
+-----------------
 
 We're building a distributed GPU Pandas dataframe out of
 [cuDF](https://github.com/rapidsai/cudf) and
@@ -20,6 +20,48 @@ This post describes the current situation,
 our general approach,
 and gives examples of what does and doesn't work today.
 We end with some notes on scaling performance.
+
+You can also view the experiment in this post as
+[a notebook](https://github.com/dask/dask-blog/blob/0637e68d78cdf1332ee72275061bf3b9a1625d55/_posts/2019-01-13-dask-cudf-first-steps.md).
+
+And here is a table of results:
+
+<table border="1" class="dataframe">
+  <thead>
+  <tr>
+    <th>Architecture</th>
+    <th>Time</th>
+    <th>Bandwidth</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th> Single CPU Core </th>
+      <td> 3min 14s </td>
+      <td> 50 MB/s </td>
+    </tr>
+    <tr>
+      <th> Eight CPU Cores </th>
+      <td> 58s </td>
+      <td> 170 MB/s </td>
+    </tr>
+    <tr>
+      <th> Forty CPU Cores </th>
+      <td> 35s </td>
+      <td> 285 MB/s </td>
+    </tr>
+    <tr>
+      <th> One GPU </th>
+      <td> 11s </td>
+      <td> 900 MB/s </td>
+    </tr>
+    <tr>
+      <th> Eight GPUs </th>
+      <td> 5s </td>
+      <td> 2000 MB/s </td>
+    </tr>
+  </tbody>
+</table>
 
 
 Building Blocks: cuDF and Dask
@@ -179,18 +221,17 @@ What I'm excited about in the example above
    don't).
 
 -  We're tightly integrated and more connected to other systems. For example if
-   we wanted to convert our dask-dataframe-of-cudf-dataframes to a
-   dask-dataframe-of-pandas-dataframes then we would use the standard cuDF
-   function for this:
+   we wanted to convert our dask-cudf-dataframe to a dask-pandas-dataframe then
+   we would use the standard cuDF function for this:
 
    ```python
    df = df.map_partitions(cudf.DataFrame.to_pandas)
    ```
 
-   We don't have to write anything special like a separate
-   `DaskCUDFDataFrame.to_dask_dataframe` method (indeed, this class should
-   eventually not even exist), nor handle special cases.  The parallelism
-   component of Dask is orthogonal to the CPU/GPU choice.
+   We don't have to write anything special like a separate `.to_dask_dataframe`
+   method nor handle other special cases.
+
+   The parallelism of Dask should be orthogonal to the choice of CPU/GPU.
 
 -  It's easy to switch hardware.  By avoiding separate `dask-cudf` code paths
    it's easier to add cuDF to an existing Dask+Pandas codebase if we get a GPU,
@@ -206,8 +247,9 @@ What's wrong with the example above
 In general the answer is **many small things**.
 
 1.  The `cudf.read_csv` function doesn't yet support reading chunks from a
-    single CSV file, and so doesn't work well with very large CSV files.  We had
-    to pre-shard our data first with normal Dask+Pandas
+    single CSV file, and so doesn't work well with very large CSV files.  We
+    had to split our large CSV files into many smalle CSV files first with
+    normal Dask+Pandas:
 
     ```python
     import dask.dataframe as dd
@@ -215,6 +257,8 @@ In general the answer is **many small things**.
             .repartition(npartitions=100)
             .to_csv('many-small/*.csv', index=False))
     ```
+
+    (See [rapidsai/cudf #568](https://github.com/rapidsai/cudf/issues/568))
 
 2.  Many operations that used to work in dask-cudf like groupby-aggregations
     and joins no longer work.  We're going to need to slightly modify many cuDF
@@ -232,8 +276,9 @@ In general the answer is **many small things**.
     I suspect that there will by many more small changes like
     these necessary in the future.
 
-These are all fixable and indeed, are actively being fixed today by the [good
-folks working on RAPIDS](https://github.com/rapidsai/cudf/graphs/contributors).
+These problems are representative of dozens more similar issues.  They are are
+all fixable and indeed, many are actively being fixed today by the [good folks
+working on RAPIDS](https://github.com/rapidsai/cudf/graphs/contributors).
 
 
 Near Term Schedule
@@ -242,7 +287,7 @@ Near Term Schedule
 The RAPIDS group is currently busy working to release 0.5, which includes some
 of the fixes necessary to run the example above, and also many unrelated
 stability improvements.  This will probably keep them busy for a week or two
-during which I don't expect to seem much Dask + cuDF work going on other than
+during which I don't expect to see much Dask + cuDF work going on other than
 planning.
 
 After that, and for the next couple months this seems to be their priority, so
@@ -292,10 +337,11 @@ computation of creating random data.
 
 #### Dask DataFrame + cuDF on CSV data
 
-We did a similar study on the example above, which is bound mostly by reading
-CSV data from disk and then parsing it.  You can see a notebook available
-[here](https://gist.github.com/mrocklin/4b1b80d1ae07ec73f75b2a19c8e90e2e).
-We have similar (though less impressive) numbers to present.
+We did a similar study on the `read_csv` example above, which is bound mostly
+by reading CSV data from disk and then parsing it.  You can see a notebook
+available
+[here](https://gist.github.com/mrocklin/4b1b80d1ae07ec73f75b2a19c8e90e2e).  We
+have similar (though less impressive) numbers to present.
 
 <table border="1" class="dataframe">
   <thead>
@@ -334,7 +380,7 @@ We have similar (though less impressive) numbers to present.
   </tbody>
 </table>
 
-*The bandwidth numbers were computing by noting that the data was around 10 GB on disk*
+*The bandwidth numbers were computed by noting that the data was around 10 GB on disk*
 
 
 Analysis
@@ -348,16 +394,17 @@ span) across a variety of different hardware with a wide range of cost points.
 Second lets note that this problem scales less well than our
 [previous example with CuPy](../../../2019/01/03/dask-array-gpus-first-steps),
 both on CPU and GPU.
-I suspect that this is because this example is also bound by I/O.  While the
-jump from single-CPU to single-GPU is large, the jump from single-CPU to
-many-CPU or single-GPU to many-GPU is not as large as we would have liked.  For
-GPUs for example we got around a 2x speedup when we added 8x as many GPUs.
+I suspect that this is because this example is also bound by I/O and not just
+number-crunching.  While the jump from single-CPU to single-GPU is large, the
+jump from single-CPU to many-CPU or single-GPU to many-GPU is not as large as
+we would have liked.  For GPUs for example we got around a 2x speedup when we
+added 8x as many GPUs.
 
 At first one might think that this is because we're saturating disk read speeds.
 However two pieces of evidence go against that guess:
 
 -  NVIDIA folks familiar with my current hardware inform me that they're able to get
-   around 10x more I/O when they're careful
+   much more I/O when they're careful (TODO verify)
 -  The CPU scaling is similarly poor, despite the fact that it's obviously not
    reaching full I/O bandwidth
 
@@ -373,3 +420,18 @@ some cheaper systems than a DGX, I may experiment with those soon.  It may be
 that for data-loading and pre-processing workloads the previous wisdom of "pack
 as much computation as you can into a single box" no longer holds
 (without us doing more work that is).
+
+
+### Come help!
+
+If the work above sounds interesting to you then come help!
+There is a lot of low-hanging and high impact work to do.
+
+If you're interested in being paid to focus more on these topics, then consider
+applying for a job.  The NVIDIA corporation is hiring around the use of Dask
+with GPUs.
+
+-  [Senior Library Software Engineer - RAPIDS](https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/US-TX-Austin/Senior-Library-Software-Engineer---RAPIDS_JR1919608-1)
+
+That's a fairly generic posting.  If you're interested the posting doesn't seem
+to fit then please apply anyway and we'll tweak things as necessary.
