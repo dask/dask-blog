@@ -84,7 +84,7 @@ can assemble much of this system from existing components:
     df.groupby('id').value.mean()
     ```
 
-    It is part of the growing [RAPIDS initiative](https://rapids.ai).
+    cuDF is part of the growing [RAPIDS initiative](https://rapids.ai).
 
 2.  The [Dask Dataframe](https://docs.dask.org/en/latest/dataframe.html)
     library provides parallel algorithms around the Pandas API.  It composes
@@ -101,12 +101,12 @@ can assemble much of this system from existing components:
     ```
 
 3.  The [Dask distributed task scheduler](https://distributed.dask.org)
-    provides general purpose parallel execution given complex task graphs.
+    provides general-purpose parallel execution given complex task graphs.
     It's good for adding multi-node computing into an existing codebase.
 
 Given these building blocks,
-our approach is to make cuDF look enough like Pandas that
-the Dask Dataframe algorithms can be reused.
+our approach is to make the cuDF API close enough to Pandas that
+we can reuse the Dask Dataframe algorithms.
 
 
 Benefits and Challenges to this approach
@@ -116,51 +116,49 @@ This approach has a few benefits:
 
 1.  We get to reuse the parallel algorithms found in Dask Dataframe originally designed for Pandas.
 
-    (these were hard enough to get right the first time)
 
-2.  It consolidates the development effort behind a single codebase so that
+2.  It consolidates the development effort within a single codebase so that
     future effort spent on CPU Dataframes benefits GPU Dataframes and vice
     versa.  Maintenance costs are shared.
 
-3.  By building code that works simultaneously with two Pandas implementations
-    (CPU and GPU) we start to establish conventions and protocols that will
-    make it easy for other projects to do the same, either with these two
+3.  By building code that works equally with two DataFrame implementations
+    (CPU and GPU) we establish conventions and protocols that will
+    make it easier for other projects to do the same, either with these two
     Pandas-like libraries, or with future Pandas-like libraries.
 
-    We start forcing the ecosystem to consider supporting Pandas-like
-    libraries, rather than just the single Pandas library.  For example if
+    This approach also aims to demonstrate that the ecosystem should support Pandas-like
+    libraries, rather than just Pandas.  For example, if
     (when?) the Arrow library develops a computational system then we'll be in
     a better place to roll that in as well.
 
 4.  When doing any refactor we tend to clean up existing code.
 
-    For example to make dask dataframe ready for a new GPU Parquet reader
+    For example, to make dask dataframe ready for a new GPU Parquet reader
     we end up [refactoring and simplifying our Parquet I/O logic](https://github.com/dask/dask/pull/4336).
 
-But also some drawbacks:
+The approach also has some drawbacks. Namely, it places API pressure on cuDF to match Pandas so:
 
-1.  This places API pressure on cuDF to match Pandas so...
 
-2.  Slight differences in API now cause larger problems
+1. Slight differences in API now cause larger problems, such as these:
 
     -  [Join column ordering differs rapidsai/cudf #251](https://github.com/rapidsai/cudf/issues/251)
     -  [Groupby aggregation column ordering differs rapidsai/cudf #483](https://github.com/rapidsai/cudf/issues/483#issuecomment-453218151)
 
-3.  cuDF has some pressure on it to repeat what some believe to be mistakes in
+2.  cuDF has some pressure on it to repeat what some believe to be mistakes in
     the Pandas API.
 
     For example, cuDF today supports missing values arguably more sensibly than
-    does Pandas.  Should cuDF have to revert to the old way of doing things
-    just to match Pandas semantics?  Dask Dataframe will probably have to need
-    to grow more flexible here to handle evolution and small differences
+    Pandas.  Should cuDF have to revert to the old way of doing things
+    just to match Pandas semantics?  Dask Dataframe will probably need
+    to be more flexible in order to handle evolution and small differences
     in semantics.
 
 
 Alternatives
 ------------
 
-We could also write a new dask-dataframe-style project around cuDF that was
-more able to deviate from the Pandas/Dask Dataframe API.  Until recently this
+We could also write a new dask-dataframe-style project around cuDF that deviates
+from the Pandas/Dask Dataframe API.  Until recently this
 has actually been the approach, and the
 [dask-cudf](https://github.com/rapidsai/dask-cudf) project did exactly this.
 This was probably a good choice early on to get started and prototype things.
@@ -169,7 +167,7 @@ groupby-aggregations, joins, and so on using
 [dask delayed](https://docs.dask.org/en/latest/delayed.html).
 
 We're redoing this now on top of dask dataframe though, which means that we're
-losing some functionality that dask-cudf had before, but hopefully the
+losing some functionality that dask-cudf already had, but hopefully the
 functionality that we add now will be more stable and established on a firmer
 base.
 
@@ -220,25 +218,24 @@ What I'm excited about in the example above
    many functions we didn't think about work well today (though also many
    don't).
 
--  We're tightly integrated and more connected to other systems. For example if
+-  We're tightly integrated and more connected to other systems. For example, if
    we wanted to convert our dask-cudf-dataframe to a dask-pandas-dataframe then
-   we would use the standard cuDF function for this:
+   we would just use the cuDF `to_pandas` function:
 
    ```python
    df = df.map_partitions(cudf.DataFrame.to_pandas)
    ```
 
    We don't have to write anything special like a separate `.to_dask_dataframe`
-   method nor handle other special cases.
+   method or handle other special cases.
 
-   The parallelism of Dask should be orthogonal to the choice of CPU/GPU.
+   Dask parallelism is orthogonal to the choice of CPU or GPU.
 
 -  It's easy to switch hardware.  By avoiding separate `dask-cudf` code paths
-   it's easier to add cuDF to an existing Dask+Pandas codebase if we get a GPU,
-   or remove cuDF and use Pandas if we want our code to be runnable by people
-   who don't have GPUs.
+   it's easier to add cuDF to an existing Dask+Pandas codebase to run on GPUs,
+   or to remove cuDF and use Pandas if we want our code to be runnable without GPUs.
 
-   We'll see more examples of this in the scaling section below.
+   There are more examples of this in the scaling section below.
 
 
 What's wrong with the example above
@@ -262,7 +259,7 @@ In general the answer is **many small things**.
 
 2.  Many operations that used to work in dask-cudf like groupby-aggregations
     and joins no longer work.  We're going to need to slightly modify many cuDF
-    APIs over the next couple months to more closely match their Pandas
+    APIs over the next couple of months to more closely match their Pandas
     equivalents.
 
 3.  I ran the timing cell twice because it currently takes a few seconds to
@@ -276,7 +273,7 @@ In general the answer is **many small things**.
     I suspect that there will by many more small changes like
     these necessary in the future.
 
-These problems are representative of dozens more similar issues.  They are are
+These problems are representative of dozens more similar issues.  They are
 all fixable and indeed, many are actively being fixed today by the [good folks
 working on RAPIDS](https://github.com/rapidsai/cudf/graphs/contributors).
 
@@ -290,7 +287,7 @@ stability improvements.  This will probably keep them busy for a week or two
 during which I don't expect to see much Dask + cuDF work going on other than
 planning.
 
-After that, and for the next couple months this seems to be their priority, so
+After that, Dask parallelism support will be a top priority, so
 I look forward to seeing some rapid progress here.
 
 
@@ -386,12 +383,12 @@ have similar (though less impressive) numbers to present.
 Analysis
 --------
 
-First, lets appreciate again that it's easy to test a wide variety of
+First, I want to emphasize again that it's easy to test a wide variety of
 architectures using this setup because of the Pandas API compatibility between
 all of the different projects.  We're seeing a wide range of performance (40x
 span) across a variety of different hardware with a wide range of cost points.
 
-Second lets note that this problem scales less well than our
+Second, note that this problem scales less well than our
 [previous example with CuPy](../../../2019/01/03/dask-array-gpus-first-steps),
 both on CPU and GPU.
 I suspect that this is because this example is also bound by I/O and not just
@@ -428,8 +425,7 @@ If the work above sounds interesting to you then come help!
 There is a lot of low-hanging and high impact work to do.
 
 If you're interested in being paid to focus more on these topics, then consider
-applying for a job.  The NVIDIA corporation is hiring around the use of Dask
-with GPUs.
+applying for a job.  NVIDIA's RAPIDS team is looking to hire engineers for Dask development with GPUs.
 
 -  [Senior Library Software Engineer - RAPIDS](https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/US-TX-Austin/Senior-Library-Software-Engineer---RAPIDS_JR1919608-1)
 
