@@ -72,9 +72,8 @@ Fortunately we're starting on a good foundation and
 can assemble much of this system from existing components:
 
 1.  The [cuDF](https://github.com/rapidsai/cudf) library aims to implement the
-    Pandas API on the GPU.  It gets good speedups (around 10x) on standard
-    operations like reading CSV files, filtering and aggregating columns,
-    joins, and so on.
+    Pandas API on the GPU.  It gets good speedups on standard operations like
+    reading CSV files, filtering and aggregating columns, joins, and so on.
 
     ```python
     import cudf  # looks and feels like Pandas, but runs on the GPU
@@ -401,7 +400,7 @@ At first one might think that this is because we're saturating disk read speeds.
 However two pieces of evidence go against that guess:
 
 -  NVIDIA folks familiar with my current hardware inform me that they're able to get
-   much more I/O when they're careful (TODO verify)
+   much higher I/O throughput when they're careful (TODO verify)
 -  The CPU scaling is similarly poor, despite the fact that it's obviously not
    reaching full I/O bandwidth
 
@@ -425,9 +424,7 @@ If the work above sounds interesting to you then come help!
 There is a lot of low-hanging and high impact work to do.
 
 If you're interested in being paid to focus more on these topics, then consider
-applying for a job.  NVIDIA's RAPIDS team is looking to hire engineers for Dask development with GPUs.
+applying for a job.  NVIDIA's RAPIDS team is looking to hire engineers for Dask
+development with GPUs and other data analytics library development projects.
 
 -  [Senior Library Software Engineer - RAPIDS](https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/US-TX-Austin/Senior-Library-Software-Engineer---RAPIDS_JR1919608-1)
-
-That's a fairly generic posting.  If you're interested the posting doesn't seem
-to fit then please apply anyway and we'll tweak things as necessary.
