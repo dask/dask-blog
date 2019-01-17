@@ -400,14 +400,12 @@ At first one might think that this is because we're saturating disk read speeds.
 However two pieces of evidence go against that guess:
 
 -  NVIDIA folks familiar with my current hardware inform me that they're able to get
-   much higher I/O throughput when they're careful (TODO verify)
+   much higher I/O throughput when they're careful
 -  The CPU scaling is similarly poor, despite the fact that it's obviously not
    reaching full I/O bandwidth
 
 Instead, it's likely that we're just not treating our disks and IO pipelines
-carefully.  Many simultaneous reads are causing contention, and (TODO need more
-information from people familiar with the DGX).
-
+carefully.
 
 We might consider working to think more carefully about data locality within a
 single machine.  Alternatively, we might just choose to use a smaller machine,
