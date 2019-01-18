@@ -15,15 +15,20 @@ Summary
 -------
 
 Dask DataFrame works well with pandas' new Extension Array interface, including
-third-party extension arrays.
+third-party extension arrays. This lets Dask
+
+1. easily support pandas' new extension arrays, like their new [nullable integer
+   array][intna]
+2. support third-party extension array arrays, like [cyberpandas's][cyberpandas]
+   `IPArray`
 
 Background
 ----------
 
 Pandas 0.23 introduced the [`ExtensionArray`][EA], a way to store things other
 than a simple NumPy array in a DataFrame or Series. Internally pandas uses this
-for data types that aren't handled natively by NumPy (datetimes with timezones,
-Categorical, and nullable integer arrays, to name a few).
+for data types that aren't handled natively by NumPy like datetimes with
+timezones, Categorical, or (the new!) nullable integer arrays.
 
 
 ```python
@@ -55,7 +60,7 @@ The Challenge
 
 Newer versions of pandas allow third-party libraries to write custom extension
 arrays. These arrays can be placed inside a DataFrame or Series, and work
-just as well as any extension arary defined within pandas itself. However,
+just as well as any extension array defined within pandas itself. However,
 third-party extension arrays provide a slight challenge for Dask.
 
 Recall: `dask.dataframe` is lazy. We use a familiar pandas-like API to build up
@@ -110,7 +115,7 @@ The Solution
 Rather than Dask guessing what values to use for the `_meta_nonempty`, extension
 array authors (or users) can register their extension dtype with Dask. Once
 registered, Dask will be able to generate the `_meta_nonempty`, and things
-should work fine from there. For example, we can register the dummy DecimalArray
+should work fine from there. For example, we can register the dummy `DecimalArray`
 that pandas uses for testing (this isn't part of pandas' public API) with Dask.
 
 ```python
@@ -149,7 +154,7 @@ A    decimal
 dtype: object
 ```
 
-And from there, the usual operations just as the would in pandas.
+And from there, the usual operations just as they would in pandas.
 
 ```python
 >>> from random import choices
@@ -171,11 +176,39 @@ The Real Lesson
 ---------------
 
 It's neat that Dask now supports extension arrays. But to me, the exciting thing
-is just how little work this took. The [PR implementing
-this](https://github.com/dask/dask/pull/4379/files) is quite short, just
-defining the object that third-parties register with, and using it to generate
-the data when dtype is detected. And for third-party extension array authors,
-the work is minimal.
+is just how little work this took. The
+[PR](https://github.com/dask/dask/pull/4379/files) implementing support for
+third-party extension arrays is quite short, just defining the object that
+third-parties register with, and using it to generate the data when dtype is
+detected. Supporting the three new extension arrays in pandas 0.24.0
+(`IntegerArray`, `PeriodArray`, and `IntervalArray`), takes a handful of lines
+of code
+
+```python
+@make_array_nonempty.register(pd.Interval):
+def _(dtype):
+    return IntervalArray.from_breaks([0, 1, 2], closed=dtype.closed)
+    
+
+@make_array_nonempty.register(pd.Period):
+def _(dtype):
+    return period_array([2000, 2001], freq=dtype.freq)
+    
+    
+@make_array_nonempty.register(_IntegerDtype):
+def _(dtype):
+    return integer_array([0, None], dtype=dtype)
+ 
+```
+
+Dask benefits directly from improvements made to pandas. Dask didn't have to
+build out a new parallel extension array interface, and reimplement all the new
+extension arrays using the parallel interface. We just re-used what pandas
+already did, and it fits into the existing Dask structure.
+
+For third-party extension array authors, like [cyberpandas][cyberpandas], the
+work is similarly minimal. They don't need to re-implement everything from the
+ground up, just to play well with Dask.
 
 This highlights the importance of one of the Dask project's core values: working
 with the community. If you visit [dask.org](https://dask.org), you'll see
@@ -187,7 +220,7 @@ and
 
 > Built with the broader community
 
-At the start of Dask, the developers *could* have gone off an re-written pandas
+At the start of Dask, the developers *could* have gone off and re-written pandas
 or NumPy from scratch to be parallel friendly (though we'd probably still be
 working on that part today, since that's such a massive undertaking). Instead,
 the Dask developers worked with the community, occasionally nudging it in
@@ -204,7 +237,9 @@ benefits from it. And third-party extension array authors can do the same for
 their extension arrays.
 
 If you're writing an ExtensionArray, make sure to add it to the [pandas
-ecosystem](http://pandas.pydata.org/pandas-docs/version/0.24/ecosystem.html#extension-data-types)
-page, and register it with Dask.
+ecosystem][ecosystem] page, and register it with Dask!
 
+[cyberpandas]: https://cyberpandas.readthedocs.io
 [EA]: http://pandas.pydata.org/pandas-docs/version/0.24/extending.html#extension-types
+[ecosystem]: http://pandas.pydata.org/pandas-docs/version/0.24/ecosystem.html#extension-data-types
+[intna]: http://pandas.pydata.org/pandas-docs/version/0.24/whatsnew/v0.24.0.html#optional-integer-na-support
