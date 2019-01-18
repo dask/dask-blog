@@ -130,13 +130,15 @@ mpirun -np 5 python my_dask_script.py
 What just happened
 ------------------
 
-So MPI started up and ran our script.  The
-[dask-mpi](https://dask-mpi.readthedocs.io/en/latest/) project set a Dask
-scheduler on rank 0, a bunch of workers on ranks 2+, and gave control back to
-the rest of our script for the client code, which we use to drive the
-computation.
+So MPI started up and ran our script.
+The [dask-mpi](https://dask-mpi.readthedocs.io/en/latest/) project set a Dask
+scheduler on rank 0, runs our client code on rank 1, and then runs a bunch of workers on ranks 2+.
 
-Our client code created a dask array, though presumably here it would read in
+-  Rank 0: Runs a Dask scheduler
+-  Rank 1: Runs our script
+-  Ranks 2+: Run Dask workers
+
+Our script then created a Dask array, though presumably here it would read in
 data from some source, do more complex Dask manipulations before continuing on.
 
 We then wait until all of the Dask work has finished and is in a quiet state.
@@ -158,7 +160,7 @@ for key, workers in who_has.items():
 
 Admittedly, this code is gross, and not particularly friendly or obvious to
 non-Dask experts (or even Dask experts themselves, I had to steal this from the
-[Dask XGBoost project](https://dask-mpi.readthedocs.io/en/latest/), which does
+[Dask XGBoost project](http://ml.dask.org/xgboost.html), which does
 the same trick).
 
 But after that we just call our MPI library's initialize function,
@@ -166,7 +168,7 @@ But after that we just call our MPI library's initialize function,
 [Futures interface](http://docs.dask.org/en/latest/futures.html).
 That function gets the data directly from local memory (the Dask workers and
 MPI ranks are in the same process), and does whatever the MPI application
-wnats.
+wants.
 
 
 Future work
