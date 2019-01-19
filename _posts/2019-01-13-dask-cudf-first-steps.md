@@ -243,7 +243,7 @@ In general the answer is **many small things**.
 
 1.  The `cudf.read_csv` function doesn't yet support reading chunks from a
     single CSV file, and so doesn't work well with very large CSV files.  We
-    had to split our large CSV files into many smalle CSV files first with
+    had to split our large CSV files into many smaller CSV files first with
     normal Dask+Pandas:
 
     ```python
