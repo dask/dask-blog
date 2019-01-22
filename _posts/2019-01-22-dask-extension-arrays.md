@@ -2,7 +2,6 @@
 layout: post
 title: Extension Arrays in Dask DataFrame
 author: Tom Augspurger
-tagline: Extension Arrays in Dask DataFrame
 tags: [dask, dataframe]
 theme: twitter
 ---
@@ -188,17 +187,17 @@ of code
 @make_array_nonempty.register(pd.Interval):
 def _(dtype):
     return IntervalArray.from_breaks([0, 1, 2], closed=dtype.closed)
-    
+
 
 @make_array_nonempty.register(pd.Period):
 def _(dtype):
     return period_array([2000, 2001], freq=dtype.freq)
-    
-    
+
+
 @make_array_nonempty.register(_IntegerDtype):
 def _(dtype):
     return integer_array([0, None], dtype=dtype)
- 
+
 ```
 
 Dask benefits directly from improvements made to pandas. Dask didn't have to
