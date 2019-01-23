@@ -21,7 +21,7 @@ and gives examples of what does and doesn't work today.
 We end with some notes on scaling performance.
 
 You can also view the experiment in this post as
-[a notebook](https://github.com/dask/dask-blog/blob/0637e68d78cdf1332ee72275061bf3b9a1625d55/_posts/2019-01-13-dask-cudf-first-steps.md).
+[a notebook](https://gist.github.com/mrocklin/4b1b80d1ae07ec73f75b2a19c8e90e2e).
 
 And here is a table of results:
 
