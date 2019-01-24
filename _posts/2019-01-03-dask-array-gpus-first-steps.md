@@ -3,7 +3,7 @@ layout: post
 title: GPU Dask Arrays, first steps
 tagline: throwing Dask and CuPy together
 author: Matthew Rocklin
-tags: [Programming, Python, scipy, dask]
+tags: [GPU, array, cupy]
 theme: twitter
 ---
 {% include JB/setup %}

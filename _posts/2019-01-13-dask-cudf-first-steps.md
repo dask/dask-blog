@@ -2,7 +2,7 @@
 layout: post
 title: "Dask, Pandas, and GPUs: first steps"
 author: Matthew Rocklin
-tags: [RAPIDS, GPU, Pandas]
+tags: [GPU, Pandas]
 theme: twitter
 ---
 {% include JB/setup %}
