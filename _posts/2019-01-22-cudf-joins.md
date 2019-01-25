@@ -173,3 +173,33 @@ comes of it, both for Dask and for high performance Python generally.
 It's worth pointing out that this effort won't just help GPU users.  It should
 help anyone on advanced networking hardware, including the mainstream
 scientific HPC community.
+
+
+Summary
+-------
+
+Single-node Mutli-GPU joins have a lot of promise.  In fact, earlier RAPIDS
+developers got this running much faster than I was able to do above through the
+clever communication tricks I briefly mentioned.  The main purpose of this post
+is to provide a benchmark for joins that we can use in the future, and to
+highlight when communication can be essential in parallel computing.
+
+Now that GPUs have accelerated the computation time of each of our chunks of
+work we increasingly find that other systems become the bottleneck.  We didn't
+care as much about communication before because computational costs were
+comparable.  Now that computation is an order of magnitude cheaper, other
+aspects of our stack become much more important.
+
+I'm looking forward to seeing where this goes.
+
+
+### Come help!
+
+If the work above sounds interesting to you then come help!
+There is a lot of low-hanging and high impact work to do.
+
+If you're interested in being paid to focus more on these topics, then consider
+applying for a job.  NVIDIA's RAPIDS team is looking to hire engineers for Dask
+development with GPUs and other data analytics library development projects.
+
+-  [Senior Library Software Engineer - RAPIDS](https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/US-TX-Austin/Senior-Library-Software-Engineer---RAPIDS_JR1919608-1)
