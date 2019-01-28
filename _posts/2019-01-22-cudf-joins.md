@@ -128,11 +128,11 @@ throughput of the system, which is typical for TCP-on-localhost in Python.
 
 We can also look more deeply at the computational costs in Dask's
 flamegraph-style plot.  This shows which lines of our functions were taking up
-the most time (down to the Python level at least).  We see that ...
+the most time (down to the Python level at least).
 
-TODO: include iframed bokehplot
-
-TODO: analyze results
+<iframe src="https://raw.githubusercontent.com/mrocklin/raw-host/gh-pages/dask-cudf-join-profile.html"
+        width="800"
+        height="400"></iframe>
 
 
 Plans for efficient communication
