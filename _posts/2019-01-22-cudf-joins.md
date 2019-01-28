@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Single-Node Multi-GPU Dataframe Joins
-tagline: a first pass
 author: Matthew Rocklin
 tags: [dataframe, GPU]
 theme: twitter
@@ -14,7 +13,8 @@ Summary
 
 We experiment with single-node multi-GPU joins using cuDF and Dask.  We find
 that the in-GPU computation is faster than communication.  We also present
-context and plans for near-future work.
+context and plans for near-future work, including improving high performance
+communication in Dask with UCX.
 
 [Here is a notebook of the experiment in this post](https://gist.github.com/mrocklin/6e2c33c33b32bc324e3965212f202f66)
 
