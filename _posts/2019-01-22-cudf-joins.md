@@ -114,7 +114,7 @@ When we look at Dask's task stream plot we see that each of our eight threads
 (red is communication time).  The actual merge and concat tasks are quite fast
 relative to the data transfer time.
 
-<iframe src="https://raw.githubusercontent.com/mrocklin/raw-host/gh-pages/dask-cudf-joins.html"
+<iframe src="https://matthewrocklin.com/raw-host/dask-cudf-joins.html"
         width="800"
         height="400"></iframe>
 
@@ -130,9 +130,14 @@ We can also look more deeply at the computational costs in Dask's
 flamegraph-style plot.  This shows which lines of our functions were taking up
 the most time (down to the Python level at least).
 
-<iframe src="https://raw.githubusercontent.com/mrocklin/raw-host/gh-pages/dask-cudf-join-profile.html"
+<iframe src="http://matthewrocklin.com/raw-host/dask-cudf-join-profile.html"
         width="800"
         height="400"></iframe>
+
+This [Flame graph](http://www.brendangregg.com/flamegraphs.html) shows which
+lines of cudf code we spent time on while computing (excluding the main
+communication costs mentioned above).  It may be interesting for those trying
+to further optimize performance.
 
 
 Plans for efficient communication
