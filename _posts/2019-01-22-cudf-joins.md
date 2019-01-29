@@ -137,7 +137,10 @@ the most time (down to the Python level at least).
 This [Flame graph](http://www.brendangregg.com/flamegraphs.html) shows which
 lines of cudf code we spent time on while computing (excluding the main
 communication costs mentioned above).  It may be interesting for those trying
-to further optimize performance.
+to further optimize performance.  It shows that most of our costs are in memory
+allocation.  Like communication, this has actually also been fixed in RAPIDS'
+optional memory management pool, it just isn't default yet, so I didn't use it
+here.
 
 
 Plans for efficient communication
