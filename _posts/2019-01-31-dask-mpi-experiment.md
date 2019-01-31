@@ -1,8 +1,9 @@
 ---
 layout: post
-title: Pass data from Dask to MPI
+title: Running Dask and MPI programs together
+tagline: an experiment
 author: Matthew Rocklin
-tags: [RAPIDS, GPU, Pandas]
+tags: [MPI]
 theme: twitter
 ---
 {% include JB/setup %}
@@ -21,6 +22,9 @@ We give motivation and a complete digestible example.
 
 Motivation
 ----------
+
+*Disclaimer: Nothing in this post is polished or production ready.  This is an
+experiment designed to start conversation.  No long-term support is offered.*
 
 We often get the following question:
 
