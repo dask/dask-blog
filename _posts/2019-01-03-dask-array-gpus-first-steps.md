@@ -195,7 +195,7 @@ First, this is my first time playing with an 40-core system.  I was surprised
 to see that many cores.  I was also pleased to see that Dask's normal threaded
 scheduler happily saturates many cores.
 
-<img src="{{BASE_PATH}}/images/python-gil-8000-percent.png" width="100%">
+<img src="https://matthewrocklin.com/blog/images/python-gil-8000-percent.png" width="100%">
 
 Although later on it did dive down to around 5000-6000%, and if you do the math
 you'll see that we're not getting a 40x speedup.  My *guess* is that
