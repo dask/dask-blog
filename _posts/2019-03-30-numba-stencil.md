@@ -101,11 +101,11 @@ at Python speeds.
 
 ```python
 x = np.ones((100, 100))
-timeit f(x)
+timeit _smooth(x)
 527 ms ± 44.1 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 ```
 
-But if JIT compile this function with Numba, then it runs more quickly.
+But if we JIT compile this function with Numba, then it runs more quickly.
 
 ```python
 @numba.njit
@@ -116,7 +116,7 @@ def smooth(x):
 70.8 µs ± 6.38 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
 ```
 
-For those counting, that's over 1000x faster.
+For those counting, that's over 1000x faster!
 
 Dask Array
 ----------
@@ -184,9 +184,9 @@ def smooth(x, out):
 This function knows that it consumes a 2d array of int8's and produces a 2d
 array of int8's of the same dimensions.
 
-This sort of annotation is a small change, but it lets other systems like Dask
+This sort of annotation is a small change, but it gives other systems like Dask
 enough information to use it intelligently.  Rather than call functions like
-map_blocks, we can just use the function directly, as if our Dask Array was
+`map_blocks`, we can just use the function directly, as if our Dask Array was
 just a very large NumPy array.
 
 ```python
