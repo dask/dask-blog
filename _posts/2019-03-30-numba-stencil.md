@@ -153,7 +153,6 @@ like a NumPy array.
 import dask_image
 x = dask_image.imread('/path/to/*.png')  # a large lazy array of all of our images
 y = x.map_blocks(smooth, dtype='int8')
-TODO: write
 ```
 
 And then because each of the chunks of a Dask array are just NumPy arrays, we
