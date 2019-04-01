@@ -118,6 +118,9 @@ def smooth(x):
 
 For those counting, that's over 1000x faster!
 
+*Note: this function already exists as `scipy.ndimage.uniform_filter`, which
+operates at the same speed.*
+
 Dask Array
 ----------
 
