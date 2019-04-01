@@ -53,7 +53,9 @@ y = smooth(x)
 # dask.array<transpose, shape=(1000000, 1000, 1000), dtype=int8, chunksize=(125, 1000, 1000)>
 ```
 
-Lets break this down a bit
+Note: the `smooth` function above is more commonly referred to as the 2D mean filter in the image processing community.
+
+Now, lets break this down a bit
 
 
 Numba Stencils
