@@ -325,3 +325,13 @@ x = dask_image.io.imread('/path/to/*.png')
 y = smooth(x)
 dask_image.io.imsave(y, '/path/to/out/*.png')
 ```
+
+Update: Now with GPUs!
+----------------------
+
+After writing this blogpost I did a small update where I used
+[numba.cuda.jit](https://numba.pydata.org/numba-doc/dev/cuda/index.html)
+to implement the same smooth function on a GPU to achieve a 200x speedup with
+only a modest increase to code complexity.
+
+[That notebook is here](https://gist.github.com/mrocklin/9272bf84a8faffdbbe2cd44b4bc4ce3c).
