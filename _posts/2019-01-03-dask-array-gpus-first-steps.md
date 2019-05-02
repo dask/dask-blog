@@ -32,7 +32,7 @@ The computation and communication patterns are simple,
 reflecting the simplicity commonly found in data processing workloads.
 
 What *is* impressive is that we were able to create a distributed parallel GPU
-array quickly by composing these three existing libraries:
+array quickly by composing these four existing libraries:
 
 1.  [CuPy](https://cupy.chainer.org/) provides a partial implementation of
     Numpy on the GPU.
@@ -45,7 +45,10 @@ array quickly by composing these three existing libraries:
 
 3.  The [Dask distributed](https://distributed.dask.org) task scheduler runs
     those algorithms in parallel, easily coordinating work across many CPU
-    cores or GPUs.
+    cores.
+
+4. The [Dask CUDA](https://github.com/rapidsai/dask-cuda) to extend Dask
+   distributed with GPU support.
 
 These tools already exist. We had to connect them together with a small amount
 of glue code and minor modifications.  By mashing these tools together we can
@@ -154,7 +157,8 @@ x = rs.normal(10, 1, size=(500000, 500000), chunks=(10000, 10000))
 ### Multi GPU timing
 
 ```python
-from dask.distributed import Client, LocalCUDACluster  # this is experimental
+from dask_cuda import LocalCUDACluster
+from dask.distributed import Client
 
 cluster = LocalCUDACluster()
 client = Client(cluster)
