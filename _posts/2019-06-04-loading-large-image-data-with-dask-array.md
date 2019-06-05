@@ -49,7 +49,7 @@ custom database solution, or they may opt to store it in the cloud. Not all
 datasets within the same group may be treated the same for a variety of
 reasons. In short, this means loading data is a hard and expensive problem.
 
-Despite data being stored in different ways, often group want to reapply the
+Despite data being stored in many different ways, often groups want to reapply the
 same analytical pipeline to these datasets. However if the data pipeline is
 tightly coupled to a particular way of loading the data for later analytical
 steps, it may be very difficult if not impossible to reuse an existing
