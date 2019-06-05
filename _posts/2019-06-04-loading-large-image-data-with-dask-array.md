@@ -67,7 +67,7 @@ pipeline.
 Loading image data with Dask
 ----------------------------
 
-A pretty typical case to see is a large directory of image files. In particular
+A typical case is a large directory of image files. In particular,
 TIFF files are quite common, though other formats could show up as well. It is
 common to see a naming structure that mirrors that shown below. The `<i>`
 represent different numbers.
