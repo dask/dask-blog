@@ -16,7 +16,7 @@ out smaller acquisitions into many small files. These files can tile a larger
 space, subsample from a larger time period, and may contain multiple channels.
 The acquistion techniques themselves are often state of the art and constantly
 pushing the envelope in term of how large a field of view can be acquired, at
-what resolution, and what quality (also known as signal-to-noise ratio).
+what resolution, and what quality.
 
 Once acquired this data presents a number of challenges. Algorithms often
 designed and tested to work on very small pieces of this data need to be scaled
