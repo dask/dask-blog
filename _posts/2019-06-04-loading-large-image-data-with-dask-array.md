@@ -76,7 +76,7 @@ represent different numbers.
 mydata_ch<i>_<j>t_<k>x_<l>y_<m>z.tif
 ```
 
-To load a single one of these a user might right some code like this:
+To load a single image, a user might write some code like the following:
 
 ```python
 from skimage.io import imread
