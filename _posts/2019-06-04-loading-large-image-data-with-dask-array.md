@@ -1,5 +1,5 @@
 ---
-layout: widepost
+layout: post
 title: Exploring loading large image data with Dask Array
 author: John Kirkham
 draft: true
