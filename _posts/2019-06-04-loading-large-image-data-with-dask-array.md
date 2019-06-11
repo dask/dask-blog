@@ -69,8 +69,7 @@ Loading image data with Dask
 
 A typical case is a large directory of image files. In particular,
 TIFF files are quite common, though other formats could show up as well. It is
-common to see a naming structure that mirrors that shown below. The `<i>`
-represent different numbers.
+common to see a naming structure that mirrors that shown below. Each filename then may indicate a channel, timestep, and spatial location with the `<i>` being some numeric values (possibly with units). Individual filenames may have more or less information and may notate it differently than we have.
 
 ```
 mydata_ch<i>_<j>t_<k>x_<l>y_<m>z.tif
