@@ -126,7 +126,7 @@ can easily extend this to more dimensions.
 ```python
 data = []
 for fn in files:
-    data.append(dask.array.imread(fn))
+    data.append(imread(fn))
 data = dask.array.block(data)
 ```
 
