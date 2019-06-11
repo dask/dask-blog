@@ -116,6 +116,9 @@ If we want to handle loading some other kind of data, we can take our own
 loading function and combine it with `delayed`. This way we can handle
 operations like reading from a database or requesting data from the cloud.
 
+Combining data loaded with Dask
+-------------------------------
+
 Thus far we have only showed how one might load one chunk. To load multiple
 chunks we would need to iterate over our data some how and combine the chunks
 together. Suppose we have one dimension to combine chunks along, we might write
