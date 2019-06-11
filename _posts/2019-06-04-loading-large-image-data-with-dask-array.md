@@ -132,10 +132,9 @@ data = dask.array.block(data)
 
 Once we have performed this operation, we now have a Dask Array. All the
 familiar operations that we have seen from NumPy can be used. Here's the [full
-list of operations in the docs](
-https://docs.dask.org/en/latest/array-api.html). This way we can leverage a
-familiar API that we know from NumPy to operate more generally on our N-D image
-data.
+list of operations in the docs]( https://docs.dask.org/en/latest/array-api.html
+). This way we can leverage a familiar API that we know from NumPy to operate
+more generally on our N-D image data.
 
 Future Work
 -----------
