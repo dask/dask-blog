@@ -14,7 +14,7 @@ Series Overview
 A common case in fields that acquire large amounts of imaging data is to write
 out smaller acquisitions into many small files. These files can tile a larger
 space, subsample from a larger time period, and may contain multiple channels.
-The acquistion techniques themselves are often state of the art and constantly
+The acquisition techniques themselves are often state of the art and constantly
 pushing the envelope in term of how large a field of view can be acquired, at
 what resolution, and what quality.
 
@@ -69,7 +69,7 @@ Loading image data with Dask
 
 A typical case is a large directory of image files. In particular,
 TIFF files are quite common, though other formats could show up as well. It is
-common to see a naming structure that mirrors that shown below. Each filename then may indicate a channel, timestep, and spatial location with the `<i>` being some numeric values (possibly with units). Individual filenames may have more or less information and may notate it differently than we have.
+common to see a naming structure that mirrors that shown below. Each filename then may indicate a channel, time step, and spatial location with the `<i>` being some numeric values (possibly with units). Individual filenames may have more or less information and may notate it differently than we have.
 
 ```
 mydata_ch<i>_<j>t_<k>x_<l>y_<m>z.tif
