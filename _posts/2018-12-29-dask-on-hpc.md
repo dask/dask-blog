@@ -9,9 +9,9 @@ theme: twitter
 ---
 {% include JB/setup %}
 
-We analyze large datasets on HPC systems with Dask,
-a parallel computing library that integrates well with the existing Python software ecosystem,
-and works comfortably with native HPC hardware.
+We analyze large datasets on HPC systems with Dask, a parallel computing
+library that integrates well with the existing Python software ecosystem, and
+works comfortably with native HPC hardware.
 
 This article explains why this approach makes sense for us.
 Our motivation is to share our experiences with our colleagues,
@@ -30,7 +30,7 @@ multi-node multiprocessing.  This makes it easy for our existing user base to
 get up to speed.
 
 By abstracting the parallelism away from the user/developer, our analysis tools can be written by computer science non-experts, such as the scientists
-themselves, meaning that our software engineers can take on a more of a supporting role than a leadership role.
+themselves, meaning that our software engineers can take on more of a supporting role than a leadership role.
 Experience has shown that, with tools like Dask and Jupyter, scientists spend less time coding and more time thinking about science, as they should.
 
 
@@ -148,6 +148,7 @@ While Dask can theoretically handle this scale, it does tend to slow down a bit,
 reducing the pleasure of interactive large-scale computing. Handling millions of tasks can lead to tens of seconds latency before a computation actually starts.  This is perfectly fine for our Dask batch jobs, but tends to make the interactive Jupyter users frustrated.
 
 Much of this slowdown is due to task-graph construction time and centralized scheduling, both of which can be accelerated through a variety of means.  We expect that, with some cleverness, we can increase the scale at which Dask continues to run smoothly by another order of magnitude.
+
 
 ### 4.  ~~Launch Batch Jobs with MPI~~
 
