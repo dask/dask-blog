@@ -87,27 +87,34 @@ a = imread("mydata_ch<i>_<j>t_<k>x_<l>y_<m>z.tif")
 
 While this works fine for reading a single image into memory, this will quickly
 become prohibitive once we try to load more data than we have memory. So we
-might replace this with something like this.
+might use `delayed` to replace this with something like this. We can sub in the
+shape and type from a single file that we have inspected. This could be used
+for multiple files if we know them to be uniform and of the same type. This
+gives us a Dask Array that represents the data on disk for us without using up
+our memory to store it. Pulling from the data on demand.
 
 ```python
-from dask.array.image import imread
+import dask.array as da
+from dask.delayed import delayed
+from skimage.io import imread
+a = da.from_delayed(delayed(imread)("mydata_ch<i>_<j>t_<k>x_<l>y_<m>z.tif"),
+                    <shape>,
+                    <dtype>)
+```
+
+If we want to simplify this a bit, we can use a pre-rolled implementation that
+does this work for us like dask-image's `imread`. This combines the simplicity
+of an API like scikit-image's with the benefits of leveraging Dask to manage
+the larger data.
+
+```python
+from dask_image.imread import imread
 a = imread("mydata_ch<i>_<j>t_<k>x_<l>y_<m>z.tif")
 ```
 
-This offloads the actual image reading to scikit-image under the hood (much
-like what happened explicitly before). Though this doesn't keep the data in
-memory. Instead we briefly load the image once to figure out the metadata
-(shape and type of the array loaded) and then drop it from memory. Once we
-actually need this data for computation of some kind, it will be loaded back
-in.
-
-Though it's possible we run into data that we want to load that scikit-image
-doesn't know to handle. In this case we have a few options. Though one pretty
-easy one is we could supply our own [`imread` function for Dask to use](
-https://docs.dask.org/en/latest/array-api.html#dask.array.image.imread ). This
-way we could manage the subtleties of loading our own data image data format.
-It might involve accessing some database to pull some image data out or could
-involve interacting with cloud storage to pull some data down.
+If we want to handle loading some other kind of data, we can take our own
+loading function and combine it with `delayed`. This way we can handle
+operations like reading from a database or requesting data from the cloud.
 
 Thus far we have only showed how one might load one chunk. To load multiple
 chunks we would need to iterate over our data some how and combine the chunks
