@@ -224,9 +224,3 @@ formats, but not all general image formats. It would be useful to have a
 community standard for reading image metadata quickly ( [ imageio/imageio#382
 ]( https://github.com/imageio/imageio/issues/382 ) ). This could form a basis
 for a new standard Dask `imread` function.
-
-* Note next steps with the data
-* Other things to note?
-
-
-* Do we want to reach out to the community here?
