@@ -214,10 +214,6 @@ community standard for reading image metadata quickly ( [ imageio/imageio#382
 ]( https://github.com/imageio/imageio/issues/382 ) ). This could form a basis
 for a new standard Dask `imread` function.
 
-If we have specialized
-hardware lying around (like a GPU cluster), we might consider moving our loaded
-data to GPU memory and leveraging GPU computations on our data.
-
 * Note Zarr - standardizing multifile formats
 * Note next steps with the data
 * Other things to note?
