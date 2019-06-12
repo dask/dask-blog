@@ -196,14 +196,15 @@ more generally on our N-D image data.
 Future Work
 -----------
 
-Going forward it might make sense to wrap up this sort of operation behind a
-standard API. We might also find that loading the full image data to parse
-metadata is slow during graph construction. To workaround this, we might use
-[dask-image's `imread`](
-https://dask-image.readthedocs.io/en/latest/dask_image.imread.html ), which is
-optimized for this use case. Though it may be more generally useful if the
-community had [a standard way of parsing metadata quickly](
-https://github.com/imageio/imageio/issues/382 ). If we have specialized
+Reading full images to inspect metadata (like shape and type) is very
+expensive. Under the hood implementations like dask-image's `imread` read only
+the metadata instead of the full image. This works with some scientific image
+formats, but not all general image formats. It would be useful to have a
+community standard for reading image metadata quickly ( [ imageio/imageio#382
+]( https://github.com/imageio/imageio/issues/382 ) ). This could form a basis
+for a new standard Dask `imread` function.
+
+If we have specialized
 hardware lying around (like a GPU cluster), we might consider moving our loaded
 data to GPU memory and leveraging GPU computations on our data.
 
