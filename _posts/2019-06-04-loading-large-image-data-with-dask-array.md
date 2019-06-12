@@ -225,7 +225,6 @@ community standard for reading image metadata quickly ( [ imageio/imageio#382
 ]( https://github.com/imageio/imageio/issues/382 ) ). This could form a basis
 for a new standard Dask `imread` function.
 
-* Note Zarr - standardizing multifile formats
 * Note next steps with the data
 * Other things to note?
 
