@@ -193,6 +193,16 @@ list of operations in the docs]( https://docs.dask.org/en/latest/array-api.html
 ). This way we can leverage a familiar API that we know from NumPy to operate
 more generally on our N-D image data.
 
+If we have special hardware lying around like a few GPUs, we can move the data
+over to it and perform computations with a library like CuPy, which mimics
+NumPy very closely. Thus benefitting from the same operations listed above, but
+with the added performance of GPUs behind them.
+
+```python
+import cupy as cp
+a_gpu = a.map_blocks(cp.asarray)
+```
+
 Future Work
 -----------
 
