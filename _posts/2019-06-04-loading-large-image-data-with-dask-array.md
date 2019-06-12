@@ -203,6 +203,17 @@ import cupy as cp
 a_gpu = a.map_blocks(cp.asarray)
 ```
 
+Saving Data
+-----------
+
+To simplify data loading in the future, we could store this in a large chunked
+array format like [Zarr]( https://zarr.readthedocs.io/ ) using [`to_zarr`](
+http://docs.dask.org/en/latest/array-api.html#dask.array.Array.to_zarr ).
+
+```python
+a.to_zarr("mydata.zarr")
+```
+
 Future Work
 -----------
 
