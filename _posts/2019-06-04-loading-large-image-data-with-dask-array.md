@@ -119,18 +119,71 @@ operations like reading from a database or requesting data from the cloud.
 Combining data loaded with Dask
 -------------------------------
 
-Thus far we have only showed how one might load one chunk. To load multiple
-chunks we would need to iterate over our data some how and combine the chunks
-together. Suppose we have one dimension to combine chunks along, we might write
-some code that looks like that below. We would load all of the chunks of data
-we have join them together with Dask Array's `block` to form a larger array. We
-can easily extend this to more dimensions.
+Thus far we have only showed how one might load one image file. However we
+generally have many such files. At a first pass we might try to load up the
+collection of files in a list.
 
 ```python
-data = []
-for fn in files:
-    data.append(imread(fn))
-data = dask.array.block(data)
+from dask_image.imread import imread
+l = [imread(fn) for fn in myfiles]
+```
+
+This is fine, but it's not that easy to manage. It would be better if we could
+turn this into one Dask Array instead of a list of many. We have a couple
+options. If we want to combine our Dask Arrays along an *existing* axis, we can
+use [`concatenate`](
+http://docs.dask.org/en/latest/array-api.html#dask.array.concatenate ).
+
+
+```python
+import dask.array as da
+from dask_image.imread import imread
+
+a = da.concatenate([imread(fn) for fn in myfiles])
+```
+
+Alternatively if we want to combine multiple arrays along a *new* axis, we can
+use [`stack`]( http://docs.dask.org/en/latest/array-api.html#dask.array.stack
+). This looks pretty similar.
+
+```python
+import dask.array as da
+from dask_image.imread import imread
+
+a = da.stack([imread(fn) for fn in myfiles])
+```
+
+Both of these provide an `axis` argument. So we can specify which axis to join
+along or where to add a new axis. By default `axis=0`.
+
+```python
+import dask.array as da
+from dask_image.imread import imread
+
+a = da.concatenate([imread(fn) for fn in myfiles], axis=-1)
+```
+
+This works fine for combining along a single axis. However if we need to
+combine across multiple we need to perform multiple concatenate steps.
+Fortunately there is a simpler option [`block`](
+http://docs.dask.org/en/latest/array-api.html#dask.array.block ), which can
+concatenate along multiple axes at once.
+
+```python
+import dask.array as da
+from dask_image.imread import imread
+
+a = da.block([[imread(fn00), imread(fn01)],
+              [imread(fn10), imread(fn11)]])
+```
+
+Though we know our original data looked a bit more like this
+`mydata_<i>x_<j>y.tif`. Using block with this format might
+looking something like this.
+
+```python
+from dask_image.imread import imread
+a = da.block([[imread("mydata_{i}x_{j}y.tif") for i in xs] for j in ys])
 ```
 
 Once we have performed this operation, we now have a Dask Array. All the
