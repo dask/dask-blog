@@ -4,7 +4,6 @@ title: Dask on HPC
 tagline: what works well, and what needs work
 author: Dharhas Pothina (Army ERDC), Guillaume Eynard-Bontemps (CNES), Kevin Paul (NCAR), Matthew Rocklin (NVIDIA), Willi Rath (GEOMAR), Joe Hamman (NCAR)
 tags: [Programming, Python, scipy, dask]
-draft: true
 theme: twitter
 ---
 {% include JB/setup %}
