@@ -103,9 +103,10 @@ a = da.from_delayed(delayed(imread)("mydata_ch<i>_<j>t_<k>x_<l>y_<m>z.tif"),
 ```
 
 If we want to simplify this a bit, we can use a pre-rolled implementation that
-does this work for us like dask-image's `imread`. This combines the simplicity
-of an API like scikit-image's with the benefits of leveraging Dask to manage
-the larger data.
+does this work for us like [dask-image's `imread`](
+https://dask-image.readthedocs.io/en/latest/dask_image.imread.html ). This
+combines the simplicity of an API like scikit-image's with the benefits of
+leveraging Dask to manage the larger data.
 
 ```python
 from dask_image.imread import imread
