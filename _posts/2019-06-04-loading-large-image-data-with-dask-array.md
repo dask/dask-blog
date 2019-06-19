@@ -13,7 +13,7 @@ Executive Summary
 
 This post explores simple workflows to load large stacks of image data with Dask array.
 
-In particular, we start with a directory full of TIF files of images like the
+In particular, we start with a directory full of TIFF files of images like the
 following:
 
 ```
@@ -124,7 +124,7 @@ Series Overview
 
 A common case in fields that acquire large amounts of imaging data is to write
 out smaller acquisitions into many small files. These files can tile a larger
-space, subsample from a larger time period, and may contain multiple channels.
+space, sub-sample from a larger time period, and may contain multiple channels.
 The acquisition techniques themselves are often state of the art and constantly
 pushing the envelope in term of how large a field of view can be acquired, at
 what resolution, and what quality.
@@ -214,7 +214,7 @@ skimage.io.imshow(sample[:, :, 0])
 
 ```python
 plt.figure(figsize=(10, 10))
-skimage.io.imshow(sample[:, :, 0])
+skimage.io.imshow(sample[:, 0, :])
 ```
 
 <img src="https://raw.githubusercontent.com/mrocklin/raw-host/gh-pages/images/aollsm-sample-2.png"
@@ -222,7 +222,7 @@ skimage.io.imshow(sample[:, :, 0])
 
 ```python
 plt.figure(figsize=(10, 10))
-skimage.io.imshow(sample[:, :, 0])
+skimage.io.imshow(sample[0, :, :])
 ```
 
 <img src="https://raw.githubusercontent.com/mrocklin/raw-host/gh-pages/images/aollsm-sample-3.png"
@@ -232,8 +232,7 @@ skimage.io.imshow(sample[:, :, 0])
 ### Investigate Filename Structure
 
 These are slices from only one chunk of a much larger aggregate image.
-Our main task in dealing with large image stacks is how to arrange the pieces
-back together.
+Our interest here is combining the pieces into a large image stack.
 It is common to see a naming structure in the filenames. Each
 filename then may indicate a channel, time step, and spatial location with the
 `<i>` being some numeric values (possibly with units). Individual filenames may
@@ -256,7 +255,8 @@ for fn in filenames:
 ```
 
 But in practice large image data is often too large to fit into memory, so we
-use Dask.
+need to be a bit more clever in order to handle it efficiently.  One approach
+here is to use Dask, which handles larger-than-memory workloads easily.
 
 
 ### Lazily load images with Dask Array
@@ -276,6 +276,10 @@ lazy_arrays = [dask.delayed(skimage.io.imread)(fn) for fn in filenames]
 lazy_arrays = [da.from_delayed(x, shape=sample.shape, dtype=sample.dtype)
                for x in lazy_arrays]
 ```
+
+*Note: here we're assuming that all of the images have the same shape and dtype
+as the sample file that we loaded above.  This is not always the case.  See the
+`dask_image` note below in the Future Work section for an alternative.*:
 
 We haven't yet stitched these together.  We have hundreds of single-chunk Dask
 arrays, each of which lazily loads a single 3d chunk of data from disk. Lets look at a single array.
@@ -350,7 +354,7 @@ and
 [da.stack](https://docs.dask.org/en/latest/array-api.html#dask.array.stack).
 
 
-Here we concatenate the first ten dask arrays along a few axes, to get an
+Here we concatenate the first ten Dask arrays along a few axes, to get an
 easier-to-understand picture of how this looks.  Take a look both at how the
 shape changes as we change the `axis=` parameter both in the table on the left
 and the image on the right.
@@ -712,7 +716,7 @@ We now do the following:
 -  See how many files are in each of our relevant dimensions
 -  Allocate a NumPy object-dtype array of the appropriate size, where each
    element of this array will hold a single-chunk Dask array
--  Go through our filenames and insert the proper dask array into the right
+-  Go through our filenames and insert the proper Dask array into the right
    position
 -  Call `da.block` on the result
 
@@ -1051,7 +1055,7 @@ The workload above is generic and straightforward.  It works well in simple
 cases and also extends well to more complex cases, providing you're willing to
 write some for-loops and parsing code around your custom logic.  It works on a
 single small-scale laptop as well as a large HPC or Cloud cluster.  If you have
-a function that turns a filename into a NumPy array, you can genreate a large
+a function that turns a filename into a NumPy array, you can generate large
 lazy Dask array using that function, [Dask
 Delayed](https://docs.dask.org/en/latest/delayed.html) and [Dask
 Array](https://docs.dask.org/en/latest/array.html).
@@ -1079,7 +1083,7 @@ accessibility and user base of these tools.
 
 If we have special hardware lying around like a few GPUs, we can move the data
 over to it and perform computations with a library like CuPy, which mimics
-NumPy very closely. Thus benefitting from the same operations listed above, but
+NumPy very closely. Thus benefiting from the same operations listed above, but
 with the added performance of GPUs behind them.
 
 ```python
