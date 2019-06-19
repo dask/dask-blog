@@ -239,7 +239,7 @@ filename then may indicate a channel, time step, and spatial location with the
 have more or less information and may notate it differently than we have.
 
 ```
-mydata_ch<i>_<j>t_<k>x_<l>y_<m>z.tif  # TODO: use filename structure from the AOLLSM example
+mydata_ch<i>_<j>t_<k>x_<l>y_<m>z.tif
 ```
 
 In principle with NumPy we might allocate a giant array and then iteratively
@@ -705,10 +705,6 @@ concatenate along multiple axes at once.
 a = da.block([[laxy_array_00, lazy_array_01],
               [lazy_array_10, lazy_array_11]])
 ```
-
-Recall our filename structure from before:
-
-TODO: ...
 
 We now do the following:
 
