@@ -115,7 +115,7 @@ on which some day we'll eventually be able to perform complex calculations.
 *Disclaimer: we're not going to produces rendered images like the above in this
 post.  These were created with [NVidia
 IndeX](https://developer.nvidia.com/index), a completely separate tool chain
-fromw what is being discussed here.  This post covers the first step of image
+from what is being discussed here.  This post covers the first step of image
 loading.*
 
 
@@ -231,7 +231,7 @@ skimage.io.imshow(sample[:, :, 0])
 
 ### Investigate Filename Structure
 
-This are slices from only one chunk of a much larger aggregate image.
+These are slices from only one chunk of a much larger aggregate image.
 Our main task in dealing with large image stacks is how to arrange the pieces
 back together.
 It is common to see a naming structure in the filenames. Each
