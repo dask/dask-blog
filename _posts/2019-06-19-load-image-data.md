@@ -13,8 +13,9 @@ Executive Summary
 
 This post explores simple workflows to load large stacks of image data with Dask array.
 
-In particular, we start with a directory full of TIFF files of images like the
-following:
+In particular, we start with a [directory full of TIFF
+files](https://drive.google.com/drive/folders/13mpIfqspKTIINkfoWbFsVtFF8D7jbTqJ)
+of images like the following:
 
 ```
 $ $ ls raw/ | head
@@ -102,7 +103,6 @@ and show how to stitch these together into large lazy arrays
 </tr>
 </table>
 
-
 on which some day we'll eventually be able to perform complex calculations.
 
 <img src="https://raw.githubusercontent.com/mrocklin/raw-host/gh-pages/images/aollsm-index-1.jpg"
@@ -144,7 +144,7 @@ scientists to leverage different tools to move towards a high level, friendly,
 cohesive, interactive analytical pipeline.
 
 Post Overview
-----------
+-------------
 
 This post in particular focuses on loading and managing large stacks of image
 data in parallel from Python.
@@ -169,14 +169,26 @@ it does best, analysis! In general, this should decouple these to components in
 a way that improves the experience of users involved in all parts of the
 pipeline.
 
+We will use
+[image data](https://drive.google.com/drive/folders/13mpIfqspKTIINkfoWbFsVtFF8D7jbTqJ)
+generously provided by
+[Gokul Upadhyayula](https://scholar.google.com/citations?user=nxwNAEgAAAAJ&hl=en)
+at the
+[Advanced Bioimaging Center](http://microscopy.berkeley.edu/)
+at UC Berkeley and discussed in
+[this paper](https://science.sciencemag.org/content/360/6386/eaaq1392)
+([preprint](https://www.biorxiv.org/content/10.1101/243352v2)),
+though the workloads presented here should work for any kind of imaging data,
+or array data generally.
 
-Loading image data with Dask
-----------------------------
+
+Load image data with Dask
+-------------------------
 
 Let's start again with our image data from the top of the post:
 
 ```
-$ $ ls raw/ | head
+$ $ ls /path/to/files/raw/ | head
 ex6-2_CamA_ch1_CAM1_stack0000_560nm_0000000msec_0001291795msecAbs_000x_000y_000z_0000t.tif
 ex6-2_CamA_ch1_CAM1_stack0001_560nm_0043748msec_0001335543msecAbs_000x_000y_000z_0000t.tif
 ex6-2_CamA_ch1_CAM1_stack0002_560nm_0087497msec_0001379292msecAbs_000x_000y_000z_0000t.tif
@@ -190,7 +202,7 @@ To load a single image, we use [Scikit-Image](https://scikit-image.org/):
 
 ```python
 >>> import glob
->>> filenames = glob.glob("raw/*.tif")
+>>> filenames = glob.glob("/path/to/files/raw/*.tif")
 >>> len(filenames)
 597
 
@@ -250,13 +262,14 @@ full_array = np.empty((..., ..., ..., ..., ...), dtype=sample.dtype)
 
 for fn in filenames:
     img = skimage.io.imread(fn)
-    index = get_location_from_filename(fn)
+    index = get_location_from_filename(fn)  # We need to write this function
     full_array[index, :, :, :] = img
 ```
 
-But in practice large image data is often too large to fit into memory, so we
-need to be a bit more clever in order to handle it efficiently.  One approach
-here is to use Dask, which handles larger-than-memory workloads easily.
+However if our data is large then we can't load it all into memory at once like
+this into a single Numpy array, and instead we need to be a bit more clever to
+handle it efficiently.  One approach here is to use [Dask](https://dask.org),
+which handles larger-than-memory workloads easily.
 
 
 ### Lazily load images with Dask Array
@@ -279,7 +292,7 @@ lazy_arrays = [da.from_delayed(x, shape=sample.shape, dtype=sample.dtype)
 
 *Note: here we're assuming that all of the images have the same shape and dtype
 as the sample file that we loaded above.  This is not always the case.  See the
-`dask_image` note below in the Future Work section for an alternative.*:
+`dask_image` note below in the Future Work section for an alternative.*
 
 We haven't yet stitched these together.  We have hundreds of single-chunk Dask
 arrays, each of which lazily loads a single 3d chunk of data from disk. Lets look at a single array.
@@ -699,7 +712,8 @@ This works fine for combining along a single axis. However if we need to
 combine across multiple we need to perform multiple concatenate steps.
 Fortunately there is a simpler option [da.block](
 https://docs.dask.org/en/latest/array-api.html#dask.array.block ), which can
-concatenate along multiple axes at once.
+concatenate along multiple axes at once if you give it a nested list of dask
+arrays.
 
 ```python
 a = da.block([[laxy_array_00, lazy_array_01],
@@ -708,7 +722,7 @@ a = da.block([[laxy_array_00, lazy_array_01],
 
 We now do the following:
 
--  We split these filenames apart
+-  Parse each filename to learn where it should live in the larger array
 -  See how many files are in each of our relevant dimensions
 -  Allocate a NumPy object-dtype array of the appropriate size, where each
    element of this array will hold a single-chunk Dask array
@@ -1025,9 +1039,14 @@ MB.  We can now do normal NumPy like computations on this array using [Dask
 Array](https://docs.dask.org/en/latest/array.html), but we'll save that for a
 future post.
 
+```python
+>>> # array computations would work fine, and would run in low memory
+>>> # but we'll save actual computation for future posts
+>>> a.sum().compute()
+```
 
-Saving Data
------------
+Save Data
+---------
 
 To simplify data loading in the future, we store this in a large chunked
 array format like [Zarr]( https://zarr.readthedocs.io/ ) using the [to_zarr](
