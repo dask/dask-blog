@@ -2,7 +2,6 @@
 layout: post
 title: Load Large Image Data with Dask Array
 author: John Kirkham
-draft: true
 tags: [python,scipy,scikit-image,dask-image]
 theme: twitter
 ---
