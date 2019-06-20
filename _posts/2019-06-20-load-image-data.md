@@ -1056,11 +1056,13 @@ method.
 a.to_zarr("mydata.zarr")
 ```
 
-This both makes things simpler for future users (they can read the full dataset
-with a single line using
-[da.from_zarr](http://docs.dask.org/en/latest/array-api.html#dask.array.from_zarr))
-and much more performant because Zarr is an *analysis ready format* that is
-efficiently encoded for computation.
+We may add additional information about the image data as [attributes](
+https://zarr.readthedocs.io/en/stable/tutorial.html#user-attributes ). This
+both makes things simpler for future users (they can read the full dataset with
+a single line using [da.from_zarr](
+http://docs.dask.org/en/latest/array-api.html#dask.array.from_zarr )) and much
+more performant because Zarr is an *analysis ready format* that is efficiently
+encoded for computation.
 
 Future Work
 -----------
