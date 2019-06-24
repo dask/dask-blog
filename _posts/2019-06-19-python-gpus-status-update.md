@@ -16,6 +16,7 @@ Executive Summary
 -----------------
 
 We're improving the state of scalable GPU computing in Python.
+
 This post lays out the current status broadly, and describes future work.  It
 also summarizes several other more focused blogposts from recent months, and
 includes links for the interested reader.
@@ -164,12 +165,15 @@ As mentioned in previous blogposts
 [3](https://blog.dask.org/2019/03/04/building-gpu-groupbys),
 [4](https://blog.dask.org/2019/03/18/dask-nep18)
 )
-we've been generalizing Dask to operate not just with Numpy arrays and Pandas
-dataframes, but with anything that looks enough like Numpy (like CuPy or Sparse
-or Jax) or enough like Pandas (like RAPIDS cuDF) to scale those libraries out
-too.  This is working out well.  Here is a brief video showing Dask array
-computing an SVD in parallel, and seeing what happens when we swap out the
-Numpy library for CuPy.
+we've been generalizing [Dask](https://dask.org), to operate not just with
+Numpy arrays and Pandas dataframes, but with anything that looks enough like
+Numpy (like [CuPy](https://cupy.chainer.org/) or
+[Sparse](https://sparse.pydata.org/en/latest/) or
+[Jax](https://github.com/google/jax)) or enough like Pandas (like [RAPIDS
+cuDF](https://docs.rapids.ai/api/cudf/nightly/))
+to scale those libraries out too.  This is working out well.  Here is a brief
+video showing Dask array computing an SVD in parallel, and seeing what happens
+when we swap out the Numpy library for CuPy.
 
 <iframe width="560"
         height="315"
