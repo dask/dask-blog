@@ -60,16 +60,10 @@ bit more mature and easier to use.
 As seen on the graph, we can get 270x speedup for elementwise operations. Not
 too bad for not having to write any parallel code by hand. However, the speedup
 is immensely affected by nature of each operation. I am not going to get too
-deep in why each operation performs differently, and I would like to focus on
-SVD computing in particular.
+deep in why each operation performs differently in this post, but I will
+continue that on a future post.
 
-Before talking about SVD, it's important to note that there are two array
-sizes, 800 MB and 8 MB, the first means 10000x10000 arrays and the latter
-1000x1000, double-precision floating-point (8 bytes) in both cases. SVD array
-size is an exception, where the large size is actually a tall-and-skinny
-of size 10000x1000, or 80MB.
-
-Let me also briefly describe each of the operations from the graph above:
+Let me briefly describe each of the operations from the graph above:
 
 * Elementwise: scalar operation on all elements of the array
 * Sum: Compute sum of entire array, reducing it to a single scalar
@@ -85,17 +79,17 @@ Let me also briefly describe each of the operations from the graph above:
 * Stencil (*Not a CuPy operation!*):
     [uniform filtering with Numba](https://blog.dask.org/2019/04/09/numba-stencil)
 
-As mentioned in the summary, I wrote a few months ago on doing
-[multi-GPU SVD computation with Dask and CuPy](https://blog.dask.org/2019/03/18/dask-nep18)
-among other things, but the poor SVD performance really surprised me when
-plotting benchmarks here, so I decided to analyze it further.
-
-
-SVD Performance Analysis
-------------------------
+It's important to note that there are two array sizes, 800 MB and 8 MB, the
+first means 10000x10000 arrays and the latter 1000x1000, double-precision
+floating-point (8 bytes) in both cases. SVD array size is an exception, where
+the large size is actually a tall-and-skinny of size 10000x1000, or 80MB.
 
 
 Future Work
 -----------
 
+For better understanding of the speedups (or slowdowns) seen in this post,
+we definitely need a careful analysis of what happens in those cases.
 
+It's also important to have standard benchmarks, the benchmark suite should
+be improved, made more general-purpose and be properly documented as well.
