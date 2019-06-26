@@ -17,9 +17,8 @@ Executive Summary
 
 We're improving the state of scalable GPU computing in Python.
 
-This post lays out the current status broadly, and describes future work.  It
-also summarizes several other more focused blogposts from recent months, and
-includes links for the interested reader.
+This post lays out the current status, and describes future work.
+It also summarizes and links to several other more blogposts from recent months that drill down into different topics for the interested reader.
 
 Broadly we cover briefly the following categories:
 
@@ -33,8 +32,20 @@ Broadly we cover briefly the following categories:
 Performance of GPU accelerated Python Libraries
 -----------------------------------------------
 
-Libraries like [CuPy](https://cupy.chainer.org/) and
-[RAPIDS](https://rapids.ai/) build GPU accelerated variants of popular Python
+Probably the easiest way for a Python programmer to get access to GPU
+performance is to use a GPU-accelerated Python library.  These provide a set of
+common operations that are well tuned and integrate well together.
+
+Many users know libraries for deep learning like PyTorch and TensorFlow, but
+there are several other for more general purpose computing.  These tend to copy
+the APIs of popular Python projects:
+
+-  Numpy on the GPU: [CuPy](https://cupy.chainer.org/)
+-  Numpy on the GPU (again): [Jax](https://github.com/google/jax)
+-  Pandas on the GPU: [RAPIDS cuDF](https://docs.rapids.ai/api/cudf/nightly/)
+-  Scikit-Learn on the GPU: [RAPIDS cuML](https://docs.rapids.ai/api/cuml/nightly/)
+
+These libraries  build GPU accelerated variants of popular Python
 libraries like NumPy, Pandas, and Scikit-Learn.  In order to better understand
 the relative performance differences
 [Peter Entschev](https://github.com/pentschev) recently put together a
@@ -446,11 +457,15 @@ and CPU:
 
 </script>
 
-This is all quite early stage (the numbers above are likely to shift as we
-learn more) but it's been valuable for us to develop an intuition about
-what will and won't be faster to be quite valuable in navigating this space.
-This has been effective as we've explored using Python-accessible GPU libraries
-in real-world data science workloads.
+There are lots of interesting results there, like why there are two Sum
+computations of greatly differing speed, and why SVD was slower than one might
+expect.  Peter goes into more depth in this in [his blogpost](TODO).
+
+More broadly though, we see that there is variability in performance.
+Our mental model for what is fast and slow on the CPU doesn't neccessarily
+carry over to the GPU.  Fortunately though, due consistent APIs, users that are
+familiar with Python can easily experiment with GPU acceleration without
+learning CUDA.
 
 
 Numba: Compiling Python to CUDA
@@ -460,14 +475,19 @@ Numba: Compiling Python to CUDA
 stencils](https://blog.dask.org/2019/04/09/numba-stencil) and the attached [GPU
 notebook](https://gist.github.com/mrocklin/9272bf84a8faffdbbe2cd44b4bc4ce3c)*
 
-The built-in operations in GPU libraries like CuPy or RAPIDS are great, and
-cover the most common operations.  However, in real-world settings we often run
-across messy situations that require writing a little bit of custom code.  With
-CPUs we tend to use tools like Cython or Numba, which let Python programmers
-write fast numeric code without learning too much beyond the Python language.
+The built-in operations in GPU libraries like CuPy and RAPIDS cover most common
+operations.  However, in real-world settings we often find messy situations
+that require writing a little bit of custom code.  Switching down to C/C++/CUDA
+in these cases can be challenging, especially for users that are primarily
+Python developers.  This is where Numba can come in.
 
-For example, Numba accelerates the for-loop style code below about 500x,
-from slow Python speeds up to fast C/Fortran speeds.
+Python has this same problem on the CPU as well.  Users often couldn't be
+bothered to learn C/C++ to write fast custom code.  To address this there are
+tools like Cython or Numba, which let Python programmers write fast numeric
+code without learning much beyond the Python language.
+
+For example, Numba accelerates the for-loop style code below about 500x on the
+CPU, from slow Python speeds up to fast C/Fortran speeds.
 
 ```python
 import numba  # We added these two lines for a 500x speedup
@@ -491,10 +511,10 @@ would probably have difficulty in setting up the compiler tools and development
 environment.
 
 Enter [numba.cuda.jit](https://numba.pydata.org/numba-doc/dev/cuda/index.html)
-Numba's backend for CUDA, which allows Python users to author, compile, and run
-CUDA code, written in Python, interactively without leaving a Python session.
-Here is an image of writing a stencil computation that smoothes a 2d-image all
-from within a Jupyter Notebook:
+Numba's backend for CUDA.  Numba.cuda.jit allows Python users to author,
+compile, and run CUDA code, written in Python, interactively without leaving a
+Python session.  Here is an image of writing a stencil computation that
+smoothes a 2d-image all from within a Jupyter Notebook:
 
 <img src="images/numba.cuda.jit.png"
      width="60%"
@@ -544,9 +564,10 @@ def smooth_gpu(x, out):
 
 
 
-Numba.cuda.jit has been out in the wild for quite a while now.  It's
-accessible, mature, and fun to play with.  If you have a machine with a GPU in
-it and some curiosity then we strongly recommend that you try it out.
+Numba.cuda.jit has been out in the wild for years.
+It's accessible, mature, and fun to play with.
+If you have a machine with a GPU in it and some curiosity
+then we strongly recommend that you try it out.
 
 ```
 conda install numba
@@ -595,7 +616,8 @@ implementation.
 We also saw a relative slowdown in communication.  In general almost all
 non-trivial Dask + GPU work today is becoming communication-bound.  We've
 gotten fast enough at computation that the relative importance of communication
-has grown significantly.
+has grown significantly.  We're working to resolve this with our next topic,
+UCX.
 
 
 Communication with UCX
@@ -642,8 +664,7 @@ memory communication.
 Packaging
 ---------
 
-In an [earlier
-blogpost](https://matthewrocklin.com/blog/work/2018/12/17/gpu-python-challenges)
+In an [earlier blogpost](https://matthewrocklin.com/blog/work/2018/12/17/gpu-python-challenges)
 we discussed the challenges around installing the wrong versions of CUDA
 enabled packages that don't match the CUDA driver installed on the system.
 Fortunately due to recent work from [Stan Seibert](https://github.com/seibert)
@@ -652,18 +673,37 @@ has a special `cuda` meta-package that is set to the version of the installed
 driver.  This should make it much easier for users in the future to install the
 correct package.
 
-Conda 4.7 isn't out yet, but you can install it from the [Conda Canary
-Channel](https://www.anaconda.com/what-conda-canary/)
+Conda 4.7 was just releasead, and comes with many new features other than the
+`cuda` meta-package.  You can read more about it [here](https://www.anaconda.com/how-we-made-conda-faster-4-7/).
 
 ```
-conda config --add channels conda-canary
 conda update conda
 ```
 
 There is still plenty of work to do in the packaging space today.
-Everyone who builds conda packages does it their own way, resulting in headache
-and heterogeneity.  This is largely due to not having centralized
-infrastructure to build and test CUDA enabled packages, like we have in [Conda
-Forge](https://conda-forge.org).  There have been early conversations between
-NVIDIA and Anaconda and the Conda-Forge community about setting up this
-infrastructure, but this is still quite early.
+Everyone who builds conda packages does it their own way,
+resulting in headache and heterogeneity.
+This is largely due to not having centralized infrastructure
+to build and test CUDA enabled packages,
+like we have in [Conda Forge](https://conda-forge.org).
+Fortunately, the Conda Forge community is working together with Anaconda and
+NVIDIA to help resolve this, though that will likely take some time.
+
+
+Summary
+-------
+
+This post gave an update of the status of some of the efforts behind GPU
+computing in Python.  It also provided a variety of links for future reading.
+We include them below if you would like to learn more:
+
+-  [Slides ](https://docs.google.com/presentation/d/e/2PACX-1vSajAH6FzgQH4OwOJD5y-t9mjF9tTKEeljguEsfcjavp18pL4LkpABy4lW2uMykIUvP2dC-1AmhCq6l/pub?start=false&loop=false&delayms=60000)
+-  Numpy on the GPU: [CuPy](https://cupy.chainer.org/)
+-  Numpy on the GPU (again): [Jax](https://github.com/google/jax)
+-  Pandas on the GPU: [RAPIDS cuDF](https://docs.rapids.ai/api/cudf/nightly/)
+-  Scikit-Learn on the GPU: [RAPIDS cuML](https://docs.rapids.ai/api/cuml/nightly/)
+-  [Benchmark suite](https://github.com/pentschev/pybench)
+-  [Numba CUDA JIT notebook](https://gist.github.com/mrocklin/9272bf84a8faffdbbe2cd44b4bc4ce3c)
+-  [A talk on UCX](https://developer.download.nvidia.com/video/gputechconf/gtc/2019/video/S9679/s9679-ucx-python-a-flexible-communication-library-for-python-applications.mp4)
+-  [A blogpost on UCX and Dask](https://blog.dask.org/2019/06/09/ucx-dgx)
+-  [Conda 4.7](https://www.anaconda.com/how-we-made-conda-faster-4-7/)
