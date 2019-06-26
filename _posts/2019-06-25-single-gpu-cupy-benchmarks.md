@@ -151,7 +151,7 @@ well on a GPU using CuPy out of the box. See the graph below:
             "field": "speedup",
             "scale": {
               "domain": [
-                -100,
+                0,
                 1000
               ],
               "type": "symlog"
@@ -201,7 +201,7 @@ well on a GPU using CuPy out of the box. See the graph below:
                 "field": "speedup",
                 "scale": {
                   "domain": [
-                    -100,
+                    0,
                     1000
                   ],
                   "type": "symlog"
@@ -249,7 +249,7 @@ well on a GPU using CuPy out of the box. See the graph below:
                 "field": "speedup",
                 "scale": {
                   "domain": [
-                    -100,
+                    0,
                     1000
                   ],
 
