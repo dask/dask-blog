@@ -111,7 +111,7 @@ on which some day we'll eventually be able to perform complex calculations.
      width="45%"
      alt="Light Microscopy data rendered with NVidia IndeX">
 
-*Disclaimer: we're not going to produces rendered images like the above in this
+*Disclaimer: we're not going to produce rendered images like the above in this
 post.  These were created with [NVidia
 IndeX](https://developer.nvidia.com/index), a completely separate tool chain
 from what is being discussed here.  This post covers the first step of image
