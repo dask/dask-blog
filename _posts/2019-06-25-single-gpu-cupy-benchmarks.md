@@ -34,13 +34,13 @@ utilized for all performance results described in this post:
 * NumPy 1.16.4
 * Intel MKL 2019.4.243
 * CuPy 6.1.0
-* CUDA Toolkit 9.2
+* CUDA Toolkit 10.1
 
 
 General Performance
 -------------------
 
-I have generated a greph comprising various operations. Most of them perform
+I have generated a graph comprising various operations. Most of them perform
 well on a GPU using CuPy out of the box. See the graph below:
 
 <style>
@@ -270,7 +270,7 @@ well on a GPU using CuPy out of the box. See the graph below:
     "data-4957f64f65957150f8029f7df2e6936f": [
       {
         "operation": "FFT",
-        "speedup": 5.0,
+        "speedup": 5.3,
         "shape0": 1000,
         "shape1": 1000,
         "shape": "1000x1000",
@@ -286,7 +286,7 @@ well on a GPU using CuPy out of the box. See the graph below:
       },
       {
         "operation": "Sum",
-        "speedup": -2.3,
+        "speedup": 8.3,
         "shape0": 1000,
         "shape1": 1000,
         "shape": "1000x1000",
@@ -294,38 +294,6 @@ well on a GPU using CuPy out of the box. See the graph below:
       },
       {
         "operation": "Sum",
-        "speedup": -1.3,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Sum",
-        "speedup": -2.3,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Sum",
-        "speedup": -1.3,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Sum With CUB",
-        "speedup": 8.0,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Sum With CUB",
         "speedup": 66.0,
         "shape0": 10000,
         "shape1": 10000,
@@ -334,7 +302,7 @@ well on a GPU using CuPy out of the box. See the graph below:
       },
       {
         "operation": "Standard Deviation",
-        "speedup": 1.0,
+        "speedup": 1.1,
         "shape0": 1000,
         "shape1": 1000,
         "shape": "1000x1000",
@@ -342,7 +310,7 @@ well on a GPU using CuPy out of the box. See the graph below:
       },
       {
         "operation": "Standard Deviation",
-        "speedup": 4.0,
+        "speedup": 3.5,
         "shape0": 10000,
         "shape1": 10000,
         "shape": "10000x10000",
@@ -382,7 +350,7 @@ well on a GPU using CuPy out of the box. See the graph below:
       },
       {
         "operation": "Array Slicing",
-        "speedup": 4.0,
+        "speedup": 3.6,
         "shape0": 1000,
         "shape1": 1000,
         "shape": "1000x1000",
@@ -398,7 +366,7 @@ well on a GPU using CuPy out of the box. See the graph below:
       },
       {
         "operation": "SVD",
-        "speedup": -3.6,
+        "speedup": 1.5,
         "shape0": 1000,
         "shape1": 1000,
         "shape": "1000x1000",
@@ -406,7 +374,7 @@ well on a GPU using CuPy out of the box. See the graph below:
       },
       {
         "operation": "SVD",
-        "speedup": -1.8,
+        "speedup": 17.0,
         "shape0": 10000,
         "shape1": 1000,
         "shape": "10000x1000",
@@ -414,7 +382,7 @@ well on a GPU using CuPy out of the box. See the graph below:
       },
       {
         "operation": "Stencil",
-        "speedup": 5.0,
+        "speedup": 5.1,
         "shape0": 1000,
         "shape1": 1000,
         "shape": "1000x1000",
@@ -468,9 +436,9 @@ continue that on a future post.
 Let me briefly describe each of the operations from the graph above:
 
 * Elementwise: scalar operation on all elements of the array
-* Sum: Compute sum of entire array, reducing it to a single scalar
-* Sum With CUB: same as previous, but using [CUB](https://nvlabs.github.io/cub/),
-    still [under development](https://github.com/cupy/cupy/pull/2090)
+* Sum: Compute sum of entire array, reducing it to a single scalar, using
+    [CUB](https://nvlabs.github.io/cub/), still
+    [under development](https://github.com/cupy/cupy/pull/2090)
 * Standard deviation: Compute standard deviation of entire array, reducing
     it to a single scalar
 * Array Slicing: select every third element of first dimension
@@ -490,8 +458,10 @@ the large size is actually a tall-and-skinny of size 10000x1000, or 80MB.
 Future Work
 -----------
 
-For better understanding of the speedups (or slowdowns) seen in this post,
-we definitely need a careful analysis of what happens in those cases.
+For better understanding of the scalability, it's interesting to generate
+benchmarks for various other sizes. In case this passed unnoticed, there was
+no benchmark with Dask, and this is definitely something that needs to be
+done as well!
 
 It's also important to have standard benchmarks, the benchmark suite should
 be improved, made more general-purpose and be properly documented as well.
