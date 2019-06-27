@@ -69,397 +69,9 @@ and CPU:
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-embed@4"></script>
 
 <div id="vis"></div>
-<script>
-  var spec = {
-  "config": {
-    "view": {
-      "width": 300,
-      "height": 200
-    },
-    "mark": {
-      "tooltip": null
-    },
-    "axis": {
-      "grid": false,
-      "labelColor": "#666666",
-      "labelFontSize": 16,
-      "titleColor": "#666666",
-      "titleFontSize": 20
-    },
-    "axisX": {
-      "labelAngle": -30,
-      "labelColor": "#666666",
-      "labelFontSize": 0,
-      "titleColor": "#666666",
-      "titleFontSize": 0
-    },
-    "header": {
-      "labelAngle": -20,
-      "labelColor": "#666666",
-      "labelFontSize": 16,
-      "titleColor": "#666666",
-      "titleFontSize": 20
-    },
-    "legend": {
-      "fillColor": "#fefefe",
-      "labelColor": "#666666",
-      "labelFontSize": 18,
-      "padding": 10,
-      "strokeColor": "gray",
-      "titleColor": "#666666",
-      "titleFontSize": 18
-    }
-  },
-  "data": {
-    "name": "data-4957f64f65957150f8029f7df2e6936f"
-  },
-  "facet": {
-    "column": {
-      "type": "nominal",
-      "field": "operation",
-      "sort": {
-        "field": "speedup",
-        "op": "sum",
-        "order": "descending"
-      },
-      "title": "Operation"
-    }
-  },
-  "spec": {
-    "layer": [
-      {
-        "mark": {
-          "type": "bar",
-          "fontSize": 18,
-          "opacity": 1.0
-        },
-        "encoding": {
-          "color": {
-            "type": "nominal",
-            "field": "size",
-            "scale": {
-              "domain": [
-                "800MB",
-                "8MB"
-              ],
-              "range": [
-                "#7306ff",
-                "#36c9dd"
-              ]
-            },
-            "title": "Array Size"
-          },
-          "x": {
-            "type": "nominal",
-            "field": "size"
-          },
-          "y": {
-            "type": "quantitative",
-            "axis": {
-              "title": "GPU Speedup Over CPU"
-            },
-            "field": "speedup",
-            "scale": {
-              "domain": [
-                -100,
-                1000
-              ],
-              "type": "symlog"
-            },
-            "stack": null
-          }
-        },
-        "height": 300,
-        "width": 50
-      },
-      {
-        "layer": [
-          {
-            "mark": {
-              "type": "text",
-              "dy": -5
-            },
-            "encoding": {
-              "color": {
-                "type": "nominal",
-                "field": "size",
-                "scale": {
-                  "domain": [
-                    "800MB",
-                    "8MB"
-                  ],
-                  "range": [
-                    "#7306ff",
-                    "#36c9dd"
-                  ]
-                },
-                "title": "Array Size"
-              },
-              "text": {
-                "type": "quantitative",
-                "field": "speedup"
-              },
-              "x": {
-                "type": "nominal",
-                "field": "size"
-              },
-              "y": {
-                "type": "quantitative",
-                "axis": {
-                  "title": "GPU Speedup Over CPU"
-                },
-                "field": "speedup",
-                "scale": {
-                  "domain": [
-                    -100,
-                    1000
-                  ],
-                  "type": "symlog"
-                },
-                "stack": null
-              }
-            },
-            "height": 300,
-            "width": 50
-          },
-          {
-            "mark": {
-              "type": "text",
-              "dy": 7
-            },
-            "encoding": {
-              "color": {
-                "type": "nominal",
-                "field": "size",
-                "scale": {
-                  "domain": [
-                    "800MB",
-                    "8MB"
-                  ],
-                  "range": [
-                    "#7306ff",
-                    "#36c9dd"
-                  ]
-                },
-                "title": "Array Size"
-              },
-              "text": {
-                "type": "quantitative",
-                "field": "speedup"
-              },
-              "x": {
-                "type": "nominal",
-                "field": "size"
-              },
-              "y": {
-                "type": "quantitative",
-                "axis": {
-                  "title": "GPU Speedup Over CPU"
-                },
-                "field": "speedup",
-                "scale": {
-                  "domain": [
-                    -100,
-                    1000
-                  ],
 
-                  "type": "symlog"
-                },
-                "stack": null
-              }
-            },
-            "height": 300,
-            "width": 50
-          }
-        ]
-      }
-    ]
-  },
-  "$schema": "https://vega.github.io/schema/vega-lite/v3.3.0.json",
-  "datasets": {
-    "data-4957f64f65957150f8029f7df2e6936f": [
-      {
-        "operation": "FFT",
-        "speedup": 5.0,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "FFT",
-        "speedup": 210.0,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Sum",
-        "speedup": -2.3,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Sum",
-        "speedup": -1.3,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Sum",
-        "speedup": -2.3,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Sum",
-        "speedup": -1.3,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Sum With CUB",
-        "speedup": 8.0,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Sum With CUB",
-        "speedup": 66.0,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Standard Deviation",
-        "speedup": 1.0,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Standard Deviation",
-        "speedup": 4.0,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Elementwise",
-        "speedup": 150.0,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Elementwise",
-        "speedup": 270.0,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Matrix Multiplication",
-        "speedup": 18.0,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Matrix Multiplication",
-        "speedup": 11.0,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Array Slicing",
-        "speedup": 4.0,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Array Slicing",
-        "speedup": 190.0,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "SVD",
-        "speedup": -3.6,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "SVD",
-        "speedup": -1.8,
-        "shape0": 10000,
-        "shape1": 1000,
-        "shape": "10000x1000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Stencil",
-        "speedup": 5.0,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Stencil",
-        "speedup": 150.0,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      }
-    ]
-  }
-};
-  var embedOpt = {"mode": "vega-lite"};
-
-  function showError(el, error){
-      el.innerHTML = ('<div class="error" style="color:red;">'
-                      + '<p>JavaScript Error: ' + error.message + '</p>'
-                      + "<p>This usually means there's a typo in your chart specification. "
-                      + "See the javascript console for the full traceback.</p>"
-                      + '</div>');
-      throw error;
-  }
-  const el = document.getElementById('vis');
-  vegaEmbed("#vis", spec, embedOpt)
-    .catch(error => showError(el, error));
-
-</script>
-
-There are lots of interesting results there, like why there are two Sum
-computations of greatly differing speed, and why SVD was slower than one might
-expect.  Peter goes into more depth in this in [his blogpost](TODO).
+There are lots of interesting results there.
+Peter goes into more depth in this in [his blogpost](https://blog.dask.org/2019/06/27/single-gpu-cupy-benchmarks).
 
 More broadly though, we see that there is variability in performance.
 Our mental model for what is fast and slow on the CPU doesn't neccessarily
@@ -707,3 +319,358 @@ We include them below if you would like to learn more:
 -  [A talk on UCX](https://developer.download.nvidia.com/video/gputechconf/gtc/2019/video/S9679/s9679-ucx-python-a-flexible-communication-library-for-python-applications.mp4)
 -  [A blogpost on UCX and Dask](https://blog.dask.org/2019/06/09/ucx-dgx)
 -  [Conda 4.7](https://www.anaconda.com/how-we-made-conda-faster-4-7/)
+
+<script>
+  var spec = {
+  "config": {
+    "view": {
+      "width": 300,
+      "height": 200
+    },
+    "mark": {
+      "tooltip": null
+    },
+    "axis": {
+      "grid": false,
+      "labelColor": "#666666",
+      "labelFontSize": 16,
+      "titleColor": "#666666",
+      "titleFontSize": 20
+    },
+    "axisX": {
+      "labelAngle": -30,
+      "labelColor": "#666666",
+      "labelFontSize": 0,
+      "titleColor": "#666666",
+      "titleFontSize": 0
+    },
+    "header": {
+      "labelAngle": -20,
+      "labelColor": "#666666",
+      "labelFontSize": 16,
+      "titleColor": "#666666",
+      "titleFontSize": 20
+    },
+    "legend": {
+      "fillColor": "#fefefe",
+      "labelColor": "#666666",
+      "labelFontSize": 18,
+      "padding": 10,
+      "strokeColor": "gray",
+      "titleColor": "#666666",
+      "titleFontSize": 18
+    }
+  },
+  "data": {
+    "name": "data-4957f64f65957150f8029f7df2e6936f"
+  },
+  "facet": {
+    "column": {
+      "type": "nominal",
+      "field": "operation",
+      "sort": {
+        "field": "speedup",
+        "op": "sum",
+        "order": "descending"
+      },
+      "title": "Operation"
+    }
+  },
+  "spec": {
+    "layer": [
+      {
+        "mark": {
+          "type": "bar",
+          "fontSize": 18,
+          "opacity": 1.0
+        },
+        "encoding": {
+          "color": {
+            "type": "nominal",
+            "field": "size",
+            "scale": {
+              "domain": [
+                "800MB",
+                "8MB"
+              ],
+              "range": [
+                "#7306ff",
+                "#36c9dd"
+              ]
+            },
+            "title": "Array Size"
+          },
+          "x": {
+            "type": "nominal",
+            "field": "size"
+          },
+          "y": {
+            "type": "quantitative",
+            "axis": {
+              "title": "GPU Speedup Over CPU"
+            },
+            "field": "speedup",
+            "scale": {
+              "domain": [
+                0,
+                1000
+              ],
+              "type": "symlog"
+            },
+            "stack": null
+          }
+        },
+        "height": 300,
+        "width": 50
+      },
+      {
+        "layer": [
+          {
+            "mark": {
+              "type": "text",
+              "dy": -5
+            },
+            "encoding": {
+              "color": {
+                "type": "nominal",
+                "field": "size",
+                "scale": {
+                  "domain": [
+                    "800MB",
+                    "8MB"
+                  ],
+                  "range": [
+                    "#7306ff",
+                    "#36c9dd"
+                  ]
+                },
+                "title": "Array Size"
+              },
+              "text": {
+                "type": "quantitative",
+                "field": "speedup"
+              },
+              "x": {
+                "type": "nominal",
+                "field": "size"
+              },
+              "y": {
+                "type": "quantitative",
+                "axis": {
+                  "title": "GPU Speedup Over CPU"
+                },
+                "field": "speedup",
+                "scale": {
+                  "domain": [
+                    0,
+                    1000
+                  ],
+                  "type": "symlog"
+                },
+                "stack": null
+              }
+            },
+            "height": 300,
+            "width": 50
+          },
+          {
+            "mark": {
+              "type": "text",
+              "dy": 7
+            },
+            "encoding": {
+              "color": {
+                "type": "nominal",
+                "field": "size",
+                "scale": {
+                  "domain": [
+                    "800MB",
+                    "8MB"
+                  ],
+                  "range": [
+                    "#7306ff",
+                    "#36c9dd"
+                  ]
+                },
+                "title": "Array Size"
+              },
+              "text": {
+                "type": "quantitative",
+                "field": "speedup"
+              },
+              "x": {
+                "type": "nominal",
+                "field": "size"
+              },
+              "y": {
+                "type": "quantitative",
+                "axis": {
+                  "title": "GPU Speedup Over CPU"
+                },
+                "field": "speedup",
+                "scale": {
+                  "domain": [
+                    0,
+                    1000
+                  ],
+
+                  "type": "symlog"
+                },
+                "stack": null
+              }
+            },
+            "height": 300,
+            "width": 50
+          }
+        ]
+      }
+    ]
+  },
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.3.0.json",
+  "datasets": {
+    "data-4957f64f65957150f8029f7df2e6936f": [
+      {
+        "operation": "FFT",
+        "speedup": 5.3,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "FFT",
+        "speedup": 210.0,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "Sum",
+        "speedup": 8.3,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "Sum",
+        "speedup": 66.0,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "Standard Deviation",
+        "speedup": 1.1,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "Standard Deviation",
+        "speedup": 3.5,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "Elementwise",
+        "speedup": 150.0,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "Elementwise",
+        "speedup": 270.0,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "Matrix Multiplication",
+        "speedup": 18.0,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "Matrix Multiplication",
+        "speedup": 11.0,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "Array Slicing",
+        "speedup": 3.6,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "Array Slicing",
+        "speedup": 190.0,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "SVD",
+        "speedup": 1.5,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "SVD",
+        "speedup": 17.0,
+        "shape0": 10000,
+        "shape1": 1000,
+        "shape": "10000x1000",
+        "size": "800MB"
+      },
+      {
+        "operation": "Stencil",
+        "speedup": 5.1,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "Stencil",
+        "speedup": 150.0,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      }
+    ]
+  }
+};
+
+  var embedOpt = {"mode": "vega-lite"};
+
+  function showError(el, error){
+      el.innerHTML = ('<div class="error" style="color:red;">'
+                      + '<p>JavaScript Error: ' + error.message + '</p>'
+                      + "<p>This usually means there's a typo in your chart specification. "
+                      + "See the javascript console for the full traceback.</p>"
+                      + '</div>');
+      throw error;
+  }
+  vegaEmbed("#vis", spec, embedOpt)
+    .catch(error => showError(el, error));
+</script>
