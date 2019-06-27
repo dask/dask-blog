@@ -491,7 +491,7 @@ be improved, made more general-purpose and be properly documented as well.
   var spec2 = {
   "config": {
     "view": {
-      "width": 150,
+      "width": 300,
       "height": 200
     },
     "mark": {
@@ -529,7 +529,7 @@ be improved, made more general-purpose and be properly documented as well.
     }
   },
   "data": {
-    "name": "data2"
+    "name": "data-2"
   },
   "facet": {
     "column": {
@@ -579,7 +579,7 @@ be improved, made more general-purpose and be properly documented as well.
             "field": "speedup",
             "scale": {
               "domain": [
-                0,
+                -100,
                 1000
               ],
               "type": "symlog"
@@ -629,7 +629,7 @@ be improved, made more general-purpose and be properly documented as well.
                 "field": "speedup",
                 "scale": {
                   "domain": [
-                    0,
+                    -100,
                     1000
                   ],
                   "type": "symlog"
@@ -677,7 +677,7 @@ be improved, made more general-purpose and be properly documented as well.
                 "field": "speedup",
                 "scale": {
                   "domain": [
-                    0,
+                    -100,
                     1000
                   ],
 
@@ -695,7 +695,7 @@ be improved, made more general-purpose and be properly documented as well.
   },
   "$schema": "https://vega.github.io/schema/vega-lite/v3.3.0.json",
   "datasets": {
-    "data": [
+    "data-2": [
       {
         "operation": "Sum",
         "speedup": -2.3,
@@ -727,7 +727,7 @@ be improved, made more general-purpose and be properly documented as well.
         "shape1": 1000,
         "shape": "10000x1000",
         "size": "800MB"
-      },
+      }
     ]
   }
 };
