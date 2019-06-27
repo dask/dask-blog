@@ -2,7 +2,8 @@
 layout: post
 title: Single-GPU CuPy Benchmarks
 author: Peter Andreas Entschev
-tags: [CuPy, Benchmark, Linear, Algebra]
+tags: [GPU, RAPIDS]
+draft: true
 theme: twitter
 ---
 {% include JB/setup %}
