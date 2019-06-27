@@ -454,6 +454,353 @@ first means 10000x10000 arrays and the latter 1000x1000, double-precision
 floating-point (8 bytes) in both cases. SVD array size is an exception, where
 the large size is actually a tall-and-skinny of size 10000x1000, or 80MB.
 
+Increasing Performance
+----------------------
+
+When we first ran these benchmarks we actually saw a performance *decrease* in
+a couple of cases.
+
+<div id="vis-decrease"></div>
+<script>
+  var spec = {
+  "config": {
+    "view": {
+      "width": 300,
+      "height": 200
+    },
+    "mark": {
+      "tooltip": null
+    },
+    "axis": {
+      "grid": false,
+      "labelColor": "#666666",
+      "labelFontSize": 16,
+      "titleColor": "#666666",
+      "titleFontSize": 20
+    },
+    "axisX": {
+      "labelAngle": -30,
+      "labelColor": "#666666",
+      "labelFontSize": 0,
+      "titleColor": "#666666",
+      "titleFontSize": 0
+    },
+    "header": {
+      "labelAngle": -20,
+      "labelColor": "#666666",
+      "labelFontSize": 16,
+      "titleColor": "#666666",
+      "titleFontSize": 20
+    },
+    "legend": {
+      "fillColor": "#fefefe",
+      "labelColor": "#666666",
+      "labelFontSize": 18,
+      "padding": 10,
+      "strokeColor": "gray",
+      "titleColor": "#666666",
+      "titleFontSize": 18
+    }
+  },
+  "data": {
+    "name": "data-4957f64f65957150f8029f7df2e6936f"
+  },
+  "facet": {
+    "column": {
+      "type": "nominal",
+      "field": "operation",
+      "sort": {
+        "field": "speedup",
+        "op": "sum",
+        "order": "descending"
+      },
+      "title": "Operation"
+    }
+  },
+  "spec": {
+    "layer": [
+      {
+        "mark": {
+          "type": "bar",
+          "fontSize": 18,
+          "opacity": 1.0
+        },
+        "encoding": {
+          "color": {
+            "type": "nominal",
+            "field": "size",
+            "scale": {
+              "domain": [
+                "800MB",
+                "8MB"
+              ],
+              "range": [
+                "#7306ff",
+                "#36c9dd"
+              ]
+            },
+            "title": "Array Size"
+          },
+          "x": {
+            "type": "nominal",
+            "field": "size"
+          },
+          "y": {
+            "type": "quantitative",
+            "axis": {
+              "title": "GPU Speedup Over CPU"
+            },
+            "field": "speedup",
+            "scale": {
+              "domain": [
+                0,
+                1000
+              ],
+              "type": "symlog"
+            },
+            "stack": null
+          }
+        },
+        "height": 300,
+        "width": 50
+      },
+      {
+        "layer": [
+          {
+            "mark": {
+              "type": "text",
+              "dy": -5
+            },
+            "encoding": {
+              "color": {
+                "type": "nominal",
+                "field": "size",
+                "scale": {
+                  "domain": [
+                    "800MB",
+                    "8MB"
+                  ],
+                  "range": [
+                    "#7306ff",
+                    "#36c9dd"
+                  ]
+                },
+                "title": "Array Size"
+              },
+              "text": {
+                "type": "quantitative",
+                "field": "speedup"
+              },
+              "x": {
+                "type": "nominal",
+                "field": "size"
+              },
+              "y": {
+                "type": "quantitative",
+                "axis": {
+                  "title": "GPU Speedup Over CPU"
+                },
+                "field": "speedup",
+                "scale": {
+                  "domain": [
+                    0,
+                    1000
+                  ],
+                  "type": "symlog"
+                },
+                "stack": null
+              }
+            },
+            "height": 300,
+            "width": 50
+          },
+          {
+            "mark": {
+              "type": "text",
+              "dy": 7
+            },
+            "encoding": {
+              "color": {
+                "type": "nominal",
+                "field": "size",
+                "scale": {
+                  "domain": [
+                    "800MB",
+                    "8MB"
+                  ],
+                  "range": [
+                    "#7306ff",
+                    "#36c9dd"
+                  ]
+                },
+                "title": "Array Size"
+              },
+              "text": {
+                "type": "quantitative",
+                "field": "speedup"
+              },
+              "x": {
+                "type": "nominal",
+                "field": "size"
+              },
+              "y": {
+                "type": "quantitative",
+                "axis": {
+                  "title": "GPU Speedup Over CPU"
+                },
+                "field": "speedup",
+                "scale": {
+                  "domain": [
+                    0,
+                    1000
+                  ],
+
+                  "type": "symlog"
+                },
+                "stack": null
+              }
+            },
+            "height": 300,
+            "width": 50
+          }
+        ]
+      }
+    ]
+  },
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.3.0.json",
+  "datasets": {
+    "data-4957f64f65957150f8029f7df2e6936f": [
+      {
+        "operation": "FFT",
+        "speedup": 5.3,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "FFT",
+        "speedup": 210.0,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "Sum",
+        "speedup": 8.3,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "Sum",
+        "speedup": 66.0,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "Standard Deviation",
+        "speedup": 1.1,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "Standard Deviation",
+        "speedup": 3.5,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "Elementwise",
+        "speedup": 150.0,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "Elementwise",
+        "speedup": 270.0,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "Matrix Multiplication",
+        "speedup": 18.0,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "Matrix Multiplication",
+        "speedup": 11.0,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "Array Slicing",
+        "speedup": 3.6,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "Array Slicing",
+        "speedup": 190.0,
+        "shape0": 10000,
+        "shape1": 10000,
+        "shape": "10000x10000",
+        "size": "800MB"
+      },
+      {
+        "operation": "SVD",
+        "speedup": 1.5,
+        "shape0": 1000,
+        "shape1": 1000,
+        "shape": "1000x1000",
+        "size": "8MB"
+      },
+      {
+        "operation": "SVD",
+        "speedup": 17.0,
+        "shape0": 10000,
+        "shape1": 1000,
+        "shape": "10000x1000",
+        "size": "800MB"
+      },
+    ]
+  }
+};
+  var embedOpt = {"mode": "vega-lite"};
+
+  function showError(el, error){
+      el.innerHTML = ('<div class="error" style="color:red;">'
+                      + '<p>JavaScript Error: ' + error.message + '</p>'
+                      + "<p>This usually means there's a typo in your chart specification. "
+                      + "See the javascript console for the full traceback.</p>"
+                      + '</div>');
+      throw error;
+  }
+  const el = document.getElementById('vis');
+  vegaEmbed("#vis", spec, embedOpt)
+    .catch(error => showError(el, error));
+
+</script>
+
 
 Future Work
 -----------
