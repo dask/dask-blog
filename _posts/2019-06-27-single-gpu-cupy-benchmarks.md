@@ -34,13 +34,13 @@ utilized for all performance results described in this post:
 * NumPy 1.16.4
 * Intel MKL 2019.4.243
 * CuPy 6.1.0
-* CUDA Toolkit 10.1
+* CUDA Toolkit 9.2 (10.1 for SVD, see Increasing Performance section)
 
 
 General Performance
 -------------------
 
-I have generated a graph comprising various operations. Most of them perform
+We have generated a graph comprising various operations. Most of them perform
 well on a GPU using CuPy out of the box. See the graph below:
 
 <style>
@@ -60,22 +60,22 @@ well on a GPU using CuPy out of the box. See the graph below:
 
 <div id="vis"></div>
 
-I have recently started working on a
+We have recently started working on a
 [simple benchmark suite](https://github.com/pentschev/pybench) to help me
 benchmark things quickly and reliably, as well as to automate some plotting,
-it's still incomplete and lacks documentation, which I intend to improve during
-the next days, and it is what I used to generate the plot above. If you're
+it's still incomplete and lacks documentation, which we intend to improve during
+the next days, and it is what was used to generate the plot above. If you're
 interested in figuring out exactly how synthetic data was generated and the
 exact compute operation benchmarked, you can look at
 [this file](https://github.com/pentschev/pybench/blob/master/pybench/benchmarks/benchmark_array.py).
-I won't go into too much details of how this benchmark suite works right now,
-but I also intend to write something about it in the near future, when it's a
+This post won't go into too much details of how this benchmark suite works right
+now, but we intend to write something about it in the near future, when it's a
 bit more mature and easier to use.
 
 As seen on the graph, we can get 270x speedup for elementwise operations. Not
 too bad for not having to write any parallel code by hand. However, the speedup
-is immensely affected by nature of each operation. I am not going to get too
-deep in why each operation performs differently in this post, but I will
+is immensely affected by nature of each operation. We are not going to get too
+deep in why each operation performs differently in this post, but we might
 continue that on a future post.
 
 Let me briefly describe each of the operations from the graph above:
