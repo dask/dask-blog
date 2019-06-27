@@ -59,6 +59,94 @@ well on a GPU using CuPy out of the box. See the graph below:
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-embed@4"></script>
 
 <div id="vis"></div>
+
+I have recently started working on a
+[simple benchmark suite](https://github.com/pentschev/pybench) to help me
+benchmark things quickly and reliably, as well as to automate some plotting,
+it's still incomplete and lacks documentation, which I intend to improve during
+the next days, and it is what I used to generate the plot above. If you're
+interested in figuring out exactly how synthetic data was generated and the
+exact compute operation benchmarked, you can look at
+[this file](https://github.com/pentschev/pybench/blob/master/pybench/benchmarks/benchmark_array.py).
+I won't go into too much details of how this benchmark suite works right now,
+but I also intend to write something about it in the near future, when it's a
+bit more mature and easier to use.
+
+As seen on the graph, we can get 270x speedup for elementwise operations. Not
+too bad for not having to write any parallel code by hand. However, the speedup
+is immensely affected by nature of each operation. I am not going to get too
+deep in why each operation performs differently in this post, but I will
+continue that on a future post.
+
+Let me briefly describe each of the operations from the graph above:
+
+* Elementwise: scalar operation on all elements of the array
+* Sum: Compute sum of entire array, reducing it to a single scalar, using
+    [CUB](https://nvlabs.github.io/cub/), still
+    [under development](https://github.com/cupy/cupy/pull/2090)
+* Standard deviation: Compute standard deviation of entire array, reducing
+    it to a single scalar
+* Array Slicing: select every third element of first dimension
+* Matrix Multiplication: Multiplication of two square matrices
+* FFT: Fast Fourier Transform of matrix
+* SVD: Singular Value Decomposition of matrix (tall-and-skinny for larger
+    array)
+* Stencil (*Not a CuPy operation!*):
+    [uniform filtering with Numba](https://blog.dask.org/2019/04/09/numba-stencil)
+
+It's important to note that there are two array sizes, 800 MB and 8 MB, the
+first means 10000x10000 arrays and the latter 1000x1000, double-precision
+floating-point (8 bytes) in both cases. SVD array size is an exception, where
+the large size is actually a tall-and-skinny of size 10000x1000, or 80MB.
+
+Increasing Performance
+----------------------
+
+When we first ran these benchmarks we actually saw a performance *decrease* in
+a couple of cases.
+
+<div id="vis2"></div>
+
+While it's true that GPUs are not *always* faster,
+we did expect these operations in particular to be faster than their CPU counterparts.
+This had us puzzled.
+
+Upon further investigation we found that both of these issues were either
+already fixed, or were actively being fixed by others within the ecosystem.
+
+-  **SVD**: CuPy's SVD links to the official cuSolver library, which got a
+   major speed boost to these kinds of solvers in CUDA 10.1 (thanks to Joe
+   Eaton for pointing us to this!)  Originally we had CUDA 9.2 installed, when
+   things were still quite a bit slower.
+
+   *Note: Most of the results above still use CUDA 9.2.*
+   *Only the SVD result uses CUDA 10.1.*
+
+-  **Sum**: CuPy's sum code was genuinely quite slow.
+    However, [Akira Naruse](https://github.com/anaruse) already had an
+    [active pull request](https://github.com/cupy/cupy/pull/2090)
+    to speed this up using
+    [CUB](http://nvlabs.github.io/cub/),
+    a library of collection primitives for CUDA.
+
+We learned a lot from doing this benchmarking.  In particular it was gratifying
+to see that the performance issues we saw had already been identified and
+corrected by other groups.  This highlights one of the many benefits of working
+in an open source community: things get faster without you having to do all of
+the work.
+
+
+Future Work
+-----------
+
+For better understanding of the scalability, it's interesting to generate
+benchmarks for various other sizes. In case this passed unnoticed, there was
+no benchmark with Dask, and this is definitely something that needs to be
+done as well!
+
+It's also important to have standard benchmarks, the benchmark suite should
+be improved, made more general-purpose and be properly documented as well.
+
 <script>
   var spec = {
   "config": {
@@ -399,73 +487,11 @@ well on a GPU using CuPy out of the box. See the graph below:
     ]
   }
 };
-  var embedOpt = {"mode": "vega-lite"};
 
-  function showError(el, error){
-      el.innerHTML = ('<div class="error" style="color:red;">'
-                      + '<p>JavaScript Error: ' + error.message + '</p>'
-                      + "<p>This usually means there's a typo in your chart specification. "
-                      + "See the javascript console for the full traceback.</p>"
-                      + '</div>');
-      throw error;
-  }
-  const el = document.getElementById('vis');
-  vegaEmbed("#vis", spec, embedOpt)
-    .catch(error => showError(el, error));
-
-</script>
-
-I have recently started working on a
-[simple benchmark suite](https://github.com/pentschev/pybench) to help me
-benchmark things quickly and reliably, as well as to automate some plotting,
-it's still incomplete and lacks documentation, which I intend to improve during
-the next days, and it is what I used to generate the plot above. If you're
-interested in figuring out exactly how synthetic data was generated and the
-exact compute operation benchmarked, you can look at
-[this file](https://github.com/pentschev/pybench/blob/master/pybench/benchmarks/benchmark_array.py).
-I won't go into too much details of how this benchmark suite works right now,
-but I also intend to write something about it in the near future, when it's a
-bit more mature and easier to use.
-
-As seen on the graph, we can get 270x speedup for elementwise operations. Not
-too bad for not having to write any parallel code by hand. However, the speedup
-is immensely affected by nature of each operation. I am not going to get too
-deep in why each operation performs differently in this post, but I will
-continue that on a future post.
-
-Let me briefly describe each of the operations from the graph above:
-
-* Elementwise: scalar operation on all elements of the array
-* Sum: Compute sum of entire array, reducing it to a single scalar, using
-    [CUB](https://nvlabs.github.io/cub/), still
-    [under development](https://github.com/cupy/cupy/pull/2090)
-* Standard deviation: Compute standard deviation of entire array, reducing
-    it to a single scalar
-* Array Slicing: select every third element of first dimension
-* Matrix Multiplication: Multiplication of two square matrices
-* FFT: Fast Fourier Transform of matrix
-* SVD: Singular Value Decomposition of matrix (tall-and-skinny for larger
-    array)
-* Stencil (*Not a CuPy operation!*):
-    [uniform filtering with Numba](https://blog.dask.org/2019/04/09/numba-stencil)
-
-It's important to note that there are two array sizes, 800 MB and 8 MB, the
-first means 10000x10000 arrays and the latter 1000x1000, double-precision
-floating-point (8 bytes) in both cases. SVD array size is an exception, where
-the large size is actually a tall-and-skinny of size 10000x1000, or 80MB.
-
-Increasing Performance
-----------------------
-
-When we first ran these benchmarks we actually saw a performance *decrease* in
-a couple of cases.
-
-<div id="vis-decrease"></div>
-<script>
-  var spec = {
+  var spec2 = {
   "config": {
     "view": {
-      "width": 300,
+      "width": 150,
       "height": 200
     },
     "mark": {
@@ -503,7 +529,7 @@ a couple of cases.
     }
   },
   "data": {
-    "name": "data-4957f64f65957150f8029f7df2e6936f"
+    "name": "data2"
   },
   "facet": {
     "column": {
@@ -669,26 +695,10 @@ a couple of cases.
   },
   "$schema": "https://vega.github.io/schema/vega-lite/v3.3.0.json",
   "datasets": {
-    "data-4957f64f65957150f8029f7df2e6936f": [
-      {
-        "operation": "FFT",
-        "speedup": 5.3,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "FFT",
-        "speedup": 210.0,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
+    "data": [
       {
         "operation": "Sum",
-        "speedup": 8.3,
+        "speedup": -2.3,
         "shape0": 1000,
         "shape1": 1000,
         "shape": "1000x1000",
@@ -696,71 +706,7 @@ a couple of cases.
       },
       {
         "operation": "Sum",
-        "speedup": 66.0,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Standard Deviation",
-        "speedup": 1.1,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Standard Deviation",
-        "speedup": 3.5,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Elementwise",
-        "speedup": 150.0,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Elementwise",
-        "speedup": 270.0,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Matrix Multiplication",
-        "speedup": 18.0,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Matrix Multiplication",
-        "speedup": 11.0,
-        "shape0": 10000,
-        "shape1": 10000,
-        "shape": "10000x10000",
-        "size": "800MB"
-      },
-      {
-        "operation": "Array Slicing",
-        "speedup": 3.6,
-        "shape0": 1000,
-        "shape1": 1000,
-        "shape": "1000x1000",
-        "size": "8MB"
-      },
-      {
-        "operation": "Array Slicing",
-        "speedup": 190.0,
+        "speedup": -1.3,
         "shape0": 10000,
         "shape1": 10000,
         "shape": "10000x10000",
@@ -768,7 +714,7 @@ a couple of cases.
       },
       {
         "operation": "SVD",
-        "speedup": 1.5,
+        "speedup": -3.6,
         "shape0": 1000,
         "shape1": 1000,
         "shape": "1000x1000",
@@ -776,7 +722,7 @@ a couple of cases.
       },
       {
         "operation": "SVD",
-        "speedup": 17.0,
+        "speedup": -1.8,
         "shape0": 10000,
         "shape1": 1000,
         "shape": "10000x1000",
@@ -785,6 +731,7 @@ a couple of cases.
     ]
   }
 };
+
   var embedOpt = {"mode": "vega-lite"};
 
   function showError(el, error){
@@ -795,20 +742,8 @@ a couple of cases.
                       + '</div>');
       throw error;
   }
-  const el = document.getElementById('vis');
   vegaEmbed("#vis", spec, embedOpt)
     .catch(error => showError(el, error));
-
+  vegaEmbed("#vis2", spec2, embedOpt)
+    .catch(error => showError(el, error));
 </script>
-
-
-Future Work
------------
-
-For better understanding of the scalability, it's interesting to generate
-benchmarks for various other sizes. In case this passed unnoticed, there was
-no benchmark with Dask, and this is definitely something that needs to be
-done as well!
-
-It's also important to have standard benchmarks, the benchmark suite should
-be improved, made more general-purpose and be properly documented as well.
