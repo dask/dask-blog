@@ -128,8 +128,8 @@ compile, and run CUDA code, written in Python, interactively without leaving a
 Python session.  Here is an image of writing a stencil computation that
 smoothes a 2d-image all from within a Jupyter Notebook:
 
-<img src="images/numba.cuda.jit.png"
-     width="60%"
+<img src="/images/numba.cuda.jit.png"
+     width="100%"
      alt="Numba.cuda.jit in a Jupyter Notebook">
 
 Here is a simplified comparison of Numba CPU/GPU code to compare programming
