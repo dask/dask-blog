@@ -11,12 +11,15 @@ theme: twitter
 Summary
 -------
 
-Some weeks ago, Matthew Rocklin wrote a post on Numba Stencils with Dask,
-demonstrating how to use it for both CPUs and GPUs. This post will show a similar
-approach to writing custom code, this time with user-defined custom kernels in
-CuPy. The motivation for this post comes from someone who recently asked how can
-one use Dask to distribute such custom kernels, which is a question that will
-surely arise again in the future.
+About three months ago, [Matthew Rocklin](https://twitter.com/mrocklin) wrote a
+post on
+[Numba Stencils with Dask](https://blog.dask.org/2019/04/09/numba-stencil),
+demonstrating how to use them for both CPUs and GPUs. This post will present a
+similar approach to writing custom code, this time with user-defined custom
+kernels in CuPy. The motivation for this post comes from someone who recently
+asked how can one use Dask to distribute such custom kernels, which is a
+question that will surely arise again in the future.
+
 
 Sample Problem
 --------------
