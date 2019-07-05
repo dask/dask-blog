@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Distributing Custom CuPy Kernels with Dask
+title: Parallelizing Custom CuPy Kernels with Dask
 author: Peter Andreas Entschev
 tags: [Dask, CuPy]
 theme: twitter
@@ -67,11 +67,13 @@ during this post.
 add_broadcast_kernel = cupy.RawKernel(
     r'''
     extern "C" __global__
-    void add_broadcast_kernel(const float* x, const float* y, float* z, const int dim0)
+    void add_broadcast_kernel(
+        const float* x, const float* y, float* z,
+        const int xdim0, const int zdim0)
     {
         int idx0 = blockIdx.x * blockDim.x + threadIdx.x;
         int idx1 = blockIdx.y * blockDim.y + threadIdx.y;
-        z[idx1 * dim0 + idx0] = x[idx1 * dim0 + idx0] + y[idx0];
+        z[idx1 * zdim0 + idx0] = x[idx1 * xdim0 + idx0] + y[idx0];
     }
     ''',
     'add_broadcast_kernel'
@@ -84,21 +86,32 @@ block size defined, call the kernel we created before and finally return the
 result.
 
 ```python
-def dispatch_add_broadcast(x, y, z):
+def dispatch_add_broadcast(x, y):
     block_size = (32, 32)
     grid_size = (x.shape[1] // block_size[1], x.shape[0] // block_size[0])
-    add_broadcast_kernel(grid_size, block_size, (x, y, z, x.strides[0] // x.strides[1]))
+
+    z = cupy.empty(x.shape, dtype=x.dtype)
+
+    xdim0 = x.strides[0] // x.strides[1]
+    zdim0 = z.strides[0] // z.strides[1]
+
+    add_broadcast_kernel(grid_size, block_size, (x, y, z, xdim0, zdim0))
     return z
 ```
 
 We can now use that dispatch function and compute the sum of `x` and `y`. Note
-that we have a third argument `z` in the function above, that is where the
-output of the function will be stored. We could also have chosen to create that
-array inside `dispatch_add_broadcast`, but for this example we chose not to,
-because we will create a single Dask array to store the result later on.
+that we create a third array `z` in the function above, that is where the output
+of the function will be stored.
+
+Note in the code above that we calculate the length of internal dimension from
+the stride of the array, that is important because each of the Dask array blocks
+is going to be a view of the original CuPy array, so the stride will not be the
+same as the block's shape for the array `x`. For `z` we could have just used its
+shape, since we are creating a new array in the function instead of getting a
+view of the array.
 
 ```python
-res_add_broadcast = dispatch_add_broadcast(x, y, cupy.empty((x.shape), dtype=cupy.float32))
+res_add_broadcast = dispatch_add_broadcast(x, y)
 ```
 
 The function above is equivalent to the previous `res_cupy = x + y`.
@@ -126,27 +139,18 @@ dx = da.from_array(x, chunks=(1024, 512), asarray=False)
 dy = da.from_array(y, chunks=(512), asarray=False)
 ```
 
-We also create another array to store the output.
-
-```python
-z = cupy.empty((4096, 1024), dtype=cupy.float32)
-dz = da.from_array(z, chunks=(1024, 512), asarray=False)
-```
-
 What is important to not here is the need match array and block sizes properly.
-In this example we have `x` and `z` with sizes 4096x1024 and `y` with length
-1024, so the length of `N` must match. The same is true for block sizes, here
-we are creating 4 blocks on the first dimension and 2 on the second dimension of
-`x`, thus we need to ensure that `y` is also split into 2 blocks. Since the
-output array `z` will have the exact same shape of `x`, it must also have the
-same number of blocks: 4x2.
+In this example we have `x` with size 4096x1024 and `y` with length 1024, so the
+length of `N` must match. The same is true for block sizes, here we are creating
+4 blocks on the first dimension and 2 on the second dimension of `x`, thus we
+need to ensure that `y` is also split into 2 blocks.
 
 The only thing left to do now is create a `map_blocks` task for the operation we
 want execute. For this example, we will pass 5 arguments in total, our dispatch
 function, the Dask arrays and the `dtype`.
 
 ```python
-res = da.map_blocks(dispatch_add_broadcast, dx, dy, dz, dtype=cupy.float32)
+res = da.map_blocks(dispatch_add_broadcast, dx, dy, dtype=cupy.float32)
 ```
 
 If we compute the Dask array and print its output, we should see a matching
