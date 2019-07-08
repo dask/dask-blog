@@ -205,8 +205,8 @@ To load a single image, we use [Scikit-Image](https://scikit-image.org/):
 >>> len(filenames)
 597
 
->>> import skimage.io
->>> sample = skimage.io.imread(filenames[0])
+>>> import imageio
+>>> sample = imageio.imread(filenames[0])
 >>> sample.shape
 (201, 1024, 768)
 ```
@@ -216,6 +216,7 @@ few 2d slices of this single 3d chunk to get some context.
 
 ```python
 import matplotlib.pyplot as plt
+import skimage.io
 plt.figure(figsize=(10, 10))
 skimage.io.imshow(sample[:, :, 0])
 ```
@@ -260,7 +261,7 @@ load images and place them into the giant array.
 full_array = np.empty((..., ..., ..., ..., ...), dtype=sample.dtype)
 
 for fn in filenames:
-    img = skimage.io.imread(fn)
+    img = imageio.imread(fn)
     index = get_location_from_filename(fn)  # We need to write this function
     full_array[index, :, :, :] = img
 ```
@@ -277,14 +278,14 @@ Now we learn how to lazily load and stitch together image data with Dask array.
 We'll start with simple examples first and then move onto the full example with
 this more complex dataset afterwards.
 
-We can delay the `skimage.io.imread` calls with [Dask
+We can delay the `imageio.imread` calls with [Dask
 Delayed](https://docs.dassk.org/en/latest/delayed.html).
 
 ```python
 import dask
 import dask.array as da
 
-lazy_arrays = [dask.delayed(skimage.io.imread)(fn) for fn in filenames]
+lazy_arrays = [dask.delayed(imageio.imread)(fn) for fn in filenames]
 lazy_arrays = [da.from_delayed(x, shape=sample.shape, dtype=sample.dtype)
                for x in lazy_arrays]
 ```
@@ -1063,6 +1064,16 @@ a single line using [da.from_zarr](
 http://docs.dask.org/en/latest/array-api.html#dask.array.from_zarr )) and much
 more performant because Zarr is an *analysis ready format* that is efficiently
 encoded for computation.
+
+Zarr uses the [Blosc](http://blosc.org/) library for compression by default.
+For scientific imaging data, we can optionally pass compression options that provide
+a good compression ratio to speed tradeoff and optimize compression
+performance.
+
+```python
+from numcodecs import Blosc
+a.to_zarr("mydata.zarr", compressor=Blosc(cname='zstd', clevel=3, shuffle=Blosc.BITSHUFFLE))
+```
 
 Future Work
 -----------
