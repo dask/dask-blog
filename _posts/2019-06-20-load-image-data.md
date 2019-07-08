@@ -1065,6 +1065,16 @@ http://docs.dask.org/en/latest/array-api.html#dask.array.from_zarr )) and much
 more performant because Zarr is an *analysis ready format* that is efficiently
 encoded for computation.
 
+Zarr uses the [Blosc](http://blosc.org/) library for compression by default.
+For scientific imaging data, we can optionally pass compression options that provide
+a good compression ratio to speed tradeoff and optimize compression
+performance.
+
+```python
+from numcodecs import Blosc
+a.to_zarr("mydata.zarr", compressor=Blosc(cname='zstd', clevel=3, shuffle=Blosc.BITSHUFFLE))
+```
+
 Future Work
 -----------
 
