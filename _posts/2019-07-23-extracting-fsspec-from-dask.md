@@ -15,21 +15,32 @@ Summary
 Over the past few years, Dask's IO capability has grown gradually and organically, to
 include a number of file-formats, and the ability to access data seamlessly on various
 remote/cloud data systems. This has been achieved through a number of sister packages
-for viewing cloud resources as file-systems, and dedicated code in the `bytes`
-subpackage within Dask. For the sake of consolidating the behaviours of the
+for viewing cloud resources as file-systems, and dedicated code in `dask.bytes`.
+Some of the storage backends, particularly `s3fs`, became immediately useful outside of
+Dask too, and were picked up as optional dependencies by `pandas`, `xarray` and others.
+
+For the sake of consolidating the behaviours of the
 various backends, providing a single reference specification for any new backends,
 and to make this set of file-system operations available even without Dask, I
-created `fsspec`. This last week, Dask changed to use `fsspec` directly for its
+created [`fsspec`](https://filesystem-spec.readthedocs.io/en/latest/). 
+This last week, Dask changed to use `fsspec` directly for its
 IO needs, and I would like to describe in detail here the benefits of this change.
+
+Although this was done initially to easy the maintenance burden, the important takeaway
+is that we want to make file-systems operations easily available to the whole pydata ecosystem,
+with ot without Dask.
 
 History
 -------
 
-The first file-system I wrote was [`hdfs3`](https://github.com/dask/hdfs3), a think wrapper
+The first file-system I wrote was [`hdfs3`](https://github.com/dask/hdfs3), a thin wrapper
 around the `libhdfs3` C library. At the time, Dask had acquired the ability to run on a
 distributed cluster, and HDFS was the most popular storage solution for these (in the
 commercial world, at least), so a solution was required. The python API closely matched
-the C one, which is turn followed the Java API and posix standards.
+the C one, which in turn followed the Java API and posix standards. Fortunately, python already
+has a [file-like standard](https://docs.python.org/3/library/io.html#i-o-base-classes), so
+providing objects that implemented that was enough to make remote bytes available to many
+packages.
 
 Pretty soon, it became apparent that cloud resources would be at least as important as in-cluster
 file-systems, and so followed [s3fs](https://github.com/dask/s3fs), 
@@ -50,10 +61,22 @@ Code duplication
 
 Copying an interface, adapting it and releasing it, as I did with each iteration of the file-system,
 is certainly a quick way to get a job done. However, when you then want to change the behaviour, or
-add new functionality, it turns out you need to repeat the work in each place (not very DRY) or have
+add new functionality, it turns out you need to repeat the work in each place 
+(violating the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle) or have
 the interfaces diverge slowly. Good examples of this were `glob` and `walk`, which supported various
 options for the former, and returned different things (list, versions dir/files iterator) for the
 latter.
+
+```python
+>>> fs = dask.bytes.local.LocalFileSystem()
+>>> fs.walk('/home/path/')
+<iterator of tuples>
+
+
+>>> fs = s3fs.S3FileSystme()
+>>> fs.walk('bucket/path')
+[list of filenames]
+```
 
 We found that, for Dask's needs, we needed to build small wrapper
 classes to ensure compatible APIs to all backends, as well as a class for operating on the local
@@ -91,8 +114,8 @@ important main-stream implementations also took shape, such as FTP, SSH, Memory 
 (the latter being the best bet for accessing HDFS from outside the cluster, following all the
 problems building and authenticating with `hdfs3`).
 
-Furthermore, the new repo gave the opportunity to implement new features, which would then have
-further-reaching applicability than if they had been done in just selected repos. Examples include
+Furthermore, the new repository gave the opportunity to implement new features, which would then have
+further-reaching applicability than if they had been done in just selected repositories. Examples include
 FUSE mounting, dictionary-style key-value views on file-systems
 (such as used by [zarr](https://zarr.readthedocs.io/en/stable/)), and transactional writing of
 files. All file-systems are serializable and pyarrow-compliant.
@@ -116,7 +139,8 @@ implemented a generalised file selector that can browse files in any file-system
 have available, even being able, for instance, to view a remote zip-file on S3 as a
 browseable file-system. Note that, similar to the general thrust of this blog, the
 file selector itself need not live in the Intake repo and will eventually become either
-its own thing, or an optional feature of `fsspec`.
+its own thing, or an optional feature of `fsspec`. You shouldn't need Intake either just
+to get generalised file-system operations.
 
 Final Thoughts
 --------------
