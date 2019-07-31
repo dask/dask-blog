@@ -4,6 +4,7 @@ title: 2019 Dask User Survey
 tagline: 2019 dask user survey
 author: Tom Augspurger
 tags: []
+theme: twitter
 ---
 {% include JB/setup %}
 
@@ -15,6 +16,11 @@ which ran earlier this summer. Thanks to everyone who took the time to fill out 
 We had 259 responses.
 
 These results help us better understand the Dask community and will guide future development efforts.
+
+This notebook can be run on binder.
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/TomAugspurger/dask-survey-results/master?filepath=analyze.ipynb)
+
 
 ## Highlights
 
