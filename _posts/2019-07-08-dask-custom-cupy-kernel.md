@@ -11,14 +11,13 @@ theme: twitter
 Summary
 -------
 
-About three months ago, [Matthew Rocklin](https://twitter.com/mrocklin) wrote a
-post on
+Some time ago, [Matthew Rocklin](https://twitter.com/mrocklin) wrote a post on
 [Numba Stencils with Dask](https://blog.dask.org/2019/04/09/numba-stencil),
 demonstrating how to use them for both CPUs and GPUs. This post will present a
 similar approach to writing custom code, this time with user-defined custom
-kernels in CuPy. The motivation for this post comes from someone who recently
-asked how can one use Dask to distribute such custom kernels, which is a
-question that will surely arise again in the future.
+kernels in [CuPy](https://cupy.chainer.org/). The motivation for this post
+comes from someone who recently asked how can one use Dask to distribute such
+custom kernels, which is a question that will surely arise again in the future.
 
 
 Sample Problem
@@ -42,7 +41,7 @@ This example using CuPy alone would look something like the following:
 import cupy
 
 x = cupy.arange(4096 * 1024, dtype=cupy.float32).reshape((4096, 1024))
-y = cupy.arange(1024, dtype=cupy.float32)
+y = cupy.arange(1024, dtype=cupy.float32).reshape(1, 1024)
 
 res_cupy = x + y
 ```
@@ -56,12 +55,17 @@ you're not familiar with that, feel free to skip this section, the upcoming
 session entitled "Using Dask's `map_blocks`" may serve as a useful reference
 for parallelizing custom code with Dask nevertheless.
 
-To write a user-defined kernel, we will use the `cupy.RawKernel` function. This
-is a very simple function, taking only three arguments: `code`, `name` and
-`options`. As implied, the first two arguments are used to define the kernel
-implementation and its name, the latter is used to pass optional arguments
-to NVRTC (NVIDIA's RunTime Compiler), but will not talk about this last argument
-during this post.
+To write a user-defined kernel, we will use the
+[`cupy.RawKernel`](https://docs-cupy.chainer.org/en/stable/reference/generated/cupy.RawKernel.html)
+function, but CuPy contains also specialized functions for
+[elementwise kernels](https://docs-cupy.chainer.org/en/stable/reference/generated/cupy.ElementwiseKernel.html)
+and
+[reduction kernels](https://docs-cupy.chainer.org/en/stable/reference/generated/cupy.ReductionKernel.html)
+that we will not cover in this post. This is a very simple function, taking only
+three arguments: `code`, `name` and `options`. As implied, the first two
+arguments are used to define the kernel implementation and its name, the latter
+is used to pass optional arguments to NVRTC (NVIDIA's RunTime Compiler), but
+will not talk about this last argument during this post.
 
 ```python
 add_broadcast_kernel = cupy.RawKernel(
@@ -90,7 +94,7 @@ def dispatch_add_broadcast(x, y):
     block_size = (32, 32)
     grid_size = (x.shape[1] // block_size[1], x.shape[0] // block_size[0])
 
-    z = cupy.empty(x.shape, dtype=x.dtype)
+    z = cupy.empty(x.shape, x.dtype)
 
     xdim0 = x.strides[0] // x.strides[1]
     zdim0 = z.strides[0] // z.strides[1]
@@ -136,7 +140,7 @@ and `dy`.
 import dask.array as da
 
 dx = da.from_array(x, chunks=(1024, 512), asarray=False)
-dy = da.from_array(y, chunks=(512), asarray=False)
+dy = da.from_array(y, chunks=(1, 512), asarray=False)
 ```
 
 What is important to not here is the need match array and block sizes properly.
@@ -150,7 +154,7 @@ want execute. For this example, we will pass 5 arguments in total, our dispatch
 function, the Dask arrays and the `dtype`.
 
 ```python
-res = da.map_blocks(dispatch_add_broadcast, dx, dy, dtype=cupy.float32)
+res = da.map_blocks(dispatch_add_broadcast, dx, dy, dtype=dx.dtype)
 ```
 
 If we compute the Dask array and print its output, we should see a matching
@@ -206,3 +210,10 @@ This post aimed to explain how CuPy and Dask allow extending their capabilities,
 thus giving users the capabilities to write self-contained and easily
 maintainable applications, even when lower-level language code, such as CUDA, is
 needed to provide best performance.
+
+
+Complete Code
+--------
+
+The complete code can be found
+[here](https://gist.github.com/pentschev/ad8bdc912bb1b5b318789102fa259bb7#file-dask_cupy_custom_kernel-py).
