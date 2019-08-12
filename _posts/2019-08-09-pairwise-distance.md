@@ -1,4 +1,11 @@
-
+In large scale genomics analysis, scientists try to reduce sequencing data from
+multiple individuals into groups that share common traits. This requires
+measuring how sequences differ from each other. A common way to do this is to
+use a distance metric like [city block](
+https://en.wikipedia.org/wiki/Taxicab_geometry ) or others. As this metric ends
+up being computed pairwise over all of the samples, this can be a real
+bottleneck. Thus it is pairmount to have a performant distance computation
+implementation to really leverage the hardware.
 
 ```python
 import numpy as np
