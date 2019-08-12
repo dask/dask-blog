@@ -214,27 +214,15 @@ def pairwise_cityblock_cuda(x):
     out = out.reshape((1, out.shape[0]))
     
     return out
-
-
 ```
 
+As with any JIT, we benefit by doing a warmup run first. Though that's easy
+enough to do. Then we are ready to compute our result.
 
 ```python
-# warm-up jit
-pairwise_cityblock_cuda(x_cuda)
-cuda.synchronize()
-```
-
-
-```python
-%%time
 dist_cuda = pairwise_cityblock_cuda(x_cuda)
 cuda.synchronize()
 ```
-
-    CPU times: user 12 ms, sys: 8 ms, total: 20 ms
-    Wall time: 24.1 ms
-
 
 
 ```python
