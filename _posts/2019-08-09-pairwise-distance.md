@@ -132,49 +132,29 @@ Now we can write something like this.
 pairwise_cityblock_dask(x_dask, f=pairwise_cityblock_cpu).compute()
 ```
 
+With this, we are able to get more of a speedup. We did a little bit of work,
+but not so much. Also we have managed to leverage the distance function from
+our serial case without issues.
 
+What if we still want more performance than even this offers? Well if we have a
+GPU in our computer or a cluster of them, we could leverage that compute
+resource for our problem.
 
-
-
-```python
-!nvidia-smi | head
-```
-
-    Fri Aug  9 07:49:55 2019       
-    +-----------------------------------------------------------------------------+
-    | NVIDIA-SMI 396.44                 Driver Version: 396.44                    |
-    |-------------------------------+----------------------+----------------------+
-    | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
-    | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
-    |===============================+======================+======================|
-    |   0  Tesla V100-SXM2...  On   | 00000000:06:00.0 Off |                    0 |
-    | N/A   36C    P0    57W / 300W |   1365MiB / 32510MiB |      0%      Default |
-    +-------------------------------+----------------------+----------------------+
-
-
+First we need to move our data to the GPU. There are several ways we could do
+this. Though one reasonably approachable way is to use Numba. We could write
+the following to handle our in-memory case.
 
 ```python
-from numba import cuda
-```
-
-How long to move the data?
-
-
-```python
-%%time
 x_cuda = cuda.to_device(x)
-x_cuda
 ```
 
-    CPU times: user 8 ms, sys: 0 ns, total: 8 ms
-    Wall time: 56.3 ms
+We can also handle the Dask case pretty easily by simply writing this.
 
+```python
+x_dask_cuda = da.map_blocks(cuda.to_device, x)
+```
 
-
-
-
-    <numba.cuda.cudadrv.devicearray.DeviceNDArray at 0x7ff01ec0f940>
-
+This may take a moment as data moves from the CPU to the GPU.
 
 
 
