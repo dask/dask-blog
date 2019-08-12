@@ -224,22 +224,11 @@ dist_cuda = pairwise_cityblock_cuda(x_cuda)
 cuda.synchronize()
 ```
 
+If work needs to be done on the CPU afterwards, we can copy it back like so.
 
 ```python
-# how long to copy data back to CPU
-%time dist_cuda.copy_to_host()
+dist_cuda.copy_to_host()
 ```
-
-    CPU times: user 4 ms, sys: 0 ns, total: 4 ms
-    Wall time: 768 µs
-
-
-
-
-
-    array([[12067., 11977., 11998., ..., 12055., 11977., 12132.]],
-          dtype=float32)
-
 
 
 ## Larger dataset
