@@ -126,20 +126,12 @@ def pairwise_cityblock_dask(x, f):
 
 ```
 
+Now we can write something like this.
 
 ```python
-%%time
 pairwise_cityblock_dask(x_dask, f=pairwise_cityblock_cpu).compute()
 ```
 
-    CPU times: user 9.06 s, sys: 168 ms, total: 9.22 s
-    Wall time: 1.12 s
-
-
-
-
-
-    array([12067., 11977., 11998., ..., 12055., 11977., 12132.])
 
 
 
