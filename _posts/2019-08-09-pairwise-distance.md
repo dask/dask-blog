@@ -7,6 +7,10 @@ up being computed pairwise over all of the samples, this can be a real
 bottleneck. Thus it is pairmount to have a performant distance computation
 implementation to really leverage the hardware.
 
+
+TODO Might be nice to have a picture or graph of what some data looks like
+
+
 To start out, one might leverage a distance implementation from the highly
 optimized SciPy library. This is quick and can be dropped with relatively
 little effort as long as one's data fits what the function expects. So one
