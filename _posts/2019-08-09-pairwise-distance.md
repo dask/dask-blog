@@ -1,3 +1,13 @@
+---
+layout: post
+title: Experiments in High Performance Networking with UCX and DGX
+author: Matthew Rocklin, Rick Zamora
+tags: [GPU, array, numba, genomics]
+draft: true
+theme: twitter
+---
+{% include JB/setup %}
+
 In large scale genomics analysis, scientists try to reduce sequencing data from
 multiple individuals into groups that share common traits. This requires
 measuring how sequences differ from each other. A common way to do this is to
