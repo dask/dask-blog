@@ -156,6 +156,11 @@ x_dask_cuda = da.map_blocks(cuda.to_device, x)
 
 This may take a moment as data moves from the CPU to the GPU.
 
+At a first pass, we might write something Numba's CUDA JIT. Here we might need
+to tune how many threads we use per block.
+
+
+TODO Add this code
 
 
 ```python
