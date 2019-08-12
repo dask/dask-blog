@@ -163,6 +163,8 @@ to tune how many threads we use per block.
 TODO Add this code
 
 
+Alternatively we could be a bit clever and write this code using `forall`. This is pretty handy as we now no longer need to think about CUDA threads per block. There is a caveat though; we need to collapse our `for`-loops into 1 loop. One can do this with a bit of ingenuity.
+
 ```python
 import math
 
