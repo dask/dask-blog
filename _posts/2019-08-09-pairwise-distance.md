@@ -10,6 +10,16 @@ implementation to really leverage the hardware.
 
 TODO Might be nice to have a picture or graph of what some data looks like
 
+TODO explain what the data mean.
+
+So a representative dataset, might look something like this.
+
+```python
+# simulate some genetic data
+x = np.random.choice(np.array([0, 1, 2], dtype='i1'),
+                     p=[.7, .2, .1,],
+                     size=(20_000, 1_000))
+```
 
 To start out, one might leverage a distance implementation from the highly
 optimized SciPy library. This is quick and can be dropped with relatively
@@ -25,17 +35,6 @@ def pairwise_cityblock_cpu(x):
     out = out.reshape((1, out.shape[0]))
     return out
 ```
-
-TODO explain what the data mean.
-
-
-```python
-# simulate some genetic data
-x = np.random.choice(np.array([0, 1, 2], dtype='i1'), 
-                     p=[.7, .2, .1,], 
-                     size=(20_000, 1_000))
-```
-
 
 ```python
 %%time
