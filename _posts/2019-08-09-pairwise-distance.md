@@ -96,6 +96,11 @@ x_dask
 </table>
 
 
+With our Dask Array in hand, we can write a simple function to facilitate
+applying our distance function on the data. By doing a little bit of work to
+keep things general, we can easily swap in different distance functions based
+on the computation we need to do or leverage more performant implementations
+that may exist for our data.
 
 
 ```python
