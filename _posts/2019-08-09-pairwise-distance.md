@@ -36,30 +36,21 @@ def pairwise_cityblock_cpu(x):
     return out
 ```
 
-```python
-%%time
-pairwise_cityblock_cpu(x)
-```
+We can then try to run this on our representative dataset. This does reasonably
+well and we haven't had to think to hard about the implementation. In some
+cases, this may already be sufficient.
 
-    CPU times: user 8.3 s, sys: 64 ms, total: 8.37 s
-    Wall time: 8.36 s
-
-
-
-
-
-    array([[12067., 11977., 11998., ..., 12055., 11977., 12132.]])
-
-
-
+However we may find that while the performance is reasonable, we have a lot of
+samples to process. We could speed things up a bit by running through small
+batches of data in parallel. An easy way to get started on this work would be
+to make a Dask Array that handles operating on our data.
 
 ```python
+import dask.array as da
+
 x_dask = da.from_array(x, chunks=(2_000, None))
 x_dask
 ```
-
-
-
 
 <table>
 <tr>
