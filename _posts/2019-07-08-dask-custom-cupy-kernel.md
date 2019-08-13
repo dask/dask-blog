@@ -24,9 +24,9 @@ Sample Problem
 --------------
 
 Let's get started by defining the problem we will look at in this post. The
-problem here is merely for demonstration purposes, and not something very
-complicated, nor particularly useful that someone would write a kernel to solve,
-when you can do that directly (and quite easily) using CuPy built-in functions.
+problem here is merely for demonstration purposes, not very complicated, and can
+be achieved in many other ways, including directly (and quite easily) using CuPy
+built-in functions.
 
 Assume you have two arrays, a 2D array `x` and a 1D array `y`, with dimensions
 `MxN` and `N` respectively. We will add those arrays together, in other words,
@@ -143,7 +143,7 @@ dx = da.from_array(x, chunks=(1024, 512), asarray=False)
 dy = da.from_array(y, chunks=(1, 512), asarray=False)
 ```
 
-What is important to not here is the need match array and block sizes properly.
+What is important to note here is the need match array and block sizes properly.
 In this example we have `x` with size 4096x1024 and `y` with length 1024, so the
 length of `N` must match. The same is true for block sizes, here we are creating
 4 blocks on the first dimension and 2 on the second dimension of `x`, thus we
@@ -203,12 +203,12 @@ The topic discussed in this post may seem like a lot of work, and it actually is
 if we consider that we can do the same in about three lines of code. But now
 consider writing a small CUDA kernel that is custom and highly optimized, the
 alternative to this would probably be creating a C++ file, writing both host
-code and the CUDA kernel, compiling it, exposing the API through CPython or
-something similar, this is definitely much more work.
+code and the CUDA kernel, compiling it, exposing the API through CPython (or
+something similar). The latter is much more work than the former.
 
-This post aimed to explain how CuPy and Dask allow extending their capabilities,
-thus giving users the capabilities to write self-contained and easily
-maintainable applications, even when lower-level language code, such as CUDA, is
+This post explained how CuPy and Dask allow you to extend their capabilities.
+This gives users the capabilities to write self-contained and easily
+maintainable applications, even when lower-level language code (such as CUDA) is
 needed to provide best performance.
 
 
