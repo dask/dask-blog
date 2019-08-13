@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Experiments in High Performance Networking with UCX and DGX
-author: Matthew Rocklin, Rick Zamora
+title: Optimizing distance functions in genomics space using Dask & Numba
+author: Alistair Miles, John Kirkham, Matthew Rocklin
 tags: [GPU, array, numba, genomics]
 draft: true
 theme: twitter
