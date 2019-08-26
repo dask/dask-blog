@@ -123,7 +123,7 @@ JOB_ID=${LSB_JOBID%.*}
 /ccs/home/mrocklin/anaconda/bin/python -m distributed.cli.dask_worker tcp://scheduler:8786 --nthreads 16 --nprocs 8 --memory-limit 75.00GB --name name --nanny --death-timeout 60 --interface ib0 --interface ib0
 ```
 
-After comparing notes with existing systems, we modify add keywords to add and
+After comparing notes with existing systems, we modify keywords to add and
 remove certain lines in the header.
 
 
@@ -296,7 +296,7 @@ http://localhost:8888 , run the cluster commands above in a notebook, and
 things work great.  Additionally, thanks to `jupyter-server-proxy`, Dask's
 dashboard is also available at http://localhost:8888/proxy/####/status , where
 `####` is the port currently hosting Dask's dashboard.  You can probably find
-this by looking at `cluster.dashbaord_link`.  It defaults to 8787, but if
+this by looking at `cluster.dashboard_link`.  It defaults to 8787, but if
 you've started a bunch of Dask schedulers on your system recently it's possible
 that that port is taken up and so Dask had to resort to using random ports.
 
@@ -443,4 +443,4 @@ information.
 ### Future work: GPUs
 
 Summit is fast because it has a ton of GPUs. I'm going to work on that next,
-but that will probably enough content to fill up a whole other blogpost :)
+but that will probably cover enough content to fill up a whole other blogpost :)
