@@ -375,7 +375,9 @@ if is_locking_enabled():
 
 It looks like Dask is trying to use a file-based lock.
 Unfortunately some NFS systems don't like file-based locks, or handle them very
-slowly.  Looking up the `is_locking_enabled` function we see that it checks a
+slowly.  In the case of Summit, the home directory is actually mounted
+read-only from the compute nodes, so a file-based lock will simply fail.
+Looking up the `is_locking_enabled` function we see that it checks a
 configuration value.
 
 ```python
