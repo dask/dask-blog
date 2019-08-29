@@ -83,7 +83,7 @@ cluster = LSFCluster(
     project="GEN119",
     walltime="00:30",
 )
-cluster.scale(3)  # ask for ten nodes
+cluster.scale(3)  # ask for three nodes
 ```
 ```
 Command:
