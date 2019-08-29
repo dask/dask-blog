@@ -8,25 +8,30 @@ theme: twitter
 {% include JB/setup %}
 
 Dask is deployed on traditional HPC machines with increasing frequency.
-In the past week I've personally helped three or four different groups get set up.
+In the past week I've personally helped four different groups get set up.
 This is a surprisingly individual process,
 because every HPC machine has its own idiosyncrasies.
-They all use a job scheduler like SLURM/PBS/SGE/LSF/..., a network file
-system, and fast interconnect, but each of those systems will have slightly
-different policies on each machine, which is where things get tricky.
+Each machine uses a job scheduler like SLURM/PBS/SGE/LSF/..., a network file
+system, and fast interconnect, but each of those sub-systems have slightly
+different policies on a machine-by-machine basis, which is where things get tricky.
 
 Typically we can solve these problems in about 30 minutes if we have both:
 
 -  Someone familiar with the machine, like a power-user or an IT administrator
 -  Someone familiar with setting up Dask
 
-These systems span a large range of scale.  This week I've worked with a
-small 24-node SLURM cluster inside of a Bio-Imaging research lab,
-Summit, the world's most powerful supercomputer, and a couple more in between.
+These systems span a large range of scale.  At different ends of this scale
+this week I've seen both:
+
+-  A small in-house 24-node SLURM cluster for research work inside of a
+   bio-imaging lab
+-  Summit, the world's most powerful supercomputer
 
 In this post I'm going to share a few notes of what I went through in dealing
 with Summit, which was particularly troublesome.  Hopefully this gives a sense
-for the kinds of situations that arise.
+for the kinds of situations that arise.  These tips likely don't apply to your
+particular system, but hopefully they give a flavor of what can go wrong,
+and the processes by which we track things down.
 
 
 ### Power Architecture
@@ -37,6 +42,9 @@ their distribution that works well with the Power architecture, so that gave me
 a good starting point.
 
 https://www.anaconda.com/distribution/#linux
+
+Packages do seem to be a few months older than for the normal distribution, but
+I can live with that.
 
 
 ### Install Dask-Jobqueue and configure basic information
@@ -123,8 +131,8 @@ JOB_ID=${LSB_JOBID%.*}
 /ccs/home/mrocklin/anaconda/bin/python -m distributed.cli.dask_worker tcp://scheduler:8786 --nthreads 16 --nprocs 8 --memory-limit 75.00GB --name name --nanny --death-timeout 60 --interface ib0 --interface ib0
 ```
 
-After comparing notes with existing systems, we modify keywords to add and
-remove certain lines in the header.
+After comparing notes with existing scripts that we know to work on Summit,
+we modify keywords to add and remove certain lines in the header.
 
 
 ```python
@@ -138,7 +146,13 @@ cluster = LSFCluster(
 )
 ```
 
-And when we call scale this seems to make LSF happy
+And when we call scale this seems to make LSF happy.  It no longer dumps out
+large error messages.
+
+```python
+>>> cluster.scale(3)  # things seem to pass
+>>>
+```
 
 
 ### Workers don't connect to the Scheduler
@@ -218,10 +232,10 @@ We try this out and still, no luck :(
 
 ### Interactive nodes
 
-The IT expert then says "Oh, our login nodes are pretty locked-down, lets try
-this from an interactive compute node".  We run some arcane bash command (I've
-never seen two of these that look alike so I'm going to omit it here), and
-things magically start working.  Hooray!
+The expert user then says "Oh, our login nodes are pretty locked-down, lets try
+this from an interactive compute node.  Things tend to work better there".  We
+run some arcane bash command (I've never seen two of these that look alike so
+I'm going to omit it here), and things magically start working.  Hooray!
 
 We run a tiny Dask computation just to prove that we can do some work.
 
@@ -236,7 +250,7 @@ the login nodes on Summit using a slightly different `bsub` command in LSF, but
 I'm going to omit details here because we're fixing this in Dask and it's
 unlikely to affect future users (I hope?).  Locked down login nodes remain a
 common cause of no connections across a variety of systems.  I'll say something
-like 20% of the systems that I interact with.
+like 30% of the systems that I interact with.
 
 
 ### SSH Tunneling
