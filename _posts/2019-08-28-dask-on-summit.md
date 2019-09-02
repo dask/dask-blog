@@ -460,3 +460,15 @@ information.
 
 Summit is fast because it has a ton of GPUs. I'm going to work on that next,
 but that will probably cover enough content to fill up a whole other blogpost :)
+
+
+### Branches
+
+For anyone playing along at home (or on Summit).  I'm operating from the
+following development branches:
+
+-  https://github.com/dask/distributed@master
+-  https://github.com/mrocklin/dask-jobqueue@spec-rewrite
+
+Although hopefully within a month of writing this article, everything should be
+in a nicely released state.
