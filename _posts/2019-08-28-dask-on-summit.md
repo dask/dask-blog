@@ -273,11 +273,14 @@ I conda installed JupyterLab and a proxy library, and then tried to
 [set up the Dask JupyterLab extension](https://github.com/dask/dask-labextension#installation).
 
 ```
-conda install jupyter-lab
+conda install jupyterlab
 pip install jupyter-server-proxy  # to route dashboard through Jupyter's port
 ```
 
-I was told that I needed `nodejs` in order to install things into JupyterLab.
+Next, we're going to install the
+[Dask Labextension](https://github.com/dask/dask-labextension) into JupyterLab
+in order to get the Dask Dashboard directly into our Jupyter session..
+For that, we need `nodejs` in order to install things into JupyterLab.
 I thought that this was going to be a pain, given the Power architecture, but
 amazingly, this also seems to be in Anaconda's default Power channel.
 
@@ -285,10 +288,18 @@ amazingly, this also seems to be in Anaconda's default Power channel.
 mrocklin@login2.summit $ conda install nodejs  # Thanks conda packaging devs!
 ```
 
+Then I install Dask-Labextension, which is both a Python and a JavaScript
+package:
+
+```
+pip install dask_labextension
+jupyter labextension install dask-labextension
+```
+
 Then I set up a password for my Jupyter sessions
 
 ```
-mrocklin@login2.summit $ jupyter notebook password
+jupyter notebook password
 ```
 
 And run JupyterLab in a network friendly way
