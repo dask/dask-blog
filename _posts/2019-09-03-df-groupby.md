@@ -12,15 +12,15 @@ theme: twitter
 ## GroupyBy Aggregations with Dask
 
 
-In this blogpost we want to dive into how Dask calculates groupby operations.  These are common operations for ETL and analysis where we want to split unordered data into groups, apply some function to those groups, then combine the groups back together.
+In this blogpost we want to dive into how Dask computes groupby aggregations.  These are common operations for ETL and analysis where we want to split data into groups, apply some function to those groups, then combine the groups back together.  In the R/PyData world this is often referred to as the split-apply-combine strategy first coined by [Hadley Wickham](https://www.jstatsoft.org/article/view/v040i01) but also widely used throughout the [Pandas eco-system](https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html)
+
 
 // image of split apply combine
 
-In the R/PyData world this is often referred to as the split-apply-combine strategy first coined by [Hadley Wickham](https://www.jstatsoft.org/article/view/v040i01) but also widely used throughout the [Pandas eco-system](https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html)
 
-Dask leveraged this idea and also produced a similarly catchy name, `apply-conact-apply` or `aca` for short.  In this blog post, we dive into aca strategy:
+Dask leveraged this idea and also produced a similarly catchy name, `apply-conact-apply` or `aca` for short.  We are going to explore the `aca` strategy in simple and complex operations.
 
-Recall that Dask works on blocks of objects.  In the case of a Dataframe, these [partitions](https://docs.dask.org/en/latest/dataframe-design.html#partitions).  For example, let's say we have the following dataframe:
+First, recall that Dask works on blocks of objects.  In the case of a Dataframe, these blocks are chunks or [partitions](https://docs.dask.org/en/latest/dataframe-design.html#partitions) of a Dataframe.  For example, let's say we have the following Dataframe:
 
 
 ```python
@@ -44,13 +44,13 @@ Recall that Dask works on blocks of objects.  In the case of a Dataframe, these 
 12   1   9   2
 ```
 
-We can load the dataframe into dask and define the number of partitions.  We'll pick 3 partitions -- as it will give us complexity to illustrate what is happening but not too much to the point that we can't keep everything in our heads.
+If we wanted to create a Dataframe with three partitions we could pull out dataframes between the indicies of: (0, 4), (5, 9), and (10, 12).  With dask, this is what happens with the `from_pandas` call` with `npartitions=3`
 
 ```python
 >>> ddf = dd.from_pandas(df, npartitions=3)
 ```
 
-The 3 partitions are simply 3 individual dataframes
+The 3 partitions are simply 3 individual dataframes:
 
 ```python
 >>> ddf.partitions[0].compute()
@@ -62,15 +62,14 @@ The 3 partitions are simply 3 individual dataframes
 4  3   2  3
 ```
 
-So when dask is applying any function and/or algorithm on dataframes, the atomic unit is the dataframe itself.
 
 ## apply-conact-apply
 
-Internally, dask re-uses the same methodology `apply-conact-apply` for much of the dataframe computations.  That is, "Apply a function to blocks, then concat, then apply again".  One of the more common operations on dataframe objects is split-apply-combine aka groupby aggregations.  Taking the dataframe above, let's spend a minute breaking down what `ddf.groupby(['a', 'b']).c.sum()` looks like
+So when dask is applying any function and/or algorithm on dataframes, the atomic unit is the dataframe itself.  That is, when calling sum, len, etc, dask is applying that operation to all the constituent parts, collecting (or concating the result) the results to an intermediary results, then applying the operation again to the intermediary result to produce a final result.
+
+Internally, dask re-uses the same methodology `apply-conact-apply` for much of the dataframe computations.  Again, "Apply a function to blocks, then concat, then apply again".  Let's dive into something a bit more complex than sum and look and break down how `ddf.groupby(['a', 'b']).c.sum()` is computed.  First, let's start with the Dataframe we defined above and split into three partitions:
 
 ### Define Partitions
-
-The equivalent 3 partitions is 3 dataframes -- starting with the original dataframe defined above:
 
 ```python
 >>> df_1 = df[:5].copy()
@@ -78,7 +77,7 @@ The equivalent 3 partitions is 3 dataframes -- starting with the original datafr
 >>> df_3 = df[-3:].copy()
 ```
 
-With three partitions, we perform the same operation, `groupby(['a', 'b']).c.sum()`:
+With three partitions, we perform the same operation, `groupby(['a', 'b']).c.sum()` on each partition:
 
 ```python
 >>> sr1 = df_1.groupby(['a', 'b']).c.sum()
