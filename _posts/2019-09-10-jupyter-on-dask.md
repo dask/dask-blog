@@ -82,7 +82,7 @@ distributed:
 ### Really though, you should use something else
 
 This is mostly a hack.  If you're at an institution then you should ask for
-something like [Juptyer Hub](https://jupyter.org/hub).
+something like [JuptyerHub](https://jupyter.org/hub).
 
 Or, you might also want to run this in a separate subprocess, so that Jupyter
 and the Dask scheduler don't collide with each other.  This shouldn't be so
