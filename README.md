@@ -29,6 +29,21 @@ That should also watch for changes and rebuild automatically.  Built pages live
 in `_site/`.
 
 
+Installing Jekyll
+-----------------
+
+As noted aboove, Jekyll can be installed as a [gem](https://jekyllrb.com/docs/):
+
+> gem install jekyll bundle
+
+Jekyll and ruby can also be install via conda-forge:
+
+```
+conda create -n dask-blog -c conda-forge ruby rb-jekyll rb-nokogiri rb-jekyll-commonmark-ghpages rb-commonmarker rb-bundler
+conda activate dask-blog
+bundle install
+bundle exec jekyll serve
+```
 
 Add a new page
 --------------
