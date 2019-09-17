@@ -216,7 +216,9 @@ Additionally, we can easily examine the steps of this apply-concat-apply calcula
 >>> ddf.groupby(['a', 'b']).c.sum().visualize()
 ```
 
-<img src="/images/sum.svg" width="80%">
+<a href="/images/sum.svg">
+  <img src="/images/sum.svg" width="80%">
+</a>
 
 `sum` is rather a straight-forward calculation.  What about something a bit more complex like `mean`?
 
@@ -224,7 +226,9 @@ Additionally, we can easily examine the steps of this apply-concat-apply calcula
 >>> ddf.groupby(['a', 'b']).c.mean().visualize()
 ```
 
-<img src="/images/mean.svg" width="80%">
+<a href="/images/mean.svg">
+  <img src="/images/mean.svg" width="80%">
+</a>
 
 `Mean` is a good example of an operation which doesn't directly fit in the `aca` model -- concatenating `mean` values and taking the `mean` again will yield incorrect results.  Like any style of computation: vectorization, Map/Reduce, etc, we sometime need to creatively fit the computation to the style/mode.  In the case of `aca` we can often break down the calculation into constituent parts.  For `mean`, this would be: `sum` and `count`
 
