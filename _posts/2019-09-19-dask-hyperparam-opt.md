@@ -7,9 +7,9 @@ theme: twitter
 ---
 {% include JB/setup %}
 
-*This post first appeared at [https://stsievert.com/blog/2019/09/19/dask-hyperparam-opt/][1]*
+*This work is supported by Anaconda, Inc. Scott first published this post at [https://stsievert.com/blog/2019/09/19/dask-hyperparam-opt/][1]*
 
-[1]:https://stsievert.com/blog/2019/09/18/dask-hyperparam-opt/
+[1]:https://stsievert.com/blog/2019/09/19/dask-hyperparam-opt/
 
 [Dask]'s machine learning package, [Dask-ML] now implements Hyperband, an
 advanced "hyperparameter optimizaiton" algorithm that performs rather well.
@@ -401,16 +401,15 @@ notebook available at [stsievert/dask-hyperband-comparison].*
 ## Future work
 
 One improvement is one making `HyperbandSearchCV` perform better for initial
-searches. Some basic internals of Hyperband can be tweaked. This work has
+searches. Some basic internals of Hyperband can be tweaked, which has
 started in [dask/dask-ml #532].
 
 [dask/dask-ml #532]:https://github.com/dask/dask-ml/pull/532
 
-The biggest improvement I see is allowing `HyperbandSearchCV` to work with any
-model that implements `fit` for computationally constrained problems. Right
-now, `HyperbandSearchCV` only works with models that implement
-`partial_fit`. This expansion is supported by the mathematical justification
-and mentioned in [the Hyperband paper][hyperband-paper].
+The biggest improvement I see is treating *dataset size* as the scarce resource
+that needs to be preserved instead of *training time*. This would allow
+Hyperband to work with any model, instead of only models that implement
+`partial_fit`.
 
 Serialization is an important part of the distributed Hyperband implementation
 in `HyperbandSearchCV`. Scikit-learn and PyTorch can easily handle this because
