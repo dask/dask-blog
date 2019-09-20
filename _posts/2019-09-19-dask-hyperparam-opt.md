@@ -42,8 +42,8 @@ data with the regularization parameter.[^alpha]
 [^alpha]:Which amounts to choosing `alpha` in Scikit-learn's [Ridge](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html) or [LASSO](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html)
 
 Model performance strongly depends on the hyperparameters provided.  A simple
-example is with tuning the regularization parameter in ridge regression or
-LASSO.[^regularization] Another more complex example is with a particular
+example is tuning the regularization parameter in ridge regression or
+LASSO.[^regularization] Another more complex example is a particular
 visualization tool, [t-SNE]. This tool requires (at least) three
 hyperparameters, and the first section in "[How to Use t-SNE
 Effectively][tsne-study]" is titled "Those hyperparameters really matter".
@@ -91,14 +91,14 @@ advanced task scheduler like Dask that I'm aware of.[^other-work]
 
 I'll highlight some key points of the corresponding paper,
 "[Better and faster hyperparameter optimization with Dask][scipy19]".  Let's go
-through the basics of Hyperband then illustrate it's use and performance with
+through the basics of Hyperband then illustrate its use and performance with
 an example.
 
 ## Hyperband basics
 
-The motivation for Hyperband is to high performing models with minimal
+The motivation for Hyperband is to find high performing hyperparameters with minimal
 training. Given this goal, it makes sense to spend more time training high
-performing models – why waste training time on poor performing models?
+performing models – why waste more time training time a model if it's done poorly in up until now?
 
 One method to spend more time on high performing models is to initialize many
 models, start training them, and then stop training low performing models
@@ -247,8 +247,10 @@ This model selection algorithm Hyperband is implemented in the class
 *initial* search; I know nothing about how this search space. Then, this search
 should be more aggressive in culling off bad models.
 
-I may be worried about how long the computation will take, or how many models
-are created:
+Hyperband hides some details from the user (which enables the mathematical
+guarantees), specifically the details on the amount of training and
+the number of models created. These details are available in the `metadata`
+attribute:
 
 ``` python
 >>> search.metadata["n_models"]
