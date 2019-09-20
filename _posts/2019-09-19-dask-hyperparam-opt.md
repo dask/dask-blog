@@ -41,22 +41,16 @@ data with the regularization parameter.[^alpha]
 
 [^alpha]:Which amounts to choosing `alpha` in Scikit-learn's [Ridge](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html) or [LASSO](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html)
 
-Model performance strongly depends on the hyperparameters provided.  A simple
-example is tuning the regularization parameter in ridge regression or
-LASSO.[^regularization] Another more complex example is a particular
+Model performance strongly depends on the hyperparameters provided. A fairly complex example is with a particular
 visualization tool, [t-SNE]. This tool requires (at least) three
-hyperparameters, and the first section in "[How to Use t-SNE
+hyperparameters and performance depends radically on the hyperparameters. In fact, the first section in "[How to Use t-SNE
 Effectively][tsne-study]" is titled "Those hyperparameters really matter".
+
 
 [^regularization]:Performance comparison: Scikit-learn's visualization of tuning a Support Vector Machine's (SVM) regularization parameter: [Scaling the regularization parameter for SVCs][sklearn-reg]
 [tsne-study]:https://distill.pub/2016/misread-tsne/
 [sklearn-reg]:https://scikit-learn.org/stable/auto_examples/svm/plot_svm_scale_c.html
 [t-SNE]:https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html
-
-These hyperparameters need to be specified by the user. There are no good
-heuristics for determining what the values should be.  Finding decent values
-for these hyperparameters or "hyperparameter optimization" grows more complex
-as the number of hyperparameters grow.
 
 Finding good values for these hyperparameters is critical and has an entire
 Scikit-Learn documentation page, "[Tuning the hyperparameters of an
