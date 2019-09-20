@@ -7,7 +7,9 @@ theme: twitter
 ---
 {% include JB/setup %}
 
-*Scott Sievert wrote this post. The original post lives at [https://stsievert.com/blog/2019/09/19/dask-hyperparam-opt/][1] with better styling*
+*Scott Sievert wrote this post. The original post lives at
+[https://stsievert.com/blog/2019/09/19/dask-hyperparam-opt/][1] with better
+styling. This work is supported by Anaconda, Inc.*
 
 [1]:https://stsievert.com/blog/2019/09/19/dask-hyperparam-opt/
 
