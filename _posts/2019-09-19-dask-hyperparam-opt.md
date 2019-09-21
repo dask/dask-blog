@@ -323,18 +323,49 @@ time:
  width="400px" class="center"/>
 
 This graph shows the mean score over the 200 runs with the solid line, and the
-shaded region represents the [interquartile range].
+shaded region represents the [interquartile range]. The dotted green
+line indicates the data required to train 4 models to completion.
 
 [interquartile range]:https://en.wikipedia.org/wiki/Interquartile_range
 
 This graph shows that `HyperbandSearchCV` will find parameters 2–3 times
-quicker than `RandomizedSearchCV`.  "Passes through the dataset" is a good
-proxy for "time to solution" because there are only 4 workers. The dotted green
-line indicates the data required to train 4 models to completion.
+quicker than `RandomizedSearchCV`. "Passes through the dataset" is a good
+proxy for "time to solution" because there are only 4 workers.
 
+### Dask opportunities
+
+What opportunities does combining Hyperband and Dask combination create?
+`HyperbandSearchCv` has a lot of internal parallelism because it's an early
+stopping scheme for `RandomizedSearchCV`, and Dask is an advanced task
+scheduler.
+
+The most obvious opportunity involves job prioritization. Hyperband fits many
+models in parallel (more than `n_params` models). Dask might not have that
+number of workers available.
+
+Of course, Dask can prioritize jobs, so it can prioritize which models get fit
+soonest. Why not assign the model's most recent score to the priority? There's
+some more info in Dask's documentation in [Prioritizing Work][dask-prior].
+
+How does this prioritization scheme influence the score? Let's run a single run
+of the 200 above and compare with different prioritization scheme:
+
+<img src="/images/2019-hyperband/synthetic/priority.svg"
+     width="400px" class="center" />
+
+This graph shows the "high scores" prioritization scheme above with the "fifo"
+scheme, Dask's default. These two lines are the same in every way except for
+the prioritization scheme. This run is one of the 200 runs mentioned in
+*[Performance](#performance)*.
+
+This graph is certainly helped by the fact that is run with 4 workers.
+Job priority does not matter if every job can be run right away (there's
+nothing to assign priority too!).
+
+[dask-prior]:https://distributed.dask.org/en/latest/priority.html
 ### Amenability to parallelism
 
-These graphs are for serial environments, only 4 workers. How does
+These graphs above are very serial, only with only 4 workers. How does
 `HyperbandSearchCV` scale to more workers?
 
 To do that, I ran a separate experiment, described more in the [corresponding
@@ -360,38 +391,6 @@ workers.[^scale-worker]
 [^scale-worker]:There's no time benefit to stopping jobs early if there are infinite workers; there's never a queue of jobs waiting to be run
 [^same]:Everything is the same between different runs: the hyperparameters sampled, the model's internal random state, the data passed for fitting. Only the number of workers varies.
 
-
-### Dask opportunities
-
-Having a more workers influences the time required to reach a particular
-validation score in different way. Hyperband is an advanced hyperparameter
-optimization framework and Dask is an advanced task scheduler. What
-opportunities does that combination create?
-
-The most obvious opportunity involves job prioritization. Hyperband fits many
-models in parallel (more than `n_params` models). Dask might not have that
-number of workers available.
-
-Of course, Dask can prioritize jobs, so it can prioritize which models get fit
-soonest. Why not assign the model's most recent score to the priority? There's
-some more info in Dask's documentation in [Prioritizing Work][dask-prior].
-
-How does this prioritization scheme influence the score? Let's run another
-experiment and only vary the prioritization scheme:
-
-<img src="/images/2019-hyperband/synthetic/priority.svg"
-     width="400px" class="center" />
-
-This graph shows the "high scores" prioritization scheme above with the "fifo"
-scheme, Dask's default. These two lines are the same in every way except for
-the prioritization scheme. This run is one of the 200 runs mentioned in
-*[Performance](#performance)*.
-
-This graph is certainly helped by the fact that is run in a serial environment.
-Job priority does not matter if every job can be run right away (there's
-nothing to assign priority too!).
-
-[dask-prior]:https://distributed.dask.org/en/latest/priority.html
 
 *Note: core concepts in this section are illustrated by some code and images from a
 notebook available at [stsievert/dask-hyperband-comparison].*
