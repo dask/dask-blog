@@ -26,7 +26,11 @@ This post will
 [Dask-ML]:https://ml.dask.org/
 
 In this post, I'll walk through a practical example and highlight key portions
-of "[Better and faster hyperparameter optimization with Dask][scipy19]".
+of "[Better and faster hyperparameter optimization with Dask][scipy19]" (also
+summarized in a [~25 minute talk][scipy19talk] at the SciPy Conference).
+
+[scipy19talk]:https://www.youtube.com/watch?v=x67K9FiPFBQ
+[scipy19]:http://conference.scipy.org/proceedings/scipy2019/pdfs/scott_sievert.pdf
 
 <!--More-->
 
@@ -115,7 +119,6 @@ models are stopped. This sweep allows a mathematical proof that Hyperband
 will find the best model possible with a minimal number of `partial_fit`
 calls.[^qual]
 
-[scipy19]:https://conference.scipy.org/proceedings/scipy2019/pdfs/scott_sievert.pdf
 [^qual]:More accurately, Hyperband will find close to the best model possible with $N$ `partial_fit` calls in expected score with high probability, where "close" means "within log terms of the upper bound on score". For details, see corollary 1 of "[Better and faster hyperparameter optimization with Dask][hyperband-paper]".
 
 That's the intuition for Hyperband, and a very informal description of the
