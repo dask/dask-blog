@@ -14,7 +14,7 @@ styling. This work is supported by Anaconda, Inc.*
 [1]:https://stsievert.com/blog/2019/09/19/dask-hyperparam-opt/
 
 [Dask]'s machine learning package, [Dask-ML] now implements Hyperband, an
-advanced "hyperparameter optimizaiton" algorithm that performs rather well.
+advanced "hyperparameter optimization" algorithm that performs rather well.
 This post will
 
 * describe "hyperparameter optimization", a common problem in machine learning
@@ -28,6 +28,12 @@ This post will
 In this post, I'll walk through a practical example and highlight key portions
 of "[Better and faster hyperparameter optimization with Dask][scipy19]" (also
 summarized in a [~25 minute talk][scipy19talk] at the SciPy Conference).
+
+[dask-ml-intro]:https://www.youtube.com/watch?v=tQBovBvSDvA
+[yt-dask-intro]:https://www.youtube.com/watch?v=ods97a5Pzw0
+[data-science-dask]:https://towardsdatascience.com/why-every-data-scientist-should-use-dask-81b2b850e15b
+[Why Dask?]:https://docs.dask.org/en/latest/why.html
+[dask-UW-cluster]:https://stsievert.com/blog/2016/09/09/dask-cluster/
 
 [scipy19talk]:https://www.youtube.com/watch?v=x67K9FiPFBQ
 [scipy19]:http://conference.scipy.org/proceedings/scipy2019/pdfs/scott_sievert.pdf
@@ -51,7 +57,7 @@ hyperparameters and performance depends radically on the hyperparameters. In fac
 Effectively][tsne-study]" is titled "Those hyperparameters really matter".
 
 
-[^regularization]:Performance comparison: Scikit-learn's visualization of tuning a Support Vector Machine's (SVM) regularization parameter: [Scaling the regularization parameter for SVCs][sklearn-reg]
+[^regularization]:Performance comparison: Scikit-learn's visualization of tuning a Support Vector Machine's (SVM) regularization parameter: [Scaling the regularization parameter for SVMs][sklearn-reg]
 [tsne-study]:https://distill.pub/2016/misread-tsne/
 [sklearn-reg]:https://scikit-learn.org/stable/auto_examples/svm/plot_svm_scale_c.html
 [t-SNE]:https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html
@@ -66,6 +72,11 @@ is difficult and requires guessing or searching.
 **How can these hyperparameters be found quickly and efficiently with an
 advanced task scheduler like Dask?** Parallelism will pose some challenges, but
 the Dask architecture enables some advanced algorithms.
+
+*Note: This post presumes knowledge of Dask basics. This material is covered in
+Dask's documentation on [Why Dask?], a ~15 minute [video introduction to
+Dask][yt-dask-intro], a [video introduction to Dask-ML][dask-ml-intro] or [a
+blog post I wrote][dask-UW-cluster] after discovering Dask.*
 
 ## Contributions
 
@@ -82,7 +93,7 @@ Pairing of Dask and Hyperband enables some exciting new performance opportunitie
 Hyperband is fairly new,[^new] and this is the first implementation with an
 advanced task scheduler like Dask that I'm aware of.[^other-work]
 
-[^new]:By some metrics. It's been around since 2016 and some call that "old news."
+[^new]:It's been around since 2016... and some call that "old news."
 [^other-work]:Including with [Ray-Tune's implementation][asha-ray] and "[Massively Parallel Hyperparameter Tuning][asha]".
 [asha-ray]:https://ray.readthedocs.io/en/latest/tune-schedulers.html#asynchronous-hyperband
 [asha]:https://arxiv.org/pdf/1810.05934.pdf
@@ -119,7 +130,7 @@ models are stopped. This sweep allows a mathematical proof that Hyperband
 will find the best model possible with a minimal number of `partial_fit`
 calls.[^qual]
 
-[^qual]:More accurately, Hyperband will find close to the best model possible with $N$ `partial_fit` calls in expected score with high probability, where "close" means "within log terms of the upper bound on score". For details, see corollary 1 of "[Better and faster hyperparameter optimization with Dask][hyperband-paper]".
+[^qual]:More accurately, Hyperband will find close to the best model possible with $N$ `partial_fit` calls in expected score with high probability, where "close" means "within log terms of the upper bound on score". For details, see Corollary 1 of the [corresponding paper][hyperband-paper] or Theorem 5 of [Hyperband's paper][hyperband-paper].
 
 That's the intuition for Hyperband, and a very informal description of the
 paper's main result. But how well does it perform?
@@ -180,7 +191,7 @@ decay".[^user-facing]
 End users don't care hyperparameters like these; they don't change the
 model architecture, only finding the best model of a particular architecture.
 
-[^user-facing]:There's less tuning for adaptive step size methods like [Adam] or [Adagrad]... and "[The Marginal Value of Adaptive Gradient Methods for Machine Learning][adamarginal]" shows that can underperform on test performance.
+[^user-facing]:There's less tuning for adaptive step size methods like [Adam] or [Adagrad]... and "[The Marginal Value of Adaptive Gradient Methods for Machine Learning][adamarginal]" shows those methods can underperform on test performance.
 
 How can high performing hyperparameter values be found quickly?
 
@@ -287,7 +298,7 @@ How well do the hyperparameters found by this search perform?
 0.9019221418447483
 ```
 
-`HyperbandSearchCV` mirrors Scikit-Learn's API for [RandomizedSearchCV], so it
+`HyperbandSearchCV` mirrors Scikit-learn's API for [RandomizedSearchCV], so it
 has access to all the expected attributes and methods:
 
 ``` python
@@ -331,9 +342,9 @@ line indicates the data required to train 4 models to completion.
 
 [interquartile range]:https://en.wikipedia.org/wiki/Interquartile_range
 
-This graph shows that `HyperbandSearchCV` will find parameters 2–3 times
-quicker than `RandomizedSearchCV`. "Passes through the dataset" is a good
-proxy for "time to solution" because there are only 4 workers.
+This graph shows that `HyperbandSearchCV` will find parameters at least 3 times
+quicker than `RandomizedSearchCV`. "Passes through the dataset" is a good proxy
+for "time to solution" because there are only 4 workers.
 
 ### Dask opportunities
 
@@ -366,6 +377,7 @@ Job priority does not matter if every job can be run right away (there's
 nothing to assign priority too!).
 
 [dask-prior]:https://distributed.dask.org/en/latest/priority.html
+
 ### Amenability to parallelism
 
 These graphs above are very serial, only with only 4 workers. How does
@@ -428,7 +440,7 @@ I choose to tune 7 hyperparameters, which are
   neuron
 * `alpha`, which controls the amount of regularization
 
-More hyperparamaeters control finding the best neural network:
+More hyperparameters control finding the best neural network:
 
 * `batch_size`, which controls the number of examples the `optimizer` uses to
   approximate the gradient
