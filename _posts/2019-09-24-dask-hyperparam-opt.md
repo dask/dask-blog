@@ -7,10 +7,11 @@ theme: twitter
 ---
 {% include JB/setup %}
 
-*Scott Sievert wrote this post. The original post lives at
+*[Scott Sievert] wrote this post. The original post lives at
 [https://stsievert.com/blog/2019/09/19/dask-hyperparam-opt/][1] with better
 styling. This work is supported by Anaconda, Inc.*
 
+[Scott Sievert]:https://stsievert.com
 [1]:https://stsievert.com/blog/2019/09/19/dask-hyperparam-opt/
 
 [Dask]'s machine learning package, [Dask-ML] now implements Hyperband, an
@@ -19,15 +20,16 @@ This post will
 
 * describe "hyperparameter optimization", a common problem in machine learning
 * describe Hyperband's benefits and why it works
-* show how to use Hyperband via an example, alongside performance comparisons
-  for the same example
+* show how to use Hyperband via example alongside performance comparisons
 
 [Dask]:https://dask.org
 [Dask-ML]:https://ml.dask.org/
 
 In this post, I'll walk through a practical example and highlight key portions
-of "[Better and faster hyperparameter optimization with Dask][scipy19]" (also
-summarized in a [~25 minute talk][scipy19talk] at the SciPy Conference).
+of the paper "[Better and faster hyperparameter optimization with Dask][scipy19]", which is also
+summarized in a [~25 minute SciPy 2019 talk][scipy19talk].
+
+<!--More-->
 
 [dask-ml-intro]:https://www.youtube.com/watch?v=tQBovBvSDvA
 [yt-dask-intro]:https://www.youtube.com/watch?v=ods97a5Pzw0
@@ -38,12 +40,9 @@ summarized in a [~25 minute talk][scipy19talk] at the SciPy Conference).
 [scipy19talk]:https://www.youtube.com/watch?v=x67K9FiPFBQ
 [scipy19]:http://conference.scipy.org/proceedings/scipy2019/pdfs/scott_sievert.pdf
 
-<!--More-->
-
 ## Problem
 
-Any machine learning requires data, an untrained model or
-model and "hyperparameters", parameters that are chosen before training begins that
+Machine learning requires data, an untrained model and "hyperparameters", parameters that are chosen before training begins that
 help with cohesion between the model and data. The user needs to specify values
 for these hyperparameters in order to use the model. A good example is
 adapting ridge regression or LASSO to the amount of noise in the
@@ -63,8 +62,8 @@ Effectively][tsne-study]" is titled "Those hyperparameters really matter".
 [t-SNE]:https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html
 
 Finding good values for these hyperparameters is critical and has an entire
-Scikit-Learn documentation page, "[Tuning the hyperparameters of an
-estimator]." Briefly, finding the decent values of hyperparameters
+Scikit-learn documentation page, "[Tuning the hyperparameters of an
+estimator]." Briefly, finding decent values of hyperparameters
 is difficult and requires guessing or searching.
 
 [Tuning the hyperparameters of an estimator]:http://scikit-learn.org/stable/modules/grid_search.html
@@ -73,46 +72,47 @@ is difficult and requires guessing or searching.
 advanced task scheduler like Dask?** Parallelism will pose some challenges, but
 the Dask architecture enables some advanced algorithms.
 
-*Note: This post presumes knowledge of Dask basics. This material is covered in
+*Note: this post presumes knowledge of Dask basics. This material is covered in
 Dask's documentation on [Why Dask?], a ~15 minute [video introduction to
-Dask][yt-dask-intro], a [video introduction to Dask-ML][dask-ml-intro] or [a
-blog post I wrote][dask-UW-cluster] after discovering Dask.*
+Dask][yt-dask-intro], a [video introduction to Dask-ML][dask-ml-intro] and [a
+blog post I wrote][dask-UW-cluster] on my first use of Dask.*
 
 ## Contributions
 
-Dask-ML can quickly find high-performing hyperparameters.
+Dask-ML can quickly find high-performing hyperparameters. I will back this
+claim with intuition and experimental evidence.
 
-I will back this
-claim with intuition and experimental evidence. Specifically, Dask-ML now
+Specifically, this is because
+Dask-ML now
 implements an algorithm introduced by Li et. al. in "[Hyperband: A novel
 bandit-based approach to hyperparameter optimization][hyperband-paper]".
+Pairing of Dask and Hyperband enables some exciting new performance opportunities,
+especially because Hyperband has a simple implementation and Dask is an
+advanced task scheduler.[^first]
 
 [hyperband-paper]:https://arxiv.org/pdf/1603.06560.pdf
 
-Pairing of Dask and Hyperband enables some exciting new performance opportunities.
-Hyperband is fairly new,[^new] and this is the first implementation with an
-advanced task scheduler like Dask that I'm aware of.[^other-work]
 
+[^first]:To the best of my knowledge, this is the first implementation of Hyperband with an advanced task scheduler
 [^new]:It's been around since 2016... and some call that "old news."
-[^other-work]:Including with [Ray-Tune's implementation][asha-ray] and "[Massively Parallel Hyperparameter Tuning][asha]".
 [asha-ray]:https://ray.readthedocs.io/en/latest/tune-schedulers.html#asynchronous-hyperband
 [asha]:https://arxiv.org/pdf/1810.05934.pdf
 
-I'll highlight some key points of the corresponding paper,
-"[Better and faster hyperparameter optimization with Dask][scipy19]".  Let's go
+Let's go
 through the basics of Hyperband then illustrate its use and performance with
 an example.
+This will highlight some key points of [the corresponding paper][scipy19].
 
 ## Hyperband basics
 
 The motivation for Hyperband is to find high performing hyperparameters with minimal
 training. Given this goal, it makes sense to spend more time training high
-performing models – why waste more time training time a model if it's done poorly in up until now?
+performing models – why waste more time training time a model if it's done poorly in the past?
 
 One method to spend more time on high performing models is to initialize many
-models, start training them, and then stop training low performing models
+models, start training all of them, and then stop training low performing models
 before training is finished. That's what Hyperband does. At the most basic
-level, Hyperband is a principled early-stopping scheme for
+level, Hyperband is a (principled) early-stopping scheme for
 [RandomizedSearchCV].
 
 [RandomizedSearchCV]:https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
@@ -127,13 +127,17 @@ the training data effects the score. There are two extremes:
 
 Hyperband balances these two extremes by sweeping over how frequently
 models are stopped. This sweep allows a mathematical proof that Hyperband
-will find the best model possible with a minimal number of `partial_fit`
-calls.[^qual]
+will find the best model possible with minimal `partial_fit`
+calls[^qual].
 
 [^qual]:More accurately, Hyperband will find close to the best model possible with $N$ `partial_fit` calls in expected score with high probability, where "close" means "within log terms of the upper bound on score". For details, see Corollary 1 of the [corresponding paper][hyperband-paper] or Theorem 5 of [Hyperband's paper][hyperband-paper].
 
-That's the intuition for Hyperband, and a very informal description of the
-paper's main result. But how well does it perform?
+Hyperband has significant parallelism because it has two "embarrassingly
+parallel" for-loops -- Dask can exploit this.  Hyperband has been implemented
+in Dask, specifically in Dask's machine library Dask-ML.
+
+How well does it perform? Let's illustrate via example. Some setup is required
+before the performance comparison in *[Performance](#performance)*.
 
 ## Example
 
@@ -157,22 +161,21 @@ width="200px" />
 
 [stsievert/dask-hyperband-comparison]:https://github.com/stsievert/dask-hyperband-comparison
 
-This is a pretty simple dataset. Let's build a fully connected neural net with
-24 neurons to classify this dataset:
+Let's build a fully connected neural net with 24 neurons for classification:
 
 ``` python
 >>> from sklearn.neural_network import MLPClassifier
 >>> model = MLPClassifier()
 ```
 
-Building the neural net with PyTorch  is also possible,[^skorch] and what I used in development).
+Building the neural net with PyTorch  is also possible[^skorch] (and what I used in development).
 
-[^skorch]:Through the Scikit-learn API wrapper [skorch]
+[^skorch]:through the Scikit-learn API wrapper [skorch]
 
-This neural net's behavior is dictated by a host of hyperparameters. There are
-6 hyperparameters, and only one controls the model of the optimal architecture
-(the number of neurons through `hidden_layer_sizes`). The rest control finding
-the best model of that architecture. Details on the hyperparameters are in the
+This neural net's behavior is dictated by 6 hyperparameters. Only one controls
+the model of the optimal architecture (`hidden_layer_sizes`, the number of
+neurons in each layer). The rest control finding the best model of that
+architecture. Details on the hyperparameters are in the
 *[Appendix](#appendix)*.
 
 ``` python
@@ -185,13 +188,13 @@ dict_keys(['hidden_layer_sizes', 'alpha', 'batch_size', 'learning_rate'
 ```
 
 I choose these hyperparameters to have a complex search space that mimics the
-searches performed for most neural networks. These searches typically involved
+searches performed for most neural networks. These searches typically involve
 hyperparameters like "dropout", "learning rate", "momentum" and "weight
 decay".[^user-facing]
 End users don't care hyperparameters like these; they don't change the
 model architecture, only finding the best model of a particular architecture.
 
-[^user-facing]:There's less tuning for adaptive step size methods like [Adam] or [Adagrad]... and "[The Marginal Value of Adaptive Gradient Methods for Machine Learning][adamarginal]" shows those methods can underperform on test performance.
+[^user-facing]:There's less tuning for adaptive step size methods like [Adam] or [Adagrad], but they might under-perform on the test data (see "[The Marginal Value of Adaptive Gradient Methods for Machine Learning][adamarginal]")
 
 How can high performing hyperparameter values be found quickly?
 
@@ -223,10 +226,10 @@ max_iter = n_params
 chunk_size = n_examples // n_params
 ```
 
-This rule-of-thumb requires are exactly the inputs the user cares about:
+The inputs to this rule-of-thumb are exactly what the user cares about:
 
-* `n_params`, a measure of how complex the search space is
-* `n_examples`, how long to train the best model.
+* a measure of how complex the search space is (via `n_params`)
+* how long to train the best model (via `n_examples`)
 
 Notably, there's no tradeoff between `n_examples` and `n_params` like with
 Scikit-learn's `RandomizedSearchCV` because `n_examples` is only for *some*
@@ -236,7 +239,7 @@ docs][hyperband-docstring].
 
 [hyperband-docstring]:https://ml.dask.org/modules/generated/dask_ml.model_selection.HyperbandSearchCV.html#dask_ml.model_selection.HyperbandSearchCV
 
-With these, a `HyperbandSearchCV` object can easily be created.
+With these inputs a `HyperbandSearchCV` object can easily be created.
 
 ### Finding the best performing hyperparameters
 
@@ -285,13 +288,13 @@ The dashboard will be active during this time[^dashboard]:
 [^dashboard]:But it probably won't be this fast: the video is sped up by a factor of 3.
 
 <p>
-<video width="600" autoplay loop controls class="center">
-  <source src="/images/2019-hyperband/dashboard-compress.mp4" type="video/mp4" class="center">
+<video width="600" autoplay loop controls>
+  <source src="/images/2019-hyperband/dashboard-compress.mp4" type="video/mp4" >
   Your browser does not support the video tag.
 </video>
 </p>
 
-How well do the hyperparameters found by this search perform?
+How well do these hyperparameters perform?
 
 ``` python
 >>> search.best_score_
@@ -323,80 +326,82 @@ Plot 2: how does this scale?
 Plot 3: what opportunities does Dask enable?
 -->
 
-Let's run this on my personal laptop with 4 cores. I ran this 200 times, so
-let's look at the distribution of final validation scores:
+I ran this 200 times on my personal laptop with 4 cores.
+Let's look at the distribution of final validation scores:
 
 <img src="/images/2019-hyperband/synthetic/final-acc.svg"
- width="400px" class="center"/>
+ width="400px"/>
 
 The "passive" comparison is really `RandomizedSearchCV` configured so it takes
 an equal amount of work as `HyperbandSearchCV`. Let's see how this does over
 time:
 
 <img src="/images/2019-hyperband/synthetic/val-acc.svg"
- width="400px" class="center"/>
+ width="400px"/>
 
 This graph shows the mean score over the 200 runs with the solid line, and the
 shaded region represents the [interquartile range]. The dotted green
 line indicates the data required to train 4 models to completion.
+"Passes through the dataset" is a good proxy
+for "time to solution" because there are only 4 workers.
 
 [interquartile range]:https://en.wikipedia.org/wiki/Interquartile_range
 
 This graph shows that `HyperbandSearchCV` will find parameters at least 3 times
-quicker than `RandomizedSearchCV`. "Passes through the dataset" is a good proxy
-for "time to solution" because there are only 4 workers.
+quicker than `RandomizedSearchCV`.
 
 ### Dask opportunities
 
-What opportunities does combining Hyperband and Dask combination create?
-`HyperbandSearchCv` has a lot of internal parallelism because it's an early
-stopping scheme for `RandomizedSearchCV`, and Dask is an advanced task
+What opportunities does combining Hyperband and Dask create?
+`HyperbandSearchCV` has a lot of internal parallelism  and Dask is an advanced task
 scheduler.
 
 The most obvious opportunity involves job prioritization. Hyperband fits many
-models in parallel (more than `n_params` models). Dask might not have that
-number of workers available.
+models in parallel and Dask might not have that
+workers available. This means some jobs have to wait for other jobs
+to finish. Of course, Dask can prioritize jobs[^prior] and choose which models
+to fit first.
 
-Of course, Dask can prioritize jobs, so it can prioritize which models get fit
-soonest. Why not assign the model's most recent score to the priority? There's
-some more info in Dask's documentation in [Prioritizing Work][dask-prior].
+[^prior]:See Dask's documentation on [Prioritizing Work](https://distributed.dask.org/en/latest/priority.html)
+[dask-prior]:https://distributed.dask.org/en/latest/priority.html
 
-How does this prioritization scheme influence the score? Let's run a single run
-of the 200 above and compare with different prioritization scheme:
+Let's assign the priority for fitting a certain model to be the model's most
+recent score. How does this prioritization scheme influence the score? Let's
+compare the prioritization schemes in
+a single run of the 200 above:
 
 <img src="/images/2019-hyperband/synthetic/priority.svg"
-     width="400px" class="center" />
+     width="400px" />
 
-This graph shows the "high scores" prioritization scheme above with the "fifo"
-scheme, Dask's default. These two lines are the same in every way except for
-the prioritization scheme. This run is one of the 200 runs mentioned in
-*[Performance](#performance)*.
+These two lines are the same in every way except for
+the prioritization scheme.
+This graph compares the "high scores" prioritization scheme and the Dask's
+default prioritization scheme ("fifo").
 
-This graph is certainly helped by the fact that is run with 4 workers.
+This graph is certainly helped by the fact that is run with only 4 workers.
 Job priority does not matter if every job can be run right away (there's
 nothing to assign priority too!).
 
-[dask-prior]:https://distributed.dask.org/en/latest/priority.html
-
 ### Amenability to parallelism
 
-These graphs above are very serial, only with only 4 workers. How does
-`HyperbandSearchCV` scale to more workers?
+How does Hyperband scale with the number of workers?
 
-To do that, I ran a separate experiment, described more in the [corresponding
-paper][scipy19]. The relevant difference is that a [PyTorch] neural network is used
-through [skorch]. I ran the *same* experiment with a different number of Dask
+I ran another separate experiment to measure. This experiment is described more in the [corresponding
+paper][scipy19], but the relevant difference is that a [PyTorch] neural network is used
+through [skorch] instead of Scikit-learn's MLPClassifier.
+
+I ran the *same* experiment with a different number of Dask
 workers.[^same] Here's how `HyperbandSearchCV` scales:
 
 [skorch]:https://skorch.readthedocs.io/en/stable/
 [PyTorch]:https://pytorch.org/
 
-<img src="/images/2019-hyperband/image-denoising/scaling-patience.svg" width="400px" class="center" />
+<img src="/images/2019-hyperband/image-denoising/scaling-patience.svg" width="400px"  />
 
 Training one model to completion requires 243 seconds (which is marked by the
 white line). This is a comparison with `patience`, which stops training models
 if their scores aren't increasing enough. Functionally, this is very useful
-because the user might specify `n_examples` to be too large.
+because the user might accidentally specify `n_examples` to be too large.
 
 It looks like the speedups start to saturate somewhere
 between 16 and 24 workers, at least for this example.
@@ -406,15 +411,11 @@ workers.[^scale-worker]
 [^scale-worker]:There's no time benefit to stopping jobs early if there are infinite workers; there's never a queue of jobs waiting to be run
 [^same]:Everything is the same between different runs: the hyperparameters sampled, the model's internal random state, the data passed for fitting. Only the number of workers varies.
 
-
-*Note: core concepts in this section are illustrated by some code and images from a
-notebook available at [stsievert/dask-hyperband-comparison].*
-
 ## Future work
 
-One improvement is one making `HyperbandSearchCV` perform better for initial
-searches. Some basic internals of Hyperband can be tweaked, which has
-started in [dask/dask-ml #532].
+There's some ongoing pull requests to improve `HyperbandSearchCV`. The most
+significant of these involves tweaking some Hyperband internals so `HyperbandSearchCV`
+works better with initial or very exploratory searches ([dask/dask-ml #532]).
 
 [dask/dask-ml #532]:https://github.com/dask/dask-ml/pull/532
 
@@ -425,7 +426,7 @@ Hyperband to work with any model, instead of only models that implement
 
 Serialization is an important part of the distributed Hyperband implementation
 in `HyperbandSearchCV`. Scikit-learn and PyTorch can easily handle this because
-they natively support the Pickle protocol[^pickle-post], but
+they support the Pickle protocol[^pickle-post], but
 Keras/Tensorflow/MXNet present challenges. The use of `HyperbandSearchCV` could
 be increased by resolving this issue.
 
@@ -447,4 +448,3 @@ More hyperparameters control finding the best neural network:
 * `learning_rate`, `learning_rate_init`, `power_t`, which control some basic
   hyperparameters for the SGD optimizer I'll be using
 * `momentum`, a more advanced hyperparameter for SGD with Nesterov's momentum.
-
