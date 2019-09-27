@@ -8,11 +8,11 @@ theme: twitter
 {% include JB/setup %}
 
 *[Scott Sievert] wrote this post. The original post lives at
-[https://stsievert.com/blog/2019/09/19/dask-hyperparam-opt/][1] with better
+[https://stsievert.com/blog/2019/09/26/dask-hyperparam-opt/][orig-post] with better
 styling. This work is supported by Anaconda, Inc.*
 
 [Scott Sievert]:https://stsievert.com
-[1]:https://stsievert.com/blog/2019/09/19/dask-hyperparam-opt/
+[orig-post]:https://stsievert.com/blog/2019/09/26/dask-hyperparam-opt/
 
 [Dask]'s machine learning package, [Dask-ML] now implements Hyperband, an
 advanced "hyperparameter optimization" algorithm that performs rather well.
@@ -130,7 +130,7 @@ models are stopped. This sweep allows a mathematical proof that Hyperband
 will find the best model possible with minimal `partial_fit`
 calls[^qual].
 
-[^qual]:More accurately, Hyperband will find close to the best model possible with $N$ `partial_fit` calls in expected score with high probability, where "close" means "within log terms of the upper bound on score". For details, see Corollary 1 of the [corresponding paper][hyperband-paper] or Theorem 5 of [Hyperband's paper][hyperband-paper].
+[^qual]:More accurately, Hyperband will find close to the best model possible with $N$ `partial_fit` calls in expected score with high probability, where "close" means "within log terms of the upper bound on score". For details, see Corollary 1 of the [corresponding paper][scipy19] or Theorem 5 of [Hyperband's paper][hyperband-paper].
 
 Hyperband has significant parallelism because it has two "embarrassingly
 parallel" for-loops -- Dask can exploit this.  Hyperband has been implemented
