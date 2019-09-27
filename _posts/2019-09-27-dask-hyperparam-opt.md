@@ -8,11 +8,11 @@ theme: twitter
 {% include JB/setup %}
 
 *[Scott Sievert] wrote this post. The original post lives at
-[https://stsievert.com/blog/2019/09/26/dask-hyperparam-opt/][orig-post] with better
+[https://stsievert.com/blog/2019/09/27/dask-hyperparam-opt/][orig-post] with better
 styling. This work is supported by Anaconda, Inc.*
 
 [Scott Sievert]:https://stsievert.com
-[orig-post]:https://stsievert.com/blog/2019/09/26/dask-hyperparam-opt/
+[orig-post]:https://stsievert.com/blog/2019/09/27/dask-hyperparam-opt/
 
 [Dask]'s machine learning package, [Dask-ML] now implements Hyperband, an
 advanced "hyperparameter optimization" algorithm that performs rather well.
