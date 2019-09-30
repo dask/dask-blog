@@ -154,6 +154,7 @@ I'll illustrate with a synthetic example. Let's build a dataset with 4 classes:
 >>> scatter(X[:, :2], color=y)
 ```
 <img src="/images/2019-hyperband/synthetic/dataset.png"
+style="max-width: 100%;"
 width="200px" />
 
 *Note: this content is pulled from
@@ -288,7 +289,7 @@ The dashboard will be active during this time[^dashboard]:
 [^dashboard]:But it probably won't be this fast: the video is sped up by a factor of 3.
 
 <p>
-<video width="600" autoplay loop controls>
+<video width="600" style="max-width: 100%;" autoplay loop controls >
   <source src="/images/2019-hyperband/dashboard-compress.mp4" type="video/mp4" >
   Your browser does not support the video tag.
 </video>
@@ -330,6 +331,7 @@ I ran this 200 times on my personal laptop with 4 cores.
 Let's look at the distribution of final validation scores:
 
 <img src="/images/2019-hyperband/synthetic/final-acc.svg"
+style="max-width: 100%;"
  width="400px"/>
 
 The "passive" comparison is really `RandomizedSearchCV` configured so it takes
@@ -337,6 +339,7 @@ an equal amount of work as `HyperbandSearchCV`. Let's see how this does over
 time:
 
 <img src="/images/2019-hyperband/synthetic/val-acc.svg"
+style="max-width: 100%;"
  width="400px"/>
 
 This graph shows the mean score over the 200 runs with the solid line, and the
@@ -371,6 +374,7 @@ compare the prioritization schemes in
 a single run of the 200 above:
 
 <img src="/images/2019-hyperband/synthetic/priority.svg"
+style="max-width: 100%;"
      width="400px" />
 
 These two lines are the same in every way except for
@@ -396,7 +400,9 @@ workers.[^same] Here's how `HyperbandSearchCV` scales:
 [skorch]:https://skorch.readthedocs.io/en/stable/
 [PyTorch]:https://pytorch.org/
 
-<img src="/images/2019-hyperband/image-denoising/scaling-patience.svg" width="400px"  />
+<img src="/images/2019-hyperband/image-denoising/scaling-patience.svg" width="400px"
+style="max-width: 100%;"
+/>
 
 Training one model to completion requires 243 seconds (which is marked by the
 white line). This is a comparison with `patience`, which stops training models
