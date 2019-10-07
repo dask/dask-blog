@@ -69,14 +69,14 @@ The 3 partitions are simply 3 individual Pandas DataFrames:
 
 ## Apply-concat-apply
 
-When Dask applies a function and/or algorithm (e.g. `sum`, `mean`, etc.) to a Dask DataFrame, it does so by applying that operation to all the constituent partitions independently, collecting (or concatenating) the outputs into intermediary results, and then applying the operation again to the intermediary results to produce a final result. Internally, Dask re-uses the same apply-concat-apply methodology for many of its internal DataFrame calculations.  Again, "Apply a function to each partition, then concat, then apply again".
+When Dask applies a function and/or algorithm (e.g. `sum`, `mean`, etc.) to a Dask DataFrame, it does so by applying that operation to all the constituent partitions independently, collecting (or concatenating) the outputs into intermediary results, and then applying the operation again to the intermediary results to produce a final result. Internally, Dask re-uses the same apply-concat-apply methodology for many of its internal DataFrame calculations.
 
-Let's dive into something a bit more complex and break down how `ddf.groupby(['a', 'b']).c.sum()` is computed.  We'll begin by splitting our `df` Pandas DataFrame into three partitions:
+Let's break down how Dask computes `ddf.groupby(['a', 'b']).c.sum()` by going through each step in the `aca` process.  We'll begin by splitting our `df` Pandas DataFrame into three partitions:
 
 ```python
->>> df_1 = df[:5].copy()
->>> df_2 = df[5:10].copy()
->>> df_3 = df[-3:].copy()
+>>> df_1 = df[:5]
+>>> df_2 = df[5:10]
+>>> df_3 = df[-3:]
 ```
 
 ### Apply
@@ -154,9 +154,9 @@ Name: c, dtype: int64
 
 ### Apply Redux
 
-Our final step is to apply the `groupby(['a', 'b']).c.sum()` operation again on the concatenated `sr_concat` Series.  However, we no longer have columns `a` and `b`.  How should we proceed?
+Our final step is to apply the same `groupby(['a', 'b']).c.sum()` operation again on the concatenated `sr_concat` Series.  However we no longer have columns `a` and `b`, so how should we proceed?
 
-Zooming out a bit, we are after adding the values in the column which have the same index.  For example, there are two rows with the index `(1, 1)` with corresponding values: 2, 5.  So how can we groupby the indices with the same value?  A MutliIndex uses [levels](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.MultiIndex.html#pandas.MultiIndex) to define what the value is at a give index.  Dask [determines the level](https://github.com/dask/dask/blob/973c6e1b2e38c2d9d6e8c75fb9b4ab7a0d07e6a7/dask/dataframe/groupby.py#L69-L75) and uses [these levels](https://github.com/dask/dask/blob/973c6e1b2e38c2d9d6e8c75fb9b4ab7a0d07e6a7/dask/dataframe/groupby.py#L1065) in the final apply step of our calculation.  In our case, the level is `[0, 1]`, that is, we want both the index at the 0th level and the 1st level and if we group by both, `0, 1`, we will have effectively grouped the same indices together:
+Zooming out a bit, our goal is to add the values in the column which have the same index.  For example, there are two rows with the index `(1, 1)` with corresponding values: 2, 5.  So how can we groupby the indices with the same value?  A MutliIndex uses [levels](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.MultiIndex.html#pandas.MultiIndex) to define what the value is at a give index.  Dask [determines](https://github.com/dask/dask/blob/973c6e1b2e38c2d9d6e8c75fb9b4ab7a0d07e6a7/dask/dataframe/groupby.py#L69-L75) and [uses these levels](https://github.com/dask/dask/blob/973c6e1b2e38c2d9d6e8c75fb9b4ab7a0d07e6a7/dask/dataframe/groupby.py#L1065) in the final apply step of the apply-concat-apply calculation.  In our case, the level is `[0, 1]`, that is, we want both the index at the 0th level and the 1st level and if we group by both, `0, 1`, we will have effectively grouped the same indices together:
 
 ```python
 >>> total = sr_concat.groupby(level=[0, 1]).sum()
@@ -232,8 +232,8 @@ Additionally, we can easily examine the steps of this apply-concat-apply calcula
   <img src="/images/mean.svg" width="80%">
 </a>
 
-`Mean` is a good example of an operation which doesn't directly fit in the `aca` model -- concatenating `mean` values and taking the `mean` again will yield incorrect results.  Like any style of computation: vectorization, Map/Reduce, etc, we sometime need to creatively fit the computation to the style/mode.  In the case of `aca` we can often break down the calculation into constituent parts.  For `mean`, this would be: `sum` and `count`
+`Mean` is a good example of an operation which doesn't directly fit in the `aca` model -- concatenating `mean` values and taking the `mean` again will yield incorrect results.  Like any style of computation: vectorization, Map/Reduce, etc., we sometime need to creatively fit the computation to the style/mode.  In the case of `aca` we can often break down the calculation into constituent parts.  For `mean`, this would be `sum` and `count`:
 
 $$ \bar{x} = \frac{x_1+x_2+\cdots +x_n}{n}$$
 
-From the task graph above, we can see that two independent tasks for each partition: `series-groupby-count-chunk` and  `series-groupby-sum-chunk` .  The results are then aggregated into two final nodes: `series-groupby-count-agg` and `series-groupby-sum-agg` and then we finally calculate the mean: `total sum / total count` .
+From the task graph above, we can see that two independent tasks for each partition: `series-groupby-count-chunk` and  `series-groupby-sum-chunk`.  The results are then aggregated into two final nodes: `series-groupby-count-agg` and `series-groupby-sum-agg` and then we finally calculate the mean: `total sum / total count`.
