@@ -14,11 +14,12 @@ theme: twitter
 
 In this post we'll dive into how Dask computes groupby aggregations.  These are commonly used operations for ETL and analysis in which we split data into groups, apply a function to each group independently, and then combine the results back together.  In the PyData/R world this is often referred to as the split-apply-combine strategy (first coined by [Hadley Wickham](https://www.jstatsoft.org/article/view/v040i01)) and is used widely throughout the [Pandas ecosystem](https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html).
 
-<p align="center">
+<div align="center">
   <a href="/images/split-apply-combine.png">
     <img src="/images/split-apply-combine.png" width="80%" align="center">
   </a>
-</p>
+  <p align="center"><i>Image courtesy of swcarpentry.github.io</i></p>
+</div>
 
 Dask leverages this idea using a similarly catchy name: apply-concat-apply or `aca` for short.  Here we'll explore the `aca` strategy in both simple and complex operations.
 
