@@ -196,7 +196,7 @@ The recent rewrite of Dask-SSH, Dask-Jobqueue, Dask-Kubernetes, and the new
 Dask-Cloudprovider and Dask-CUDA libraries place them
 all under the same `dask.distributed.SpecCluster` superclass.  So we can expect a high degree of
 uniformity from them.  Additionally, all of the classes now match the
-`dask.distributed.Cluster` inteerface, which standardizes things like
+`dask.distributed.Cluster` interface, which standardizes things like
 adaptivity, IPython widgets, logs, and some basic reporting.
 
 -  Cluster
