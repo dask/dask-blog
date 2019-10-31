@@ -80,10 +80,15 @@ We've rewritten Dask-Jobqueue for SLURM/PBS/LSF/SGE cluster managers typically
 found in HPC centers and Dask-Kubernetes.  These now share a common codebase
 along with Dask SSH, and so are much more consistent and hopefully bug free.
 
-Hopefully users shouldn't notice much difference with existing workloads,
+Ideally users shouldn't notice much difference with existing workloads,
 but new features like asynchronous operation, integration with the Dask
 JupyterLab extension, and so on are more consistently available.  Also, we've
 been able to unify development and reduce our maintenance burden considerably.
+
+The new version of Dask Jobqueue where these changes take place is 0.7.0, and
+the work was done in [dask/dask-jobqueue #307](https://github.com/dask/dask-jobqueue/pull/307).
+The new version of Dask Kubernetes is 0.10.0 and the work was done in
+[dask/dask-kubernetes #162](https://github.com/dask/dask-kubernetes/pull/162).
 
 
 Dask-CloudProvider
@@ -92,11 +97,12 @@ Dask-CloudProvider
 For cloud deployments we generally recommend using a hosted Kubernetes or Yarn
 service, and then using Dask-Kubernetes or Dask-Yarn on top of these.
 
-However in some institutions these hosted services aren't yet accessible, and
-it's more convenient to use APIs that are more native to the particular cloud.
-The new package [Dask Cloudprovider](https://cloudprovider.dask.org) handles
-this today for Amazon's ECS API, which has been around for a long while and is
-more universally accepted.
+However in some institutions they have made decisions or commitments to use
+certain vendor specific technologies, and it's more convenient to use APIs that
+are more native to the particular cloud.  The new package [Dask
+Cloudprovider](https://cloudprovider.dask.org) handles this today for Amazon's
+ECS API, which has been around for a long while and is more universally
+accepted.
 
 
 ```python
@@ -112,7 +118,7 @@ Dask-Gateway
 
 In some cases users may not have access to the cluster manager.  For example
 the institution may not give all of their data science users access to the Yarn
-or Kubernetes cluster.  In this the [Dask-Gateway](https://gateway.dask.org)
+or Kubernetes cluster.  In this case the [Dask-Gateway](https://gateway.dask.org)
 project may be useful.
 It can launch and manage Dask jobs,
 and provide a proxy connection to these jobs if necessary.
@@ -126,14 +132,14 @@ GPUs and Dask-CUDA
 ------------------
 
 While using Dask with multi-GPU deployments the [NVIDIA
-Rapids](https://rapids.ai) has needed the ability to specify increasingly
+RAPIDS](https://rapids.ai) has needed the ability to specify increasingly
 complex setups of Dask workers.  They recommend the following deployment
 strategy:
 
 1.  One Dask-worker per GPU on a machine
 2.  Specify the `CUDA_VISIBLE_DEVICES` environment variable to pin that worker
     to that GPU
-3.  If your machine has multiple network interfaces then choose the network interface closest to that GPU
+3.  If your machine has multiple network interfaces then choose the network interface that has the best connection to that GPU
 4.  If your machine has multiple CPUs then set thread affinities to use the closest CPU
 5.  ... and more
 
@@ -167,8 +173,13 @@ And the new SpecCluster class to deploy these workers:
 cluster = SpecCluster(workers=specification)
 ```
 
+We've used this technique in the
+[Dask-CUDA](https://github.com/rapidsai/dask-cuda) project to provide
+convenient functions for deployment on multi-GPU systems.
+
 This class was generic enough that it ended up forming the base of the SSH,
 Jobqueue, and Kubernetes solutions as well.
+
 
 
 Standards and Conventions
@@ -184,9 +195,9 @@ to interoperate with all of the Dask deployment solutions.
 The recent rewrite of Dask-SSH, Dask-Jobqueue, Dask-Kubernetes, and the new
 Dask-Cloudprovider and Dask-CUDA libraries place them
 all under the same `dask.distributed.SpecCluster` superclass.  So we can expect a high degree of
-uniformity from them.  Additionally, all of the classes now inherit from the
-`dask.distributed.Cluster` class, which standardizes things like adaptivity,
-IPython widgets, logs, and some basic reporting.
+uniformity from them.  Additionally, all of the classes now match the
+`dask.distributed.Cluster` inteerface, which standardizes things like
+adaptivity, IPython widgets, logs, and some basic reporting.
 
 -  Cluster
     - SpecCluster
