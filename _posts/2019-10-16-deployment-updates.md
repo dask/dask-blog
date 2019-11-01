@@ -36,10 +36,10 @@ $ dask-worker tcp://192.168.0.1
 For informal clusters people might do this manually, by logging into each
 machine and running these commands themselves.  However it's much more common
 to use a cluster resource manager such as Kubernetes, Yarn (Hadoop/Spark),
-SGE, PBS, SLURM, LSF, some cloud service or some custom system.
+HPC batch schedulers (SGE, PBS, SLURM, LSF ...), some cloud service or some custom system.
 
 As Dask is used by more institutions and used more broadly within those
-institutions making deployment smooth and natural becomes increasingly
+institutions, making deployment smooth and natural becomes increasingly
 important.  This is so important in fact, that there have been seven separate
 efforts to improve deployment in some regard or another by a few different
 groups.
@@ -97,7 +97,7 @@ Dask-CloudProvider
 For cloud deployments we generally recommend using a hosted Kubernetes or Yarn
 service, and then using Dask-Kubernetes or Dask-Yarn on top of these.
 
-However in some institutions they have made decisions or commitments to use
+However, some institutions have made decisions or commitments to use
 certain vendor specific technologies, and it's more convenient to use APIs that
 are more native to the particular cloud.  The new package [Dask
 Cloudprovider](https://cloudprovider.dask.org) handles this today for Amazon's
