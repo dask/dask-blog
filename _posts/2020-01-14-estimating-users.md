@@ -18,7 +18,7 @@ and so on, but most of them are wildly incorrect.
 As a project maintainer who tries to find employment for other maintainers,
 I'm incentivized to take the highest number I can find,
 but that is somewhat dishonest.
-That number today is in the form of this likley false statement.
+That number today is in the form of this likely false statement.
 
 *Dask has 50-100k daily downloads.*
 
@@ -64,9 +64,9 @@ Linux), which seems more in line with my expectations.
 
 However even this is strange.  The structure doesn't match my personal experience.
 Why the big change in adoption in 2018?
-What is the big spike at the end of 2019?
+What is the big spike in 2019?
 Anecdotally maintainers did not notice a significant jump in users there.
-Instead, we've experience smooth continuous growth of adoption over time
+Instead, we've experienced smooth continuous growth of adoption over time
 (this is what most long-term software growth looks like).
 It's also odd that there hasn't been continued growth since 2018.  Anecdotally
 Dask seems to have grown somewhat constantly over the last few years.  Phase
