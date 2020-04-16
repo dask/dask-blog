@@ -83,18 +83,16 @@ We didn't capture video, but we do have slides from each of the talks below:
 -   Also attending:
     -   Nefta Kanilmaz
     -   Lucas Rademaker
--   [Slides](https://docs.google.com/presentation/d/e/2PACX-1vSk2zAnSmzpbz5BgK70mpPmeQeV4h1IkCQh-EU8KXrZFJQGHmlMTuHvln3CmOQVTg/pub?start=false&loop=false&delayms=60000)
 
-Notes ...
+  <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vSk2zAnSmzpbz5BgK70mpPmeQeV4h1IkCQh-EU8KXrZFJQGHmlMTuHvln3CmOQVTg/embed?start=false&loop=false&delayms=3000" frameborder="0" width="595" height="355" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
 
 #### Prefect
 
 -   Title: Prefect + Dask: Parallel / Distributed Workflows
 -   Presenters: Chris White, CTO
--   [Slides](https://www.slideshare.net/ChrisWhite249/dask-prefect)
 
-Notes ...
+<iframe src="//www.slideshare.net/slideshow/embed_code/key/4wiUwkDHmdzVTW" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="//www.slideshare.net/ChrisWhite249/dask-prefect" title="Dask + Prefect" target="_blank">Dask + Prefect</a> </strong> from <strong><a href="https://www.slideshare.net/ChrisWhite249" target="_blank">Chris White</a></strong> </div>
 
 #### SymphonyRM
 
