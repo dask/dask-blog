@@ -153,7 +153,7 @@ We didn't capture video, but we do have slides from each of the talks below.
 <iframe src="http://jcrist.github.io/talks/dask_summit_2020/slides.html" frameborder="1" width="600" height="355" scrolling="no"></iframe>
 
 
-3. Imaging
+3: Imaging
 ----------
 
 #### Kitware
@@ -184,7 +184,8 @@ We didn't capture video, but we do have slides from each of the talks below.
 
 
 
-### General Data Analysis
+4: General Data Analysis
+------------------------
 
 #### Brookhaven National Labs
 
@@ -204,7 +205,8 @@ We didn't capture video, but we do have slides from each of the talks below.
 <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTs6nNsMkV92Uj4QUns1VB8pKlKSsRgUAGwvcbTOPqMazSAhxtawVNgb04YmHVFmb0z8-no-cdS8mE8/embed?start=false&loop=false&delayms=3000" frameborder="0" width="600" height="366" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
 
-### Performance and Tooling
+5: Performance and Tooling
+--------------------------
 
 #### Berkeley Institute for Data Science
 
@@ -233,7 +235,8 @@ We didn't capture video, but we do have slides from each of the talks below.
 -   Presenters: Ben Zaitlen
 <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRU-vsXsnXgeLKdmtWZkZVV_-mOojsNesCbQKJgmWkwSjxj5ZdwkmS6X4tOt3HpFrIOfNROSlV_8l84/embed?start=false&loop=false&delayms=3000" frameborder="0" width="600" height="366" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
-### Xarray
+6: Xarray
+---------
 
 #### USGS and NCAR
 
