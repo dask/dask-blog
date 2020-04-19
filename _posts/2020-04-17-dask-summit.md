@@ -9,13 +9,13 @@ author: Mike McCarty (Capital One Center for Machine Learning) and Matthew Rockl
 {% include JB/setup %}
 
 In late February members of the Dask community gathered together in Washington, DC.
-This was a mix of open source project maintainers,
-and highly active users from a broad range of institutions.
+This was a mix of open source project maintainers
+and active users from a broad range of institutions.
 This post shares a summary of what happened at this workshop,
 including slides, images, and lessons learned.
 
 *Note: this event happened just before the widespread effects of the COVID-19
-outbreak.  We wouldn't recommend doing this today.*
+outbreak in the US and Europe.  We were glad to see each other, but wouldn't recommend doing this today.*
 
 Who came?
 ---------
@@ -23,19 +23,15 @@ Who came?
 This was an invite-only event of fifty people, with a cap of three people per
 organization.  We intentionally invited an even mix of half people who
 self-identified as open source maintainers, and half people who identified as
-institutional users.  We had attendees from the following companies:
-
--  ...
--  TODO
--  ...
+institutional users.  We had attendees from academia, small startups, tech
+companies, government institutions, and large enterprise.  It was surprising
+how much we all had in common.
 
 
 Objectives
 ----------
 
-The Dask community comes from a broad range of institutions.
-We have climate scientists talking with bankers,
-and open source evangelists talking with startup founders.
+The Dask community comes from a broad range of backgrounds.  .
 It's an odd bunch, all solving very different problems,
 but all with a surprisingly common set of needs.
 We've all known each other on GitHub for several years,
@@ -46,35 +42,51 @@ In hindsight, this workshop served two main purposes:
 1.  It helped us to see that we were all struggling with the same problems
     and so helped to form direction and motivate future work
 2.  It helped us to create social bonds and collaborations that help us manage
-    ...
+    the day to day challenges of building and maintaining community software
+    across organizations
 
 
 Structure
 ---------
 
 We met for three days.
-On the first two we started with quick talks from the attendees that always had
-the same structure:
+
+On days 1-2 we started with quick talks from the attendees and followed with
+afternoon working sessions.
+
+Talks were short around 10-15 minutes
+(having only experts in the room meant that we could easily skip the introductory material)
+and always had the same structure:
 
 1.  A brief description of the domain that they're in and why it's important
 
-    *It's really fun to see all of the different use cases*
+    *Example: We look at seismic readings from thousand of measurement devices around
+    the world to understand and predict catastrophic earthquakes*
 
 2.  How they use Dask to solve this problem
 
-    *This is something that everyone can relate to, even if they're in a
-    different field*
+    *Example: this means that we need to cross-correlate thousands of very
+    long timeseries.  We use Xarray on AWS with some custom operations.*
 
 3.  What is wrong with Dask, and what they would like to see improved
 
-    *...*
+    *Example: It turns out that our axes labels can grow larger than what
+    Xarray was designed for.  Also, the task graph size for Dask can become a
+    limitation*
 
-Talks were short around 10-15 minutes
-(having only experts in the room meant that we could easily skip the introductory material).
+These talks were structured into six sections:
 
-We didn't capture video, but we do have slides from each of the talks below:
+1.  Workflow and pipelines
+2.  Deployment
+3.  Imaging
+4.  General data analysis
+5.  Performance and tooling
+6.  Xarray
 
-### Workflow and Pipelines
+We didn't capture video, but we do have slides from each of the talks below.
+
+1: Workflow and Pipelines
+--------------------------
 
 #### Blue Yonder
 
@@ -101,7 +113,8 @@ We didn't capture video, but we do have slides from each of the talks below:
 <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vSCDbXrXtrL9vmA0hQ1NNk5DY0-3Azpcf9FbYgjoLuKV79vf_nm7wdUZl1NsL5DZqRmlUTP--u9HM56/embed?start=false&loop=false&delayms=3000" frameborder="0" width="600" height="366" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
 
-### Deployment
+2: Deployment
+-------------
 
 #### Quansight
 
@@ -122,7 +135,7 @@ We didn't capture video, but we do have slides from each of the talks below:
 
 -   Title: HPC Deployments with Dask-Jobqueue
 -   Presenters: Loïc Esteve
-<iframe src="https://lesteve.github.io/talks/2020-dask-jobqueue-dask-workshop/slides.html#/slide-org5239ab5" frameborder="0" width="1000" height="800"></iframe>
+<iframe src="https://lesteve.github.io/talks/2020-dask-jobqueue-dask-workshop/slides.html" frameborder="0" width="1000" height="800"></iframe>
 
 #### Anaconda
 
@@ -137,10 +150,11 @@ We didn't capture video, but we do have slides from each of the talks below:
         overflow:hidden;
     }
 </style>
-<iframe src="http://jcrist.github.io/talks/dask_summit_2020/slides.html" frameborder="1" width="800" height="455" scrolling="no"></iframe>
+<iframe src="http://jcrist.github.io/talks/dask_summit_2020/slides.html" frameborder="1" width="600" height="355" scrolling="no"></iframe>
 
 
-### Imaging
+3. Imaging
+----------
 
 #### Kitware
 
@@ -154,16 +168,20 @@ We didn't capture video, but we do have slides from each of the talks below:
 -   Presenters: Marcus Hanwell
 <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRT--l76IcSPlIP_N6ClUtm2ECZaxkvIGrBNyyoFmJNQu6kS6CilWoleIMCur2FQ7ZpEkkCsw7UXnRd/embed?start=false&loop=false&delayms=3000" frameborder="0" width="600" height="366" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
-#### NIMH
+#### National Institutes of Mental Health
 
 -   Title: Brain imaging
 -   Presenters: John Lee
 <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTH1X0cSjozmCDvSQ8CtcxPPYejkLROC_b92W6uwznG5litWq_MwKJzUMnAQi0Prw/embed?start=false&loop=false&delayms=3000" frameborder="0" width="600" height="366" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
-Pictures from happy hour.
 
-On the second day we also captured pictures during presentations ...
-TODO: pull from here for day two https://twitter.com/mrocklin/status/1233037116885458944
+### Janelia / Howard Hughes Medical Institute
+
+-   Title: Spark, Dask, and FlyEM HPC
+-   Presenters: Stuart Berg
+
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vSnZ-JgHAoAOUirqmLcI3GaKyC4oVo3vThZZ4oyx8vZjJ66An09JIhbcoy6k7ufTw/pub?start=false&loop=false&delayms=3000" frameborder="0" width="600" height="366" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+
 
 
 ### General Data Analysis
@@ -178,13 +196,6 @@ TODO: pull from here for day two https://twitter.com/mrocklin/status/12330371168
 
 -   Title: Dask at D.E. Shaw
 -   Presenters: Akihiro Matsukawa
--   Need slides - PDF
-
-#### JD.com
-
--   Title: Dask for Automated Time Series Forecasting
--   Presenters: Ethan Zhang
--   Need slides - Did not attend?
 
 #### Anaconda
 
@@ -243,7 +254,66 @@ TODO: pull from here for day two https://twitter.com/mrocklin/status/12330371168
 <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vSWAgKLxt1tBZxXjQfIRQNFPvAMFYZ-z0hkMy7euPnOHwO9pomH_gM8cKUTKXA68w/embed?start=false&loop=false&delayms=3000" frameborder="0" width="600" height="404" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
 
+Unstructured Time
+-----------------
+
+Having rapid fire talks in the morning, followed by unstructured time in the
+afternoon was a productive combination that we would recommend to other broad
+groups in the future.  Engagement and productivity was really high throughout
+the workshop.
+
+<img src="https://pbs.twimg.com/media/ERykEc9XUAEFq-L?format=jpg&name=large"
+     width="40%">
+<img src="https://pbs.twimg.com/media/ERzEcEeXkAU35sg?format=jpg&name=large"
+    width="40%">
+
+<img src="https://pbs.twimg.com/media/ERyz7B5X0AIrDkn?format=jpg&name=large"
+    width="40%">
+<img src="https://pbs.twimg.com/media/ERzXhHnWAAE_zDA?format=jpg&name=large"
+    width="40%">
+
+<img src="https://pbs.twimg.com/media/ERz3GDgXsAcE6Id?format=jpg&name=large"
+    width="40%">
+<img src="https://pbs.twimg.com/media/ERz4ur2WkAAGJwm?format=jpg&name=large"
+    width="40%">
+
+<img src="https://pbs.twimg.com/media/ER0sZceUYAAF5fW?format=jpg&name=large"
+    width="40%">
+<img src="https://pbs.twimg.com/media/ER0yY2rX0AEFfXi?format=jpg&name=large"
+    width="40%">
+
+<img src="https://pbs.twimg.com/media/ERyz98YWAAAmJbE?format=jpg&name=large"
+    width="40%">
+<img src="https://pbs.twimg.com/media/ERz5S2dWoAEhFHc?format=jpg&name=large"
+    width="40%">
+
+Above you'll see pictures from geo-scientists and quants talking about the same
+challenges.  You'll also see library maintainers from Pandas/Arrow/RAPDIS/Dask
+all working together on joint solutions.
+
+
 Final Thoughts
 --------------
 
-...
+Dask's strength comes from this broad community of stakeholders.
+
+An early technical focus on simplicity and pragmatism allowed the project to be
+quickly adopted within many different domains.  As a result, the practitioners
+within these domains are largely the ones driving the project forward today.
+This Community Driven Development brings an incredible diversity of technical
+and cultural challenges and experience that force the project to quickly evolve
+in a way that in constrained towards pragmatism.
+
+There is still plenty of work to do.
+Short term this workshop brought up many technical challenges that are shared
+by all (simpler deployments, scheduling under task constraints, active memory
+management).  Longer term we need to welcome more people into this community,
+both by increasing the diversity of domains, and the diversity of individuals
+(the vast majority of attendees were white men in their thirties from the US
+and western Europe).
+
+We're in a good position to effect this change.
+Dask's recent growth has captured the attention of many different institutions.
+Now is a critical time to be intentional about the projects growth to make sure
+that the project and community continue to reflect a broad and ethical set of
+principles.
