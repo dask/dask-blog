@@ -212,7 +212,7 @@ We didn't capture video, but we do have slides from each of the talks below.
 -   Title: Spark, Dask, and FlyEM HPC
 -   Presenters: Stuart Berg
 
-<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vSnZ-JgHAoAOUirqmLcI3GaKyC4oVo3vThZZ4oyx8vZjJ66An09JIhbcoy6k7ufTw/pub?start=false&loop=false&delayms=3000" frameborder="0" width="600" height="366" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vSnZ-JgHAoAOUirqmLcI3GaKyC4oVo3vThZZ4oyx8vZjJ66An09JIhbcoy6k7ufTw/embed?start=false&loop=false&delayms=3000" frameborder="0" width="600" height="479" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
 
 
@@ -244,7 +244,6 @@ We didn't capture video, but we do have slides from each of the talks below.
 
 -   Title: Numpy APIs
 -   Presenters: Sebastian Berg
--   Need slides - PDF
 
 #### Ursa Labs
 
