@@ -26,6 +26,38 @@ self-identified as open source maintainers, and half people who identified as
 institutional users.  We had attendees from academia, small startups, tech
 companies, government institutions, and large enterprise.  It was surprising
 how much we all had in common.
+We had attendees from the following companies:
+
+-   Anaconda
+-   Berkeley Institute for Datascience
+-   Blue Yonder
+-   Brookhaven National Lab
+-   Capital One
+-   Chan Zuckerberg Initiative
+-   Coiled Computing
+-   Columbia University
+-   D. E. Shaw & Co.
+-   Flatiron Health
+-   Howard Hughes Medial Institute, Janelia Research Campus
+-   Inria
+-   Kitware
+-   Lawrence Berkeley National Lab
+-   Los Alamos National Laboratory
+-   MetroStar Systems
+-   Microsoft
+-   NIMH
+-   NVIDIA
+-   National Center for Atmospheric Research (NCAR)
+-   National Energy Research Scientific Computing (NERSC) Center
+-   Prefect
+-   Quansight
+-   Related Sciences
+-   Saturn Cloud
+-   Smithsonian Institution
+-   SymphonyRM
+-   The HDF Group
+-   USGS
+-   Ursa Labs
 
 
 Objectives
@@ -305,7 +337,7 @@ quickly adopted within many different domains.  As a result, the practitioners
 within these domains are largely the ones driving the project forward today.
 This Community Driven Development brings an incredible diversity of technical
 and cultural challenges and experience that force the project to quickly evolve
-in a way that in constrained towards pragmatism.
+in a way that is constrained towards pragmatism.
 
 There is still plenty of work to do.
 Short term this workshop brought up many technical challenges that are shared
