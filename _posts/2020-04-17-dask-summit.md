@@ -63,7 +63,7 @@ We had attendees from the following companies:
 Objectives
 ----------
 
-The Dask community comes from a broad range of backgrounds.  .
+The Dask community comes from a broad range of backgrounds.
 It's an odd bunch, all solving very different problems,
 but all with a surprisingly common set of needs.
 We've all known each other on GitHub for several years,
@@ -292,9 +292,11 @@ Unstructured Time
 -----------------
 
 Having rapid fire talks in the morning, followed by unstructured time in the
-afternoon was a productive combination that we would recommend to other broad
-groups in the future.  Engagement and productivity was really high throughout
-the workshop.
+afternoon was a productive combination. Below you'll see pictures from
+geo-scientists and quants talking about the same challenges, and library
+maintainers from Pandas/Arrow/RAPDIS/Dask all working together on joint
+solutions.
+
 
 <img src="https://pbs.twimg.com/media/ERykEc9XUAEFq-L?format=jpg&name=large"
      width="40%">
@@ -321,9 +323,9 @@ the workshop.
 <img src="https://pbs.twimg.com/media/ERz5S2dWoAEhFHc?format=jpg&name=large"
     width="40%">
 
-Above you'll see pictures from geo-scientists and quants talking about the same
-challenges.  You'll also see library maintainers from Pandas/Arrow/RAPDIS/Dask
-all working together on joint solutions.
+This unstructured time is a productive combination that we would recommend to
+other technically diverse groups in the future. Engagement and productivity was
+really high throughout the workshop.
 
 
 Final Thoughts
