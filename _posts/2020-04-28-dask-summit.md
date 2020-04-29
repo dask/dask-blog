@@ -353,3 +353,26 @@ Dask's recent growth has captured the attention of many different institutions.
 Now is a critical time to be intentional about the projects growth to make sure
 that the project and community continue to reflect a broad and ethical set of
 principles.
+
+Acknowledgements
+----------------
+
+### Sponsors
+
+Without the support of our sponsors, this workshop would not have been possible.
+Thanks to Anaconda, Capital One and NVIDIA for their support and generous
+donations toward this event.
+
+### Organizers
+
+Thank you very much to the organizers who took time from their busy schedules
+and worked so hard to put together this event.
+
+-   Brittany Treadway (Capital One)
+-   Keith Kraus (NVIDIA)
+-   Matthew Rocklin (Coiled Computing)
+-   Mike Beaumont (NVIDIA)
+-   Mike McCarty (Capital One)
+-   Neia Woodson (Capital One)
+-   Jake Schmitt (Capital One)
+-   Jim Crist (Anaconda)
