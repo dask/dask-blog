@@ -144,23 +144,57 @@ I'm going to quickly provide the use case that was motivating this work.
 Application - Genomics
 ----------------------
 
-In humans, mosquitos, mice -- organisms which have two parents (diploids) -- they inherit two [alleles](https://en.wikipedia.org/wiki/Allele),
-one from each parent.  For those not biologist, recall the [Punnett square](https://en.wikipedia.org/wiki/Punnett_square), where
-each box is filled letter from each column/row combination.
+Many studies are using genome sequencing to study genetic variation
+one from each parent.  For those not biologist, recall the [Punnett square](https://en.wikipedia.org/wiki/Punnett_square), where	between different individuals within a species.  These includes
+each box is filled letter from each column/row combination.	studies of human populations, but also other species such as mice,
+mosquitoes or disease-causing parasites.  These studies will, in
+general, find a large number of sites in the genome sequence where
+individuals differ from each other.  For example, humans have more
+than 100 million variable sites in the genome, and modern studies
+like the [UK BioBank](https://www.ukbiobank.ac.uk/) are working towards
+sequencing the genomes of 1 million individuals or more.
 
+In diploid species like humans, mice or mosquitoes, each individual
+carries two genome sequences, one inherited from each parent.  At each
+of the 100 million variable genome sites there will be two or more
+"alleles" that a single genome might carry.  One way to think about
+this is via the [Punnett square](https://en.wikipedia.org/wiki/Punnett_square), which
+represents the different possible genotypes that one individual might
+carry at one of these variable sites
 <td>
 <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Punnett_Square_Genetic_Carriers.PNG" alt="punnet square" height="40%" width="40%">
 </td>
 
-In the above there are three types of genotypes: AA, Aa, and aa.  For computational genomics, these variants are typically encoded 0, 1, or 2.
+In the above there are three possible genotypes: AA, Aa, and aa.  For
 
-Humans have 20,000-25,000 genes and experiments across populations can vary between 10s of thousand of individuals to 10 Million individuals.  For example,  [biobank](https://www.ukbiobank.ac.uk/) SOMETHING ABOUT THE SCIENCE
+computational genomics, these genotypes can be encoded as 0, 1, or 2.
+Humans have 20,000-25,000 genes and experiments across populations can vary between 10s of thousand of individuals to 10 Million individuals.  For example,  [biobank](https://www.ukbiobank.ac.uk/) SOMETHING ABOUT THE SCIENCE	In a study of a species with M genetic variants assayed in N
 
-Common questions we want to answer of this data include: How do genes vary across populations ? Can we classify a set of genes for a particular trait ?  [Performing an SVD](https://www.pnas.org/content/97/18/10101) helps scientists understand what is happening, not at an individual gene level, but across the entire genome.
+individual samples, we can represent these genotypes as an (N x M)
+Common questions we want to answer of this data include: How do genes vary across populations ? Can we classify a set of genes for a particular trait ?  [Performing an SVD](https://www.pnas.org/content/97/18/10101) helps scientists understand what is happening, not at an individual gene level, but across the entire genome.	array of integers.  For a modern human genetics study, the scale of
 
-Reducing the time computing, like all science, allows for testing more hypotheses in less time.
-Practically, this means not simply a fast SVD but an accelerated pipeline end-to-end, from data loading to analysis, to understanding.
+this array might approach (100 million x 1 million).  (Although in
+Reducing the time computing, like all science, allows for testing more hypotheses in less time.	practice, the size of the first dimension (number of variants) can be
+Practically, this means not simply a fast SVD but an accelerated pipeline end-to-end, from data loading to analysis, to understanding.	reduced somewhat, by at least an order of magnitude, because many
 
+genetic variants will carry little information and/or be correlated
+with each other.)
+
+These genetic differences are not random, but carry information about
+patterns of genetic similarity and shared ancestry between
+individuals, because of the way they have been inherited through many
+generations.  A common task is to perform a dimensionality reduction
+analysis on these data, such as a [principal components analysis](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.0020190)
+(SVD), to identify genetic structure reflecting these differencies in
+degree of shared ancestry.  This is an essential part of discovering
+genetic variants associated with different diseases, and for learning
+more about the genetic history of populations and species.
+
+Reducing the time taken to compute an analysis such as SVD, like all
+science, allows for exploring larger datasets and testing more
+hypotheses in less time.  Practically, this means not simply a fast
+SVD but an accelerated pipeline end-to-end, from data loading to
+analysis, to understanding.
 
 Performant SVDs w/ Dask
 -----------------------
