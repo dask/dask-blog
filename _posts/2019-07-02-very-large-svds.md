@@ -262,9 +262,9 @@ In practice though, our input array won't be randomly generated, it will be
 coming from some dataset stored on disk or increasingly more common, stored in the cloud.
 To make things more realistic we perform a similar calculation with data stored in a [Zarr format](https://zarr.readthedocs.io/en/stable/) (which is what Alistair, our genomics collaborator, uses) in [GCS](https://cloud.google.com/storage)
 
-In this [Zarr SVD example](https://gist.github.com/quasiben/e52bc740ae22ae321f30987c65998078), we load a 25GB GCS backed data set onto a DGX2,
+In this [Zarr SVD example](https://gist.github.com/quasiben/e52bc740ae22ae321f30987c65998078), we load a 25GB GCS backed data set onto a DGX2, run a few processing steps, then perform an SVD.  The combination of preprocessing and SVD calculations ran in 18.7 sec and the data loading took 14.3 seconds.
 
-Again, on a DGX2, from data loading to SVD we are running in time less than it take to make a cup of tea.
+Again, on a DGX2, from data loading to SVD we are running in time less than it would take to make a cup of tea.  However, the data loading can be accelerated.  From GCS we are reading into host memory, uncompressing the zarr bits, then moving the data from host memory to device memory.  This is be improved if we cut out the host entirely and read directly into the GPU.
 
 And so we come back to a common lesson of high performance computing:
 
