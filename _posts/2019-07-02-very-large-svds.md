@@ -170,7 +170,7 @@ carry at one of these variable sites:
 In the above there are three possible genotypes: AA, Aa, and aa.  For
 computational genomics, these genotypes can be encoded as 0, 1, or 2.
 In a study of a species with M genetic variants assayed in N
-individual samples, we can represent these genotypes as an (N x M)
+individual samples, we can represent these genotypes as an (M x N)
 array of integers.  For a modern human genetics study, the scale of
 this array might approach (100 million x 1 million).  (Although in
 practice, the size of the first dimension (number of variants) can be
