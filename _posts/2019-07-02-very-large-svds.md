@@ -195,6 +195,8 @@ hypotheses in less time.  Practically, this means not simply a fast
 SVD but an accelerated pipeline end-to-end, from data loading to
 analysis, to understanding.
 
+*We want to run an experiment in less time than it take to make a cup of tea*
+
 Performant SVDs w/ Dask
 -----------------------
 
@@ -232,34 +234,37 @@ it works, and it works using only a few GB of RAM on my consumer laptop.
 It takes around 2min 30s time to compute that on my laptop.  That's great!  But we can do better
 
 
-Adding GPUs
------------
+Adding GPUs (a 15 second SVD)
+-----------------------------
 
 We can increase performance considerably by using a multi-GPU machine.
 Here is almost the same code, running in significantly less same time but we make the
 following changes:
 
-1.  We increase the size of the array by a factor of 10x
+1.  We increase the size of the array by a factor of **10x**
 2.  We switch out NumPy for CuPy, a GPU NumPy implementation
 3.  We use a sixteen-GPU DGX-2 machine with NVLink interconnects between GPUs (this will dramatically decrease transfer time between workers)
 
-To see this run, we recommend looking at
-[this point in the attached screencast](https://youtu.be/4X5yky2lvEw)
+On A DGX2 we can calculate an SVD on a 200GB Dask array between 10 and15 seconds: [SVD Multi-GPU Notebook](https://gist.github.com/quasiben/98ee254920837313946f621e103d41f4)
 
-On A DGX2 calculating an SVD takes 10-15 seconds: [SVD GPU Notebook](https://gist.github.com/quasiben/98ee254920837313946f621e103d41f4)
+To see this run, we recommend viewing
+[the attached screencast](https://youtu.be/4X5yky2lvEw)
+
 
 Read dataset from Disk
 ----------------------
 
 While impressive, the computation above is mostly bound by generating random
-data and then performing matrix multiplies.  GPUs are good at both of these
+data and then performing matrix calculations.  GPUs are good at both of these
 things.
 
 In practice though, our input array won't be randomly generated, it will be
 coming from some dataset stored on disk or increasingly more common, stored in the cloud.
-To make things more realistic we perform a similiar calculation with data stored in a [Zarr format](https://zarr.readthedocs.io/en/stable/) (which is what Alistair, our genomics collaborator, uses) in [GCS](https://cloud.google.com/storage)
+To make things more realistic we perform a similar calculation with data stored in a [Zarr format](https://zarr.readthedocs.io/en/stable/) (which is what Alistair, our genomics collaborator, uses) in [GCS](https://cloud.google.com/storage)
 
-[Zarr SVD Example](https://gist.github.com/quasiben/e52bc740ae22ae321f30987c65998078)
+In this [Zarr SVD example](https://gist.github.com/quasiben/e52bc740ae22ae321f30987c65998078), we load a 25GB GCS backed data set onto a DGX2,
+
+Again, on a DGX2, from data loading to SVD we are running in time less than it take to make a cup of tea.
 
 And so we come back to a common lesson of high performance computing:
 
