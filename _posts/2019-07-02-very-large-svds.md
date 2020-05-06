@@ -121,7 +121,7 @@ Dask array has one of these approximation algorithms implemented in the
 function.  And with it we can compute the approximate SVD of very large
 matrices.
 
-We were recently working on a problem (explained below) and found that I was
+We were recently working on a problem (explained below) and found that we were
 still running out of memory when dealing with this algorithm.  There were two
 challenges that we ran into:
 
@@ -241,18 +241,22 @@ It takes around 2min 30s time to compute that on a laptop.  That's great!  But w
 Adding GPUs (a 15 second SVD)
 -----------------------------
 
-We can increase performance considerably by using a multi-GPU machine.
-Here is almost the same code, running in significantly less same time but we make the
+*Disclaimer: one of the authors (Ben Zaitlen) works for NVIDIA*
+
+We can dramatically increase performance by using a multi-GPU machine.  NVIDIA and other manufactures now make machines with multiple GPUs co-located in the same physical box.  In the following section, we will run the calculations on a **DGX2**, a machine with 16 GPUs.
+
+
+Below is almost the same code, running in significantly less same time but we make the
 following changes:
 
 1.  We increase the size of the array by a factor of **10x**
 2.  We switch out NumPy for CuPy, a GPU NumPy implementation
-3.  We use a sixteen-GPU DGX-2 machine with NVLink interconnects between GPUs (this will dramatically decrease transfer time between workers)
+3.  We use a sixteen-GPU DGX-2 machine with NVLink interconnects between GPUs (NVLink will dramatically decrease transfer time between workers)
 
 On A DGX2 we can calculate an SVD on a 200GB Dask array between 10 and15 seconds: [SVD Multi-GPU Notebook](https://gist.github.com/quasiben/98ee254920837313946f621e103d41f4)
 
 To see this run, we recommend viewing
-[the attached screencast](https://youtu.be/4X5yky2lvEw)
+[the attached screencast](https://www.youtube.com/watch?v=6hmt1gARqp0)
 
 
 Read dataset from Disk
@@ -275,9 +279,8 @@ The combination of preprocessing and SVD calculations ran in 18.7 sec and the da
 
 Again, on a DGX2, from data loading to SVD we are running in time less than it would take to make a cup of tea.
 However, the data loading can be accelerated.
-From GCS we are reading into host memory, uncompressing the zarr bits,
-then moving the data from host memory to device memory.
-This is be improved if we cut out the host entirely and read directly into the GPU.
+From GCS we are reading into data into the main memory of the machine (host memory), uncompressing the zarr bits,
+then moving the data from host memory to the GPU (device memory).  Passing data back and forth between host and device memory can significantly decrease performance.  Reading directly into the GPU, bypassing host memory, would improve the overall pipeline.
 
 And so we come back to a common lesson of high performance computing:
 
