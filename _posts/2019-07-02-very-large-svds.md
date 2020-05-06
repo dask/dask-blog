@@ -2,7 +2,7 @@
 layout: post
 title: Very Large SVDs
 tagline: Dask + CuPy + Zarr + Genomics
-author: Matthew Rocklin & Alistair Miles
+author: Alistair Miles (Oxford Big Data Institute), Ben Zaitlen (NVIDIA), Matthew Rocklin (Coiled)
 tags: [GPU, array, cupy]
 draft: true
 theme: twitter
@@ -17,7 +17,9 @@ We perform Singular Value Decomposition (SVD) calculations on large datasets.
 We modify the computation both by using fully precise and approximate methods,
 and by using both CPUs and GPUs.
 
-In the end we compute an approximate SVD of 200GB of simulated data and using a mutli-GPU machine in 15-20 seconds.  Then we run this from a dataset stored in the cloud I/O is, predictably, a major bottleneck.
+In the end we compute an approximate SVD of 200GB of simulated data and using a mutli-GPU machine in 15-20 seconds.
+Then we run this from a dataset stored in the cloud
+where we find that I/O is, predictably, a major bottleneck.
 
 
 SVD - The simple case
@@ -26,7 +28,7 @@ SVD - The simple case
 Dask arrays contain a relatively sophisticated SVD algorithm that works in the
 tall-and-skinny or short-and-fat cases, but not so well in the roughly-square
 case.  It works by taking QR decompositions of each block of the array,
-combining the R matrices somehow, doing another smaller SVD on those, and then
+combining the R matrices,  doing another smaller SVD on those, and then
 performing some matrix multiplication to get back to the full result.  It's
 numerically stable and decently fast, assuming that the intermediate R
 matrices of the QR decompositions mostly fit in memory.
@@ -116,12 +118,12 @@ the components, then there are a number of excellent approximation algorithms.
 
 Dask array has one of these approximation algorithms implemented in the
 [da.linalg.svd_compressed](https://docs.dask.org/en/latest/array-api.html#dask.array.linalg.svd_compressed)
-function.  And with it we can compute the approximate SVD of some very large
-matrices, at least in theory.
+function.  And with it we can compute the approximate SVD of very large
+matrices.
 
-I was recently working on a problem (explained below) and found that I was
+We were recently working on a problem (explained below) and found that I was
 still running out of memory when dealing with this algorithm.  There were two
-challenges that I ran into:
+challenges that we ran into:
 
 1.  The algorithm requires multiple passes over the data, but the Dask task
     scheduler was keeping the input matrix in memory after it had been loaded once
@@ -129,7 +131,7 @@ challenges that I ran into:
     Things still worked, but Dask had to move the data to disk and back
     repeatedly, which reduced performance significantly.
 
-    We resolved this by including explicit persist/wait calls in the algorithm.
+    We resolved this by including explicit recomputation steps in the algorithm.
 
 2.  Related chunks of data would be loaded at different times, and so would
     need to stick around longer than necessary to wait for their associated
@@ -138,7 +140,7 @@ challenges that I ran into:
     We resolved this by engaging task fusion as an optimization pass.
 
 Before diving further into the technical solution
-I'm going to quickly provide the use case that was motivating this work.
+we quickly provide the use case that was motivating this work.
 
 
 Application - Genomics
@@ -195,10 +197,12 @@ hypotheses in less time.  Practically, this means not simply a fast
 SVD but an accelerated pipeline end-to-end, from data loading to
 analysis, to understanding.
 
-*We want to run an experiment in less time than it take to make a cup of tea*
+*We want to run an experiment in less time than it takes to make a cup of tea*
 
 Performant SVDs w/ Dask
 -----------------------
+
+Now that we have that scientific background, let's transition back to talking about computation.
 
 To stop Dask from holding onto the data we intentionally trigger computation as
 we build up the graph.  This is a bit atypical in Dask calculations (we prefer
@@ -211,13 +215,13 @@ fusion.
 
 ```python
 import dask
-dask.config.set(fuse_ave_width=5)
+dask.config.set({"optimization.fuse.ave-width": 5})
 ```
 
 Then things work fine
 ---------------------
 
-I can happily perform an SVD on a 20GB array on my Macbook Pro
+We can happily perform an SVD on a 20GB array on a Macbook Pro
 
 ```python
 import dask.array as da
@@ -229,9 +233,9 @@ v.compute()
 ```
 
 This call is no longer entirely lazy, and it recomputes `x` a couple times, but
-it works, and it works using only a few GB of RAM on my consumer laptop.
+it works, and it works using only a few GB of RAM on a consumer laptop.
 
-It takes around 2min 30s time to compute that on my laptop.  That's great!  But we can do better
+It takes around 2min 30s time to compute that on a laptop.  That's great!  But we can do better
 
 
 Adding GPUs (a 15 second SVD)
@@ -260,11 +264,20 @@ things.
 
 In practice though, our input array won't be randomly generated, it will be
 coming from some dataset stored on disk or increasingly more common, stored in the cloud.
-To make things more realistic we perform a similar calculation with data stored in a [Zarr format](https://zarr.readthedocs.io/en/stable/) (which is what Alistair, our genomics collaborator, uses) in [GCS](https://cloud.google.com/storage)
+To make things more realistic we perform a similar calculation with data
+stored in a [Zarr format](https://zarr.readthedocs.io/en/stable/)
+in [GCS](https://cloud.google.com/storage)
 
-In this [Zarr SVD example](https://gist.github.com/quasiben/e52bc740ae22ae321f30987c65998078), we load a 25GB GCS backed data set onto a DGX2, run a few processing steps, then perform an SVD.  The combination of preprocessing and SVD calculations ran in 18.7 sec and the data loading took 14.3 seconds.
+In this [Zarr SVD example](https://gist.github.com/quasiben/e52bc740ae22ae321f30987c65998078),
+we load a 25GB GCS backed data set onto a DGX2,
+run a few processing steps, then perform an SVD.
+The combination of preprocessing and SVD calculations ran in 18.7 sec and the data loading took 14.3 seconds.
 
-Again, on a DGX2, from data loading to SVD we are running in time less than it would take to make a cup of tea.  However, the data loading can be accelerated.  From GCS we are reading into host memory, uncompressing the zarr bits, then moving the data from host memory to device memory.  This is be improved if we cut out the host entirely and read directly into the GPU.
+Again, on a DGX2, from data loading to SVD we are running in time less than it would take to make a cup of tea.
+However, the data loading can be accelerated.
+From GCS we are reading into host memory, uncompressing the zarr bits,
+then moving the data from host memory to device memory.
+This is be improved if we cut out the host entirely and read directly into the GPU.
 
 And so we come back to a common lesson of high performance computing:
 
