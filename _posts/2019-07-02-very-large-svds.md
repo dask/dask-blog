@@ -2,8 +2,8 @@
 layout: post
 title: Very Large SVDs
 tagline: Dask + CuPy + Zarr + Genomics
-author: Alistair Miles (Oxford Big Data Institute), Ben Zaitlen (NVIDIA), Matthew Rocklin (Coiled)
-tags: [GPU, array, cupy]
+author: Matthew Rocklin (Coiled), Ben Zaitlen (NVIDIA), Alistair Miles (Oxford Big Data Institute)
+tags: [GPU, array, CuPy]
 draft: true
 theme: twitter
 ---
