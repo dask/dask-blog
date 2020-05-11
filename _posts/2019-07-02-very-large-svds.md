@@ -221,6 +221,15 @@ dask.config.set({"optimization.fuse.ave-width": 5})
 Then things work fine
 ---------------------
 
+We're going to try this SVD on a few different choices of hardware including:
+
+1.  A MacBook Pro
+2.  A DGX-2, an NVIDIA worksation with 16 high-end GPUs and fast network
+3.  A twenty-node cluster on AWS
+
+
+### Macbook Pro
+
 We can happily perform an SVD on a 20GB array on a Macbook Pro
 
 ```python
@@ -235,16 +244,21 @@ v.compute()
 This call is no longer entirely lazy, and it recomputes `x` a couple times, but
 it works, and it works using only a few GB of RAM on a consumer laptop.
 
-It takes around 2min 30s time to compute that on a laptop.  That's great!  But we can do better
+It takes around 2min 30s time to compute that on a laptop.
+That's great!  It was super easy to try out, didn't require any special
+hardware or setup, and in many cases is fast enough.
+By working locally we can iterate quickly.
+
+Now that things work, we can experiment with different hardware.
 
 
-Adding GPUs (a 15 second SVD)
------------------------------
+### Adding GPUs (a 15 second SVD)
 
 *Disclaimer: one of the authors (Ben Zaitlen) works for NVIDIA*
 
-We can dramatically increase performance by using a multi-GPU machine.  NVIDIA and other manufactures now make machines with multiple GPUs co-located in the same physical box.  In the following section, we will run the calculations on a **DGX2**, a machine with 16 GPUs.
-
+We can dramatically increase performance by using a multi-GPU machine.
+NVIDIA and other manufactures now make machines with multiple GPUs co-located in the same physical box.
+In the following section, we will run the calculations on a **DGX2**, a machine with 16 GPUs and fast network connection.
 
 Below is almost the same code, running in significantly less same time but we make the
 following changes:
@@ -253,14 +267,37 @@ following changes:
 2.  We switch out NumPy for CuPy, a GPU NumPy implementation
 3.  We use a sixteen-GPU DGX-2 machine with NVLink interconnects between GPUs (NVLink will dramatically decrease transfer time between workers)
 
-On A DGX2 we can calculate an SVD on a 200GB Dask array between 10 and15 seconds: [SVD Multi-GPU Notebook](https://gist.github.com/quasiben/98ee254920837313946f621e103d41f4)
+On A DGX2 we can calculate an SVD on a 200GB Dask array between 10 to 15 seconds.
 
-To see this run, we recommend viewing
-[the attached screencast](https://www.youtube.com/watch?v=6hmt1gARqp0)
+The [full notebook is here](https://gist.github.com/quasiben/98ee254920837313946f621e103d41f4),
+but the relevant code snippets are below:
+
+```python
+# Some GPU specific setup
+from dask_cuda import LocalCluster
+
+cluster = LocalCluster(...)
+client = Client(cluster)
+
+import cupy
+import dask.array as da
+rs = da.random.RandomState(RandomState=cupy.random.RandomState)
+
+# Create the data and run the SVD as normal
+x = rs.randint(0, 3, size=(10_000_000, 20_000),
+               chunks=(20_000, 5_000), dtype="uint8")
+x = x.persist()
+
+u, s, v = da.linalg.svd_compressed(x, k=10, seed=rs)
+v.compute()
+```
+
+To see this run, we recommend viewing this screencast:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/6hmt1gARqp0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
-Read dataset from Disk
-----------------------
+### Read dataset from Disk
 
 While impressive, the computation above is mostly bound by generating random
 data and then performing matrix calculations.  GPUs are good at both of these
@@ -290,3 +327,169 @@ about doing nothing poorly*.
 In this case GPUs made our computation fast enough that we now need to focus on
 other components of our system, notably disk bandwidth, and a direct reader for
 Zarr data to GPU memory.
+
+
+### Cloud
+
+*Diclaimer: one of the authoer (Matthew Rocklin) works for Coiled Computing*
+
+We can also run this on the cloud with any number of frameworks.
+In this case we used the [Coiled Cloud](https://coiled.io) service to deploy on AWS
+
+```python
+from coiled_cloud import Cloud, Cluster
+cloud = Cloud()
+
+cloud.create_cluster_type(
+    organization="friends",
+    name="genomics",
+    worker_cpu=4,
+    worker_memory="16 GiB",
+    worker_environment={
+        "OMP_NUM_THREADS": 1,
+        "OPENBLAS_NUM_THREADS": 1,
+        # "EXTRA_PIP_PACKAGES": "zarr"
+    },
+)
+
+cluster = Cluster(
+    organization="friends",
+    typename="genomics",
+    n_workers=20,
+)
+
+from dask.distributed import Client
+client = Client(cluster)
+
+# then proceed as normal
+```
+
+Using 20 machines with a total of 80 CPU cores on a dataset that was 10x larger
+than the MacBook pro example we were able to run in about the same amount of
+time.  This shows near optimal scaling for this problem, which is nice to see
+given how complex the SVD calculation is.
+
+A screencast of this problem is viewable here
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/qaJcAvhgLy4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+Compression
+-----------
+
+One of the easiest ways for us to improve performance is to reduce the size of
+this data through compression.
+This data is highly compressible for two reasons:
+
+1.  The real-world data itself has structure and repetition
+    (although the random play data does not)
+2.  We're storing entries that take on only four values.
+    We're using eight-bit integers when we only needed two-bit integers
+
+Let's solve the second problem first.
+
+### Compression with bit twiddling
+
+Ideally Numpy would have a two-bit integer datatype.
+Unfortunately it doesn't, and this is hard because memory in computers is
+generally thought of in full bytes.
+
+To work around this we can use bit arithmetic to shove four values into a single value
+Here are functions that do that, assuming that our array is square,
+and the last dimension is divisible by four.
+
+```python
+import numpy as np
+
+def compress(x: np.ndarray) -> np.ndarray:
+    out = np.zeros_like(x, shape=(x.shape[0], x.shape[1] // 4))
+    out += x[:, 0::4]
+    out += x[:, 1::4] << 2
+    out += x[:, 2::4] << 4
+    out += x[:, 3::4] << 6
+    return out
+
+
+def decompress(out: np.ndarray) -> np.ndarray:
+    back = np.zeros_like(out, shape=(out.shape[0], out.shape[1] * 4))
+    back[:, 0::4] = out & 0b00000011
+    back[:, 1::4] = (out & 0b00001100) >> 2
+    back[:, 2::4] = (out & 0b00110000) >> 4
+    back[:, 3::4] = (out & 0b11000000) >> 6
+    return back
+```
+
+Then, we can use these functions along with Dask to store our data in a
+compressed state, but lazily decompress on-demand.
+
+```python
+x = x.map_blocks(compress).persist().map_blocks(decompress)
+```
+
+That's it.  We compress each block our data and store that in memory.
+However the output variable that we have, `x` will decompress each chunk before
+we operate on it, so we don't need to worry about handling compressed blocks.
+
+### Compression with Zarr
+
+A slightly more general but probably less efficient route would be to compress
+our arrays with a proper compression library like Zarr.
+
+The example below shows how we do this in practice.
+
+```python
+import zarr
+import numpy as np
+from numcodecs import Blosc
+compressor = Blosc(cname='lz4', clevel=3, shuffle=Blosc.BITSHUFFLE)
+
+
+x = x.map_blocks(zarr.array, compressor=compressor).persist().map_blocks(np.array)
+```
+
+Additionally, if we're using the dask-distributed scheduler then we want to
+make sure that the Blosc compression library doesn't use additional threads.
+That way we don't have parallel calls of a parallel library, which can cause
+some contention
+
+```python
+def set_no_threads_blosc():
+    """ Stop blosc from using multiple threads """
+    import numcodecs
+    numcodecs.blosc.use_threads = False
+
+# Run on all workers
+client.register_worker_plugin(set_no_threads_blosc)
+```
+
+This approach is more general, and probably a good trick to have up ones'
+sleeve, but it also doesn't work on GPUs, which in the end is why we ended up
+going with the bit-twiddling approach one section above, which uses API that
+was uniformly accessible within the Numpy and CuPy libraries.
+
+
+Final Thoughts
+==============
+
+In this post we did a few things, all around a single important problems in
+genomics.
+
+1.  We learned a bit of science
+2.  We translated a science problem into a computational problem,
+    and in particular into a request to perform large singular value decompositions
+3.  We used a canned algorithm in dask.array that performed pretty well,
+    assuming that we're comfortable going over the array in a few passes
+4.  We then tried that algorithm on three architectures quickly
+    1.  A Macbook Pro
+    2.  A multi-GPU machine
+    3.  A cluster in the cloud
+5.  Finally we talked about some tricks to pack more data into the same memory
+    with compression
+
+This problem was nice in that we got to dive deep into a technical science
+problem, and yet also try a bunch of architecture quickly to investigate
+hardware choices that we might make in the future.
+
+We used several technologies here today, made by several different communities
+and companies.  It was great to see how they all worked together seamlessly to
+provide a flexible-yet-consistent experience.
