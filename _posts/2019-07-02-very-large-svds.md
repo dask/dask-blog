@@ -224,7 +224,7 @@ Then things work fine
 We're going to try this SVD on a few different choices of hardware including:
 
 1.  A MacBook Pro
-2.  A DGX-2, an NVIDIA worksation with 16 high-end GPUs and fast network
+2.  A DGX-2, an NVIDIA worksation with 16 high-end GPUs and fast interconnect
 3.  A twenty-node cluster on AWS
 
 
@@ -258,7 +258,7 @@ Now that things work, we can experiment with different hardware.
 
 We can dramatically increase performance by using a multi-GPU machine.
 NVIDIA and other manufactures now make machines with multiple GPUs co-located in the same physical box.
-In the following section, we will run the calculations on a **DGX2**, a machine with 16 GPUs and fast network connection.
+In the following section, we will run the calculations on a **DGX2**, a machine with 16 GPUs and fast interconnect between the GPUs.
 
 Below is almost the same code, running in significantly less same time but we make the
 following changes:
