@@ -256,7 +256,7 @@ Now that things work, we can experiment with different hardware.
 *Disclaimer: one of the authors (Ben Zaitlen) works for NVIDIA*
 
 We can dramatically increase performance by using a multi-GPU machine.
-NVIDIA and other manufactures now make machines with multiple GPUs co-located in the same physical box.
+NVIDIA and other manufacturers now make machines with multiple GPUs co-located in the same physical box.
 In the following section, we will run the calculations on a **DGX2**, a machine with 16 GPUs and fast interconnect between the GPUs.
 
 Below is almost the same code, running in significantly less same time but we make the
@@ -330,7 +330,7 @@ Zarr data to GPU memory.
 
 ### Cloud
 
-*Diclaimer: one of the authoer (Matthew Rocklin) works for Coiled Computing*
+*Diclaimer: one of the authors (Matthew Rocklin) works for Coiled Computing*
 
 We can also run this on the cloud with any number of frameworks.
 In this case we used the [Coiled Cloud](https://coiled.io) service to deploy on AWS
