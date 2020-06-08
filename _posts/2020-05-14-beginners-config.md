@@ -26,7 +26,7 @@ Though those are the two broad main categories, there are tons of choices of how
 *   Use ‘native’ deployment python APIs, provided by the dask developers, to create (and interactively configure) dask on deployment infrastructure they support, either through the general-purpose [Dask Gateway](https://gateway.dask.org/) which supports multiple backends, or directly against cluster managers such as kubernetes with [dask-kubernetes](https://kubernetes.dask.org/en/latest/) or YARN with [dask-yarn](https://yarn.dask.org/en/latest/), as long as you’ve already provisioned the kubernetes cluster or hadoop cluster already
 *   Use a nearly full-service deployment python API called [Dask Cloud Provider](https://cloudprovider.dask.org/en/latest/), that will go one step farther and provision the cluster for you too, as long as you give it AWS credentials (and as of time of writing, it only supports AWS)
 
-As you can see, there are a ton of options. On top of all of those, you might contract a managed service provider to provision and configure your dask cluster for you according to your specs, such as Saturn Cloud.
+As you can see, there are a ton of options. On top of all of those, you might contract a managed service provider to provision and configure your dask cluster for you according to your specs, such as [Saturn Cloud](https://www.saturncloud.io/s/).
 
 Whatever you choose, the whole point is to unlock the power of parallelism in Python that Dask provides, in as scalable a manner as possible which is what getting it running on distributed infrastructure is all about. Once you know where and with what API you are going to deploy your dask cluster, the real configuration process for your Dask cluster and its workload begins.
 
