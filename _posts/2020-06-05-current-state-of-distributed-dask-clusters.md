@@ -148,7 +148,7 @@ This cluster manager starts a scheduler on your local machine, and then starts a
 
 ### SSH Cluster
 
-Another reference implementation is `SSHCluster`. This is one of the most pure and simple ways of using multiple machines with Dask distributed and is very similar to our initial example in this blog post.
+Another reference implementation is [`SSHCluster`](https://docs.dask.org/en/latest/setup/ssh.html). This is one of the most pure and simple ways of using multiple machines with Dask distributed and is very similar to our initial example in this blog post.
 
 ```python
 from dask.distributed import SSHCluster, Client
