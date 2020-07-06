@@ -281,7 +281,7 @@ but also some costs (splitting of core efforts and mismatches for users).
 Also, I suspect that splitting out also probably means that we'll probably lose the dashboard,
 unless those other groups are very careful to expose the same state to Bokeh.
 
-There is more exploration to do here.  Regardless I think that it probaby makes
+There is more exploration to do here.  Regardless I think that it probably makes
 sense to try to isolate the state machine from the networking system.
 Maybe this also makes it easier for people to profile in isolation.
 
@@ -291,3 +291,37 @@ High Level Graph Optimizations
 
 Once we have everything in smarter high level graph layers,
 we will also be more ripe for optimization.
+
+We'll need a better way to write down these optimizations with a separated
+traversal system and a set of rules.  A few of us in the Dask community have
+written these things before, maybe it's time we revisit them.
+
+
+What we need
+------------
+
+This would require some effort, but I think that it would hit several high
+profile problems at once.  There are a few tricky things to get right:
+
+1.  A framework for high level graph layers
+2.  An optimization system for high level graph layers
+3.  Separation of the scheduler into two parts
+
+For this I think that we'll need people who are fairly familiar with Dask to do this right.
+
+And there there is a fair amount of follow-on work
+
+1.  Build a hierarchy of layers for dask dataframe
+2.  Build a hierarchy of layers for dask array
+3.  Build optimizations for those to remove the need for low level graph
+    optimizations
+4.  Rewrite core parts of the scheduler in Cython
+5.  Experiment with the networking layer, maybe with a new Comm
+
+I've been thinking about the right way to enact this change.
+Historically most Dask changes over the past few years have been incremental or
+peripheral, due to how burdened the maintainers are.  There might be enough
+pressure on this problem though that we can get some dedicated engineering
+effort from a few organizations though, which might change how possible this is.
+We've gotten 25% time from a few groups.  I'm curious if we can gate 100% time
+for some people for a few months.
