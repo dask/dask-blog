@@ -1,6 +1,6 @@
 ---
 layout: post
-title: High Performance Scheduling
+title: Reduce Scheduling Overhead
 tagline:
 author: Matthew Rocklin (Coiled)
 tags: []
@@ -11,8 +11,8 @@ theme: twitter
 Summary
 -------
 
-This post discusses all of the current costs around task scheduling in Dask,
-and then lays out a plan to accelerate things.
+This post discusses Dask overhead costs for task scheduling,
+and then lays out a rough plan for acceleration.
 
 This post is written for other maintainers, and often refers to internal
 details.  It is not intended for broad readability.
@@ -22,7 +22,7 @@ How does this present?
 
 When we submit large graphs there is a bit of a delay between us calling
 `.compute()` and work actually starting on the workers.  In some cases, that
-delay can be considerable.
+delay can affect usability and performance.
 
 Additionally, in far fewer cases, the gaps in between tasks can be an issue,
 especially if those tasks are very short and for some reason can not be made
@@ -35,9 +35,9 @@ First, this is a problem that affects about 1% of Dask users.  These are people
 who want to process millions of tasks relatively quickly.  Let's list a few use
 cases:
 
-1.  Pangeo workloads on the 100TB scale
+1.  Xarray/Pangeo workloads on the 100TB scale
 2.  NVIDIA benchmarking (GPUs make computing fast, so other costs become
-    proportionally larger)
+    relatively larger)
 3.  Some mystery use cases inside of some hedge funds
 
 It does not affect the everyday user, who processes 100GB to a few TB of data,
@@ -76,12 +76,13 @@ What do other people do?
 ------------------------
 
 Let's look at a few things that other projects do, and see if there are things
-that we can learn.
+that we can learn.  These are commonly suggested, but there are challenges with
+most of them.
 
 1.  Rewrite the scheduler it in C++/Rust/C/Cython
 
     Proposal: Python is slow.  Want to make it faster?  Don't use Python.  See
-    academic projects
+    academic projects.
 
     Challenge: This makes sense for some parts of the pipeline above, but not
     for others.  It also makes it harder to attract maintainers.
@@ -98,6 +99,8 @@ that we can learn.
     Dask has to make if scheduling state is spread on many computers.
     Distributed scheduling works better when the workload is very either
     uniform or highly decoupled.
+    Distributed scheduling is really attractive to people who like solving
+    interesting/hard problems.
 
     What we should consider: We can move some simple logic down to the workers.
     We've already done this with the easy stuff though.
@@ -110,7 +113,7 @@ that we can learn.
     Spark, Mars, and others.
 
     Challenge: Yes, but Dask is not a dataframe library or an array library.
-    The three use cases we mention above are all very different
+    The three use cases we mention above are all very different.
 
     What we should consider: modules like dask array and dask dataframe should
     develop high level query blocks, and we should endeavor to
@@ -121,14 +124,30 @@ that we can learn.
 What should we actually do?
 ---------------------------
 
-I don't know.  We're going to find out.  This is a hard problem because
-changing one piece of the project at this level has repurcussions for many
-other pieces.  The rest of this post tries to lay out a consistent set of
-changes.
+Because our pipeline has many stages, each of which can be slow for different
+reasons, we'll have to do many things.  Additionally, this is a hard problem
+because changing one piece of the project at this level has repurcussions for
+many other pieces.  The rest of this post tries to lay out a consistent set of
+changes.  Let's start with a summary:
+
+1.  For Dask array/dataframe let's use high level graphs more aggressively so
+    that we can communicate only abstract representations between the client
+    and scheduler.
+2.  But this breaks low level graph optimizations, fuse, cull, and slice fusion
+    in particular.  So we'll need to make high level graphs considerably
+    smarter to make these unnecessary.
+3.  Then, once all of the graph manipulation happens on the scheduler, let's
+    try to accelerate it, hopefully in a language that the current dev
+    community can understand, like Cython
+4.  At the same time in parallel, let's take a look at our network stack
+
+We'll go into these in more depth below
 
 
 Graph Generation
 ----------------
+
+### High Level Graph History
 
 A year or two ago we moved graph generation costs from user-code-typing time to
 graph-optimization-time with high level graphs
@@ -140,24 +159,81 @@ y = x + 1                 # graph generation used to happen here
 
 This really improved usability, and also let us do some high level
 optimizations which sometimes allowed us to skip some lower-level optimization
-costs.  We can extend this approach, but only if we make high level graphs much
-better.
+costs.
 
+### Can we push this further?
 
-### Send abstract graph layers to the scheduler
+The first four stages of our pipeline happen on the client:
 
-If we don't lower all the way on the client side then we can send these more
-compact graph representations up to the scheduler rather than sending the whole
-thing as a bunch of Python dicts.
+1.  **Graph generation:** Some Python code in a Dask collection library, like
+    dask array, calls the sum function, which generates a task graph on the
+    client side.
+2.  **Graph Optimization:** We then optimize that graph, also on the client
+    side, in order to remove unnecessary work, fuse tasks, apply important high
+    level optimizations, and more.
+3.  **Graph Serializtion:** We now pack up that graph in a form that can be
+    sent over to the scheduler.
+4.  **Graph Communication:** We fire those bytes across a wire over to the
+    scheduler
 
-The scheduler will then have to know how to unpack these graphs.  This is a
-little tricky because the Scheduler can't run user Python code (for security
-reasons) but we can special-case a few common cases.
+If we're able to stay with the high level graph representation through these
+stages all the way until graph communication, then we can communicate a far
+more compact representation up to the scheduler.  We can drop a lot of these
+costs, at least for the high level collection APIs (delayed and client.submit
+would still be slow, client.map might be ok though).
+
+This has a couple of other nice benefits:
+
+1.  User's code won't block, and we can alert the user immediately that we're
+    on the job
+2.  We've centralized costs in just the scheduler,
+    so there is now only one place where we might have to think about low-level code
 
 (some conversation here: https://github.com/dask/distributed/issues/3872)
 
 
-### Encode graphs in something other than Python
+### However, low-level graph optimizations are going to be a problem
+
+In principle changing the distributed scheduler to accept a variety of graph
+layer types is a tedious but straightforward problem.  I'm not concerned.
+
+The bigger concern is what to do with low-level graph optimizations.
+Today we have three of these that really matter:
+
+1.  Task fusion: this is what keeps your `read_parquet` task merged with your
+    subsequent blockwise tasks
+2.  Culling: this is what makes `df.head()` or `x[0]` fast
+3.  Slice fusion: this is why `x[:100][5]` works well
+
+In order for us to transmit abstract graph layers up to the scheduler, we need
+to remove the need for these low level graph optimizations.  Our best option
+here is to replace them with much more clever high level graph optimizations.
+
+We already do this a bit with blockwise, which has its own fusion, and which
+removes much of the need for fusion generally.  But other blockwise-like
+operations, like `read_*` will probably have to join the Blockwise family.
+
+Getting culling to work properly may require us to teach each of the individual
+graph layers how to cull themselves.  This may get tricky.
+
+Slicing is doable, we just need someone to go in, grok all of the current
+slicing optimizations, and make high level graph layers for these
+computations.
+
+
+### Also, unpacking abstract graph layers on the scheduler
+
+The scheduler will also have to know how to unpack these graphs.  This is a
+little tricky because the Scheduler can't run user Python code (for security
+reasons).  We'll have to register layer types (like blockwise) that the
+scheduler knows about and trusts ahead of time.  We'll still always support
+custom layers, and these will be at the same speed that they've always been,
+but hopefully there will be far less need for these if we go all-in on high
+level layers.
+
+
+
+### Maybe we should encode graphs in something other than Python?
 
 Today we encode graphs as dicts of tuples.  If we had a more compact
 representation then we could generate them more efficiently, and communicate
@@ -168,37 +244,11 @@ graphs in abstract form (like Blockwise).  Then we can defer this to the
 scheduler code.
 
 
-### Challenge: low level graph optimizations
-
-Many important optimizations like culling, fusion, and slice optimization require the low
-level graph.  This currently happens on the Client side.  How do we handle those?
-
-There are many cases where not culling on the client side will mean that we'll
-send very large graphs to the scheduler needlessly (consider `df.head()`)
-
-In array computing we also require the low level graph for efficient slicing
-optimizations (which are critical for performance).
-
-
-### Proposal
-
-I would like to see a world where the Client sends a sequence of graph layers
-up to the Scheduler.  This will allow more compact abstract graphs, and
-possibly also graphs encoded in a lower level langauge.  There is a nice
-opportunity for creativity there if we can encode graphs in different ways.
-
-However, in order to keep the high level graph structure we need to resolve
-some critical issues around optimization in the Dask collections, particularly
-array and dataframe.  I think that these are solvable if we ramp up high level
-query optimizations considerably, so that those optimizations can take care of
-things like culling and slice optimization and we never need to lower to a full
-low-level task graph.
-
-So if we want faster graph generation I think that we need much smarter high level graphs.
-
-
 Rewrite scheduler in low-level language
 ---------------------------------------
+
+Once most of the finicky bits are moved to the scheduler, we'll have one place
+where we can focus on low level graph state manipulation.
 
 Dask's distributed scheduler is two things:
 
@@ -223,14 +273,21 @@ help to accelerate stages 7-8 in the pipeline listed at the top of this post.
 
 Rewriting the state machine in some lower level language would be fine.
 Ideally this would be in a language that was easy for people to maintain,
-(Cython?) but more likely we'll end up making a protocol here so that other
-groups can experiment safely.  In doing this we'll probably lose the dashboard,
+(Cython?) but we may also consider making a more firm interface here that would
+allow other groups to experiment safely.
+
+There are some advantages to this (more experimentation by different groups)
+but also some costs (splitting of core efforts and mismatches for users).
+Also, I suspect that splitting out also probably means that we'll probably lose the dashboard,
 unless those other groups are very careful to expose the same state to Bokeh.
 
-It could also be that we can tune just small parts of the scheduler and
-maintain much of the same state.  I think that in an ideal world we would find
-some solution with Cython/MyPy that got most of the job done.
+There is more exploration to do here.  Regardless I think that it probaby makes
+sense to try to isolate the state machine from the networking system.
+Maybe this also makes it easier for people to profile in isolation.
 
-There is more exploration to do here.  Short-term I think that separating out
-the state machine from the networking makes sense.  Maybe that also makes it
-easier for people to profile.
+
+High Level Graph Optimizations
+------------------------------
+
+Once we have everything in smarter high level graph layers,
+we will also be more ripe for optimization.
