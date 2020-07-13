@@ -36,7 +36,7 @@ who want to process millions of tasks relatively quickly.  Let's list a few use
 cases:
 
 1.  Xarray/Pangeo workloads on the 100TB scale
-2.  NVIDIA benchmarking (GPUs make computing fast, so other costs become
+2.  NVIDIA RAPIDS workloads on large tabular data(GPUs make computing fast, so other costs become
     relatively larger)
 3.  Some mystery use cases inside of some hedge funds
 
@@ -134,8 +134,10 @@ changes.  Let's start with a summary:
     that we can communicate only abstract representations between the client
     and scheduler.
 2.  But this breaks low level graph optimizations, fuse, cull, and slice fusion
-    in particular.  So we'll need to make high level graphs considerably
-    smarter to make these unnecessary.
+    in particular.  We can make these unnecessary with two changes:
+    -   We can make high level graphs considerably smarter to handle cull and slice fusion
+    -   We can move a bit more of the scheduling down to the workers to remove
+        the advantages of low-level fusion
 3.  Then, once all of the graph manipulation happens on the scheduler, let's
     try to accelerate it, hopefully in a language that the current dev
     community can understand, like Cython
@@ -206,42 +208,53 @@ Today we have three of these that really matter:
 3.  Slice fusion: this is why `x[:100][5]` works well
 
 In order for us to transmit abstract graph layers up to the scheduler, we need
-to remove the need for these low level graph optimizations.  Our best option
-here is to replace them with much more clever high level graph optimizations.
+to remove the need for these low level graph optimizations.  I think that we
+can do this with a combination of two approaches:
+
+
+#### More clever high level graph manipulation
 
 We already do this a bit with blockwise, which has its own fusion, and which
 removes much of the need for fusion generally.  But other blockwise-like
 operations, like `read_*` will probably have to join the Blockwise family.
 
 Getting culling to work properly may require us to teach each of the individual
-graph layers how to cull themselves.  This may get tricky.
+graph layers how to track dependencies in each layer type and cull themselves.
+This may get tricky.
 
 Slicing is doable, we just need someone to go in, grok all of the current
 slicing optimizations, and make high level graph layers for these
-computations.
+computations.  This would be a great project for a sharp masters student
 
 
-### Also, unpacking abstract graph layers on the scheduler
+#### Send speculative tasks to the workers
 
-The scheduler will also have to know how to unpack these graphs.  This is a
-little tricky because the Scheduler can't run user Python code (for security
-reasons).  We'll have to register layer types (like blockwise) that the
-scheduler knows about and trusts ahead of time.  We'll still always support
-custom layers, and these will be at the same speed that they've always been,
-but hopefully there will be far less need for these if we go all-in on high
-level layers.
+High level Blockwise fusion handles many of the use cases for low-level fusion,
+but not all.  For example I/O layers like `dd.read_parquet` or `da.from_zarr`
+aren't fused at a high level.
+
+We can resolve this either by making them blockwise layers (this requires
+expanding the blockwise abstraction, which may be hard) or alternatively we can
+start sending not-yet-ready tasks to workers before all of their dependencies
+are finished if we're highly confident that we know where they're going to go.
+This would give us some of the same results of fusion, but would keep all of
+the task types separate (which would be nice for diagnostics) and might still
+give us some of the same performance benefits that we get from fusion.
 
 
+### Unpack abstract graph layers on the scheduler
 
-### Maybe we should encode graphs in something other than Python?
+So after we've removed the need for low level optimizations, and we just send
+the abstract graph layers up to the scheduler directly, we'll need to teach the
+scheduler how to unpack those graph layers.
 
-Today we encode graphs as dicts of tuples.  If we had a more compact
-representation then we could generate them more efficiently, and communicate
-them across a wire more efficiently.
 
-Personally I think that this is less important if we can encode most large
-graphs in abstract form (like Blockwise).  Then we can defer this to the
-scheduler code.
+This is a little tricky because the Scheduler can't run user Python code (for
+security reasons).  We'll have to register layer types (like blockwise,
+rechunk, dataframe shuffle) that the scheduler knows about and trusts ahead of
+time.  We'll still always support custom layers, and these will be at the same
+speed that they've always been, but hopefully there will be far less need for
+these if we go all-in on high level layers.
 
 
 Rewrite scheduler in low-level language
@@ -272,9 +285,9 @@ help to accelerate stages 7-8 in the pipeline listed at the top of this post.
 ### State machine
 
 Rewriting the state machine in some lower level language would be fine.
-Ideally this would be in a language that was easy for people to maintain,
-(Cython?) but we may also consider making a more firm interface here that would
-allow other groups to experiment safely.
+Ideally this would be in a language that was easy for the current maintainer
+community to maintain, (Cython?) but we may also consider making a more firm
+interface here that would allow other groups to experiment safely.
 
 There are some advantages to this (more experimentation by different groups)
 but also some costs (splitting of core efforts and mismatches for users).
@@ -285,6 +298,10 @@ There is more exploration to do here.  Regardless I think that it probably makes
 sense to try to isolate the state machine from the networking system.
 Maybe this also makes it easier for people to profile in isolation.
 
+In speaking with a few different groups most people have expressed reservation
+about having multiple different state machine codes.  This was done in
+MapReduce and Spark and resulted in difficult to maintain community dynamics.
+
 
 High Level Graph Optimizations
 ------------------------------
@@ -293,7 +310,7 @@ Once we have everything in smarter high level graph layers,
 we will also be more ripe for optimization.
 
 We'll need a better way to write down these optimizations with a separated
-traversal system and a set of rules.  A few of us in the Dask community have
+traversal system and a set of rules.  A few of us have
 written these things before, maybe it's time we revisit them.
 
 
