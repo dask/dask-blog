@@ -151,4 +151,6 @@ With feedback from our community we are also going to be focussing on making the
 
 <img alt="Scheduler performance tasks including a Rust implementation, benchmarking, dynamic tasks and Cython, PyPy and C experiments" src="https://pbs.twimg.com/media/Ecacr6pWoAEd4Tx.jpg" style="width: 100%;" />
 
+### Chan Zuckerberg Foundation maintainer post
+
 Lastly I'm excited to share that with funding from the [Chan Zuckerberg Foundation](https://chanzuckerberg.com/eoss/proposals/scaling-python-with-dask/), Dask will be hiring a maintainer who will focus on growing usage in the biological sciences field. If that is of interest to you keep an eye on [our twitter account](https://twitter.com/dask_dev) for more announcements.
