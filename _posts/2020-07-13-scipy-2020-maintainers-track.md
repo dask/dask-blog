@@ -1,7 +1,7 @@
 ---
 layout: post
-title: SciPy 2020 Maintainers Track Talk
-tagline: An update on Dask over the last 12 months
+title: Last Year in Review
+tagline: From the SciPy 2020 Maintainers Trak
 author: Jacob Tomlinson (NVIDIA)
 tags: [SciPy, Community, Talk]
 theme: twitter
