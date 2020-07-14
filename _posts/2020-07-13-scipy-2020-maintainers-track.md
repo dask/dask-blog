@@ -11,11 +11,11 @@ theme: twitter
 
 We recently enjoyed the 2020 SciPy conference from the comfort of our own homes this year. The 19th annual Scientific Computing with Python conference was a virtual conference this year due to the global pandemic. The annual SciPy Conference brought together over 1500 participants from industry, academia, and government to showcase their latest projects, learn from skilled users and developers, and collaborate on code development.
 
-This year we had the privilege of giving the first project update on the maintainers track.
+As part of the maintainers track we presented an update on Dask.
 
 ## Video
 
-COMING SOON! We will update this post once the SciPy organisers upload the recording to YouTube.
+COMING SOON! We will update this post once the SciPy organizers upload the recording to YouTube.
 
 <!-- TODO: Add video once published -->
 
