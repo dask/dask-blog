@@ -185,7 +185,7 @@ The `KubeCluster` cluster manager further abstracts away those concepts into the
 from dask.distributed import Client
 from dask_kubernetes import KubeCluster
 
-cluster = KubeCluster()
+cluster = KubeCluster(**cluster_specific_kwargs)
 client = Client(cluster)
 ```
 
@@ -227,7 +227,7 @@ Dask Jobqueue has cluster manager objects for [PBS](https://en.wikipedia.org/wik
 from dask.distributed import Client
 from dask_jobqueue import PBSCluster
 
-cluster = PBSCluster()
+cluster = PBSCluster(**cluster_specific_kwargs)
 client = Client(cluster)
 ```
 
@@ -245,7 +245,7 @@ Hadoop is a framework that allows for the distributed processing of large data s
 from dask.distributed import Client
 from dask_yarn import YarnCluster
 
-cluster = YarnCluster()
+cluster = YarnCluster(**cluster_specific_kwargs)
 client = Client(cluster)
 ```
 
@@ -265,7 +265,7 @@ One example is [AWS Fargate](https://aws.amazon.com/fargate/) which is a managed
 from dask.distributed import Client
 from dask_cloudprovider import FargateCluster
 
-cluster = FargateCluster()
+cluster = FargateCluster(**cluster_specific_kwargs)
 client = Client(cluster)
 ```
 
@@ -283,7 +283,7 @@ This tool is targeted at IT administrators who want to enable their users to cre
 from dask.distributed import Client
 from dask_gateway import GatewayCluster
 
-cluster = GatewayCluster()
+cluster = GatewayCluster(**cluster_specific_kwargs)
 client = Client(cluster)
 ```
 
@@ -301,7 +301,7 @@ The cluster manager closely follows the `LocalCluster` in that is creates resour
 from dask.distributed import Client
 from dask_cuda import LocalCUDACluster
 
-cluster = LocalCUDACluster()
+cluster = LocalCUDACluster(**cluster_specific_kwargs)
 client = Client(cluster)
 ```
 
