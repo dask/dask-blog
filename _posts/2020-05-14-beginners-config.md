@@ -96,7 +96,7 @@ As discussed in [the Dask docs on workers]([https://distributed.dask.org/en/late
 *   If your code is mostly pure Python (in non-optimized Python libraries) on non-numerical data
 *   If your code causes computations external to Python that are long running and don’t release the GIL explicitly
 
-Conveniently, a lot of dask users are running exclusively numerical computations using Python libraries optimized for multithreading, namely NumPy, Pandas, SciPy, etc in the PyData stack. If you do mostly numerical computations using those or similarly optimized libraries, you should emphasize a higher thread count.
+Conveniently, a lot of dask users are running exclusively numerical computations using Python libraries optimized for multithreading, namely NumPy, Pandas, SciPy, etc in the PyData stack. If you do mostly numerical computations using those or similarly optimized libraries, you should emphasize a higher thread count. If you truly are doing mostly numerical computations, you can specify as many total threads as you have cores; if you are doing any work that would cause a thread to pause, for example any I/O (to write results to disk, perhaps), you can specify *more* threads than you have cores, since some will be occasionally sitting idle. The ideal number regarding how many more threads than cores to set in that situation is complex to estimate and dependent on your workload, but taking some advice from [concurrent.futures](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor), 5 times the processors on your machine is a historical upper bound to limit your total thread count to for heavily I/O dependent workloads. 
 
 
 ## How to chunk arrays and partition DataFrames
