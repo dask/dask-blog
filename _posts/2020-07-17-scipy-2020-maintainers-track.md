@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Last Year in Review
-tagline: From the SciPy 2020 Maintainers Trak
+tagline: From the SciPy 2020 Maintainers Track
 author: Jacob Tomlinson (NVIDIA)
 tags: [SciPy, Community, Talk]
 theme: twitter
