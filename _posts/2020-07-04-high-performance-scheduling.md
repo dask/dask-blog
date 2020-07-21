@@ -17,8 +17,8 @@ and then lays out a rough plan for acceleration.
 This post is written for other maintainers, and often refers to internal
 details.  It is not intended for broad readability.
 
-How does this present?
-----------------------
+How does this problem present?
+------------------------------
 
 When we submit large graphs there is a bit of a delay between us calling
 `.compute()` and work actually starting on the workers.  In some cases, that
@@ -31,12 +31,12 @@ longer.
 Who cares?
 ----------
 
-First, this is a problem that affects about 1% of Dask users.  These are people
+First, this is a problem that affects about 1-5% of Dask users.  These are people
 who want to process millions of tasks relatively quickly.  Let's list a few use
 cases:
 
-1.  Xarray/Pangeo workloads on the 100TB scale
-2.  NVIDIA RAPIDS workloads on large tabular data(GPUs make computing fast, so other costs become
+1.  Xarray/Pangeo workloads at the 10-100TB scale
+2.  NVIDIA RAPIDS workloads on large tabular data (GPUs make computing fast, so other costs become
     relatively larger)
 3.  Some mystery use cases inside of some hedge funds
 
@@ -79,7 +79,7 @@ Let's look at a few things that other projects do, and see if there are things
 that we can learn.  These are commonly suggested, but there are challenges with
 most of them.
 
-1.  Rewrite the scheduler it in C++/Rust/C/Cython
+1.  **Rewrite the scheduler it in C++/Rust/C/Cython**
 
     Proposal: Python is slow.  Want to make it faster?  Don't use Python.  See
     academic projects.
@@ -91,7 +91,7 @@ most of them.
     algorithms could be written in a lower level language, maybe Cython.  We'll
     need to be careful about maintainability.
 
-2.  Distributed scheduling
+2.  **Distributed scheduling**
 
     Proposal: The scheduler is slow, maybe have many schedulers?  See Ray.
 
@@ -106,7 +106,7 @@ most of them.
     We've already done this with the easy stuff though.
     It's not clear how much additional benefit there is here.
 
-3.  Build specialty scheduling around collections
+3.  **Build specialty scheduling around collections**
 
     Proposal: If Dask were to become just a dataframe library or just an array
     computing library then it could special-case things more effectively.  See
@@ -136,8 +136,8 @@ changes.  Let's start with a summary:
 2.  But this breaks low level graph optimizations, fuse, cull, and slice fusion
     in particular.  We can make these unnecessary with two changes:
     -   We can make high level graphs considerably smarter to handle cull and slice fusion
-    -   We can move a bit more of the scheduling down to the workers to remove
-        the advantages of low-level fusion
+    -   We can move a bit more of the scheduling down to the workers to
+        replicate the advantages of low-level fusion there
 3.  Then, once all of the graph manipulation happens on the scheduler, let's
     try to accelerate it, hopefully in a language that the current dev
     community can understand, like Cython
