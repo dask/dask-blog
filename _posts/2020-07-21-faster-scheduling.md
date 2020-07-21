@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Reduce Scheduling Overhead
+title: Faster Scheduling
 tagline:
 author: Matthew Rocklin (Coiled)
 tags: []
