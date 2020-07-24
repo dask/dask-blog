@@ -102,3 +102,8 @@ Publish on Github Pages
 
 Github runs Jekyll by default.  No additional work is needed for deployment,
 just push to the `gh-pages` branch and things should be up in a few minutes.
+
+The blog is also rebuilt nightly via a GitHub Actions cron job. This allows
+post authors to set the post date in the future for publishing later. Jekyll
+will only build posts dated in the past. This should make scheduling a little
+easier.
