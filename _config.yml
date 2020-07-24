@@ -25,6 +25,9 @@ url: https://blog.dask.org
 #
 production_url : https://blog.dask.org
 
+# Only build posts dated in the past
+future: false
+
 # All Jekyll-Bootstrap specific configurations are namespaced into this hash
 #
 JB :
