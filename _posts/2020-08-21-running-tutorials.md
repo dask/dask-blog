@@ -78,6 +78,8 @@ Any of these options will likely be a good choice, they allow the presenter to s
 
 The main decision you will have to make is around whether you want to restrict numbers or not. The more interactivity you want to have in the tutorial the more you will need a handle on numbers. For our initial tutorials we wanted to enable participants to ask questions at any time and get a quick response, so we opted to use Zoom and limit our numbers to allow us to not get overwhelmed with questions. However if you want to present to as many people as possible and accept that you may not be able to address them all individually you may want to use a streaming platform instead.
 
+It is also possible to do both at the same time. Zoom can stream directly to YouTube for example. This can be useful if you want to open things to as many folks as possible, but also limit the interactivity to a select group (probably on a first-come-first-served basis). For the Dask tutorials we decided to not livestream and instead run multiple tutorials so that everyone gets an interactive experience, but we are fortunate to have the resources to do that.
+
 ### Registering attendees
 
 There are a couple of reasons why you may wish to register attendees ahead of time.
@@ -195,7 +197,7 @@ If you have a mailing list, or any other platform you will probably want to shar
 
 ### Setting up the call
 
-Be sure to join the call ahead of the attendees. I would make sure this is at least before the final reminder email goes out. Personally I join 20 minutes or so before hand.
+Be sure to join the call ahead of the attendees. I would make sure this is at least before the final reminder email goes out. Personally I join 20 minutes or so before hand. This allows you to ensure the call is being recorded and that attendees were muted when they join.
 
 Consider the experience of the user's here. They will have signed up for an event online, received a few emails with Zoom call details and then they will join the call. If there is no indication that they are in the right place within a few seconds they may become anxious.
 
