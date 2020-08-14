@@ -13,17 +13,18 @@ For the last couple of months we've been running community tutorials every three
 
 ## Why should open source projects run tutorials
 
-The Dask team has historically run tutorials at conferences such as SciPy. With 2020 turning out the way that it has much of this content is being presented virtually this year. As more people are becoming accustom to participating in virtual tutorials we felt it would be a good service to our community to start running regular virtual tutorials independent of conferences we may be attending or speaking at.
+The Dask team has historically run tutorials at conferences such as SciPy. With 2020 turning out the way that it has much of this content is being presented virtually this year. As more people are becoming accustomed to participating in virtual tutorials we felt it would be a good service to our community to start running regular virtual tutorials independent of conferences we may be attending or speaking at.
 
 Tutorials are great for open source projects as they appeal to multiple types of learner.
 
 - The tutorial material provides a great foundation for _written and visual learners_.
 - Using an interactive tool like Jupyter Notebooks allows _kinesthetic learners_ to follow along and take their own paths.
 - Having an instructor run through the material in real time provides a spoken source for _auditory learners_.
+- It's also just fun to have a bunch of people from around the world participate in a live event.  There is a greater sense of community.
 
 Many open source projects provide documentation, some also make instructional videos on YouTube, but you really can't beat a tutorial for producing a single set of content that is valuable to many users.
 
-The more users you can share knowledge, information and skills with the more they are going to use and engage with the project. Having a great source of learning material is critical for converting interested newcomers to users and users to contributors.
+The more users can share knowledge, information and skills with the more they are going to use and engage with the project. Having a great source of learning material is critical for converting interested newcomers to users and users to contributors.
 
 It is also great for the maintainers too. Dask is a large project made up of many open source repositories all with different functions. Each maintainer tends to participate in their specialist areas, but do not engage with everything on a day-to-day basis. Having maintainers run tutorials encourages them to increase their knowledge of areas they rarely touch in order to deliver the material, and this benefits the project as a whole.
 
@@ -37,7 +38,7 @@ When starting to compile material is it important to consider a few questions; "
 
 For the Dask tutorial we were targeting users who were either new to Dask, or had been using it for a while but wanted to learn more about the wider project. Dask is a large project after all and there are many features that you may not discover when trying to solve your specific challenges with it.
 
-At large conferences is it quite normal to run a three hour tutorial, however when trying to schedule a tutorial as part of a person's normal working day that is probably too much to ask of them. Folks are accustom to scheduling in work meetings that are typically 30-60 minutes, but that may not be enough to run a tutorial. So we settled on 90 minutes, enough to get through a good amount of content, but not too long that folks will be put off.
+At large conferences is it quite normal to run a three hour tutorial, however when trying to schedule a tutorial as part of a person's normal working day that is probably too much to ask of them. Folks are accustomed to scheduling in work meetings that are typically 30-60 minutes, but that may not be enough to run a tutorial. So we settled on 90 minutes, enough to get through a good amount of content, but not too long that folks will be put off.
 
 We already have an ["official" tutorial](https://github.com/dask/dask-tutorial) which is designed to fill the three hours of a SciPy tutorial. This tutorial is also designed as a "Dask from first principals" style tutorial where we explore how Dask works and eventually scale up to how Dask implements familiar APIs like Numpy and Pandas. This is great for giving folks a thorough understanding of Dask but given that we decided on 90 minutes we may not want to start with low level code as we may run out of time before getting to general usage.
 
@@ -198,7 +199,7 @@ Be sure to join the call ahead of the attendees. I would make sure this is at le
 
 Consider the experience of the user's here. They will have signed up for an event online, received a few emails with Zoom call details and then they will join the call. If there is no indication that they are in the right place within a few seconds they may become anxious.
 
-To combat this I tend to show some graphic which lets people know they are i the right place. You could either use a tool like [OBS with Zoom](https://jacobtomlinson.dev/posts/2020/how-to-use-obs-studio-with-zoom-hangouts-teams-and-more-on-macos/) to create a custom scene or just share your screen with a simple slide saying something like "The Dask tutorial will start soon".
+To combat this I tend to show some graphic which lets people know they are in the right place. You could either use a tool like [OBS with Zoom](https://jacobtomlinson.dev/posts/2020/how-to-use-obs-studio-with-zoom-hangouts-teams-and-more-on-macos/) to create a custom scene or just share your screen with a simple slide saying something like "The Dask tutorial will start soon".
 
 _The only downside to sharing your screen is you can't continue to use your computer in the run up to the tutorial._
 
@@ -218,7 +219,7 @@ _I'm awful at pronouncing names correctly so I tend to list the places they said
 
 Once you're ready to start introduce yourself and a general overview of the tutorial content. Then make use of any interaction tools you may have in your chat application. In zoom there are buttons that participants can click with labels like "go faster", "go slower", "yes" and "no". These are great for getting feedback from the audience when running the tutorial, but it's good to make sure everyone knows where they are and has a go at using them. I tend to explain where the buttons are and then ask questions like "have you managed to launch the binder?", "have you used Dask before?" or "are you a Pandas user?". You learn a little about your audience and they get familiar with the controls.
 
-Being interactive means you can also respond to user questions. In Dask tutorials we mute everyone by default and encourage folks to type in the text chat. We also have an additional instructor who is not delivering the material who is able to watch the chat and answer questions in real time. If they feel like a question/answer would be beneficial to the whole group they can unmute and interrupt the presenter in order to bubble it up.
+Being interactive means you can also respond to user questions. In Dask tutorials we mute everyone by default and encourage folks to type in the text chat. We also have an additional instructor who is not delivering the material who is able to watch the chat and answer questions in real time. If they feel like a question/answer would be beneficial to the whole group they can unmute and interrupt the presenter in order to bubble it up.  Be prepared for a wide range of questions from the chat, including topics that are not being actively covered in the tutorial.  This is often the only time that attendees have real-time access to core maintainers.
 
 You may not have the resources to have two instructors for every tutorial, Dask is fortunate to have a strong maintainer team, so instead you may want to allocate breaks at the end of each section to answer questions. During the labs can be a good time to go back and review any questions.
 
