@@ -298,6 +298,8 @@ Our feedback shows that folks were generally happy, but we are leaning on the si
 
 By asking what sections were most informative we can identify things to cut in future if we do need to slow things down. It also shows areas where we may want to spend more time and add more content.
 
+![Forms response chart. Question title: Which sections did you find more informative?](https://i.imgur.com/XLzSEw4.png)
+
 #### What would be your preferred platform for a tutorial like this?
 
 We had to make a decision on which video platform to use based on the criteria we discussed earlier. For our tutorials we chose Zoom. By doing a user survey we were able to check that this worked for people and also see if there is an alternative that folks prefer.
