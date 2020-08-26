@@ -14,16 +14,16 @@ Summary
 Image Analysis Redux
 --------------------
 
-[Last year](https://blog.dask.org/2019/08/09/image-itk) we experimented with Dask/ITk/Scikit-Image
+[Last year](https://blog.dask.org/2019/08/09/image-itk) we experimented with Dask/ITK/Scikit-Image
 to perform large scale image analysis on a stack of 3D images.  Specifically, we looked at `deconvolution`
-a common method to _deblur_ images.  Now, a year later, we return to these experiments armed with a better
+a common method to _deblur_ images.  Now, a year later, we return to these experiments with a better
 understanding of how Dask and CuPy can interact, enhanced serialization methods, and support from the
 open-source community.
 
 Previously we used the [Richardson Lucy (RL)](https://en.wikipedia.org/wiki/Richardson%E2%80%93Lucy_deconvolution) deconvolution
 algorithm from ITK and [Scikit-Image](https://github.com/scikit-image/scikit-image/blob/master/skimage/restoration/deconvolution.py#L329).
-We left off at theorizing how GPUs could potential help accelerate these workflows.  Naively, we started
-replacing `scipy.signal.convolve` calls with `cupyx.scipy.ndimage.convolve` in Scikit-Image, and while
+We left off at theorizing how GPUs could potential help accelerate these workflows.  Starting with Scikit-Image's
+implementation, we naively tried replacing `scipy.signal.convolve` calls with `cupyx.scipy.ndimage.convolve`, and while
 performance improved, it did not improve _significantly_ -- that is, we did not get the 100X speed we were looking for
 
 Often, in working with images, we hit performance roadblocks in real space where data represents position.  When this happens,
