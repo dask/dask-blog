@@ -3,7 +3,7 @@ layout: post
 title: 2019 Dask User Survey
 tagline: 2019 dask user survey
 author: Tom Augspurger
-tags: []
+tags: [User Survey]
 theme: twitter
 ---
 {% include JB/setup %}
