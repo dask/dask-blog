@@ -29,7 +29,7 @@ The `dask/daskhub` helm chart is an evolution of the [Pangeo](http://pangeo.io/)
 helm chart, which came out of that community's attempts to do big data
 geoscience on the cloud. We're very grateful to have years of experience using
 Dask and JupyterHub together. Pangeo was always aware that there wasn't anything
-geocience specific to their Helm chart and so were eager to contribute it to
+geoscience-specific to their Helm chart and so were eager to contribute it to
 Dask to share the maintenance burden. In the process of moving it over to Dask's
 chart repository we took the opportunity to clean up a few rough edges.
 
