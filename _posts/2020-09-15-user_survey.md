@@ -1,7 +1,6 @@
 ---
 layout: post
 title: 2020 Dask User Survey
-tagline: 2020 dask user survey
 author: Tom Augspurger
 tags: [User Survey]
 theme: twitter
@@ -432,7 +431,7 @@ SSH continues to be the most popular "cluster resource mananger". This was the b
 
 And Dask users are about as happy with its stability as last year.
 
-<img src="/images/2020_survey/2020_25_0.png">
+<img src="/images/2020_survey/2020_27_0.png">
 
 ## Takeaways
 
