@@ -15,9 +15,9 @@ As part of the maintainers track we presented an update on Dask.
 
 ## Video
 
-COMING SOON! We will update this post once the SciPy organizers upload the recording to YouTube.
+You can find the video on the SciPy YouTube channel. The Dask update runs from 0:00-19:30.
 
-<!-- TODO: Add video once published -->
+<iframe width="560" height="315" src="https://www.youtube.com/embed/XC0M76CmzHg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Slides
 
