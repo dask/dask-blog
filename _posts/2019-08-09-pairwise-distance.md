@@ -12,17 +12,17 @@ In large scale genomics analysis, scientists try to reduce sequencing data from
 multiple individuals into groups that share common traits. This requires
 measuring how sequences differ from each other. A common way to do this is to
 use a distance metric like [city block](
-https://en.wikipedia.org/wiki/Taxicab_geometry ) or others. As this metric ends
+https://en.wikipedia.org/wiki/Taxicab_geometry ). As this metric ends
 up being computed pairwise over all of the samples, this can be a real
-bottleneck. Thus it is pairmount to have a performant distance computation
-implementation to really leverage the hardware.
+bottleneck. Therefore it is paramount to have a performant distance computation
+implementation that makes full use of the hardware available.
 
 
 TODO Might be nice to have a picture or graph of what some data looks like
 
 TODO explain what the data mean.
 
-So a representative dataset, might look something like this.
+A representative dataset, might look something like this:
 
 ```python
 # simulate some genetic data
@@ -32,8 +32,8 @@ x = np.random.choice(np.array([0, 1, 2], dtype='i1'),
 ```
 
 To start out, one might leverage a distance implementation from the highly
-optimized SciPy library. This is quick and can be dropped with relatively
-little effort as long as one's data fits what the function expects. So one
+optimized SciPy library. This is quick and can be employed with relatively
+little effort as long as one's data fits what the function expects. Consequently one
 might end up with an implementation like this.
 
 ```python
@@ -53,7 +53,7 @@ cases, this may already be sufficient.
 However we may find that while the performance is reasonable, we have a lot of
 samples to process. We could speed things up a bit by running through small
 batches of data in parallel. An easy way to get started on this work would be
-to make a Dask Array that handles operating on our data.
+to make a [Dask Array]( https://docs.dask.org/en/latest/array.html ) that handles operations on our data.
 
 ```python
 import dask.array as da
@@ -143,15 +143,15 @@ pairwise_cityblock_dask(x_dask, f=pairwise_cityblock_cpu).compute()
 ```
 
 With this, we are able to get more of a speedup. We did a little bit of work,
-but not so much. Also we have managed to leverage the distance function from
+but not a great amount. Also we have managed to leverage the distance function from
 our serial case without issues.
 
-What if we still want more performance than even this offers? Well if we have a
-GPU in our computer or a cluster of them, we could leverage that compute
+What if we still want more performance than this offers? Well, if we have a
+GPU in our computer, or a cluster of them, we could use that compute
 resource for our problem.
 
 First we need to move our data to the GPU. There are several ways we could do
-this. Though one reasonably approachable way is to use Numba. We could write
+this; though, one reasonable way is to use [Numba]( https://numba.pydata.org ). We could write
 the following to handle our in-memory case.
 
 ```python
@@ -173,7 +173,7 @@ to tune how many threads we use per block.
 TODO Add this code
 
 
-Alternatively we could be a bit clever and write this code using `forall`. This is pretty handy as we now no longer need to think about CUDA threads per block. There is a caveat though; we need to collapse our `for`-loops into 1 loop. One can do this with a bit of ingenuity.
+Alternatively we could be a bit clever and write this code using `forall`. This is pretty handy as we now no longer need to think about CUDA threads per block. There is a caveat though; we need to collapse our `for`-loops into one loop. One can do this with a bit of ingenuity.
 
 ```python
 import math
