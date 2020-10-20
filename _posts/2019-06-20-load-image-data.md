@@ -26,6 +26,14 @@ ex6-2_CamA_ch1_CAM1_stack0004_560nm_0174993msec_0001466788msecAbs_000x_000y_000z
 ```
 
 and show how to stitch these together into large lazy arrays
+using the [dask-image](https://image.dask.org/en/latest/) library
+
+```python
+>>> import dask_image
+>>> x = dask_image.imread.imread('raw/*.tif')
+```
+
+or by writing your own Dask delayed image reader function.
 
 <table>
 <tr>
@@ -102,7 +110,7 @@ and show how to stitch these together into large lazy arrays
 </tr>
 </table>
 
-on which some day we'll eventually be able to perform complex calculations.
+Some day we'll eventually be able to perform complex calculations on this dask array.
 
 <img src="https://raw.githubusercontent.com/mrocklin/raw-host/gh-pages/images/aollsm-index-1.jpg"
      width="45%"
