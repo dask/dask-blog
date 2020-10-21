@@ -86,7 +86,7 @@ def deconvolve(img, psf=None, iterations=20):
 For a 1.3 GB image we measured the following:
 
 - CuPy ~3 seconds for 20 iterations
-- NumPy ~36 second for 2 iterations
+- NumPy ~36 seconds for 2 iterations
 
 We see 10x increase in speed for 10 times the number of iterations -- very close to our desired 100X speedup!  Let's explore how this implementation
 performs with real biological data and Dask...
@@ -342,7 +342,7 @@ out = da.map_blocks(deconvolve,
                     dtype=cp.float32)
 ```
 
-TIMING INFO
+With Dask and multiple GPUs, we measured deconvolution of an 8GB image in ~10 seconds! But this is just the first step towards accelerated image science.
 
 <a href="/images/deconvolve.png">
     <img src="/images/deconvolve.png" width="100%"></a>
