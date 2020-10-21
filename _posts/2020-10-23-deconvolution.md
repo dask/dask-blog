@@ -15,7 +15,7 @@ Image Analysis Redux
 --------------------
 
 [Last year](https://blog.dask.org/2019/08/09/image-itk) we experimented with Dask/ITK/Scikit-Image
-to perform large scale image analysis on a stack of 3D images.  Specifically, we looked at `deconvolution`
+to perform large scale image analysis on a stack of 3D images.  Specifically, we looked at `deconvolution`,
 a common method to _deblur_ images.  Now, a year later, we return to these experiments with a better
 understanding of how Dask and CuPy can interact, enhanced serialization methods, and support from the
 open-source community.
@@ -24,16 +24,16 @@ Previously we used the [Richardson Lucy (RL)](https://en.wikipedia.org/wiki/Rich
 algorithm from ITK and [Scikit-Image](https://github.com/scikit-image/scikit-image/blob/master/skimage/restoration/deconvolution.py#L329).
 We left off at theorizing how GPUs could potentially help accelerate these workflows.  Starting with Scikit-Image's
 implementation, we naively tried replacing `scipy.signal.convolve` calls with `cupyx.scipy.ndimage.convolve`, and while
-performance improved, it did not improve _significantly_ -- that is, we did not get the 100X speed we were looking for
+performance improved, it did not improve _significantly_ -- that is, we did not get the 100X speed we were looking for.
 
 Often, in working with images, we hit performance roadblocks in real space where data represents position.  When this happens,
 we can reach for a common tool, the [Fast-Fourirer Transform FFT](https://en.wikipedia.org/wiki/Fast_Fourier_transform).  FFTs convert
 the data to from real space to frequency space where data now represents the rate of change of intensity between pixels.  This conversion
 is extremely fast on both CPUs and GPUs and the algorithm we can write with FFTs similarly are accelerated.
 And while it is challenging to write an equivalent algorithm in FFT space (thank you mathematicians!)
-the cost of transformation + the cost of the algorithm is still significantly faster than performing the original algorithm in real space.
-We (and others before us) found this was the case for Richardson Lucy (on both CPUs and GPUs) and was accelerated further when we parallelized with Dask
-over multiple GPUs.
+the cost of transformation + the cost of the algorithm is still lower than performing the original algorithm in real space.
+We (and others before us) found this was the case for Richardson Lucy (on both CPUs and GPUs) and performance continued increasing
+when we parallelized with Dask over multiple GPUs.
 
 Help from Open-Source
 ---------------------
@@ -93,7 +93,11 @@ performs with real biological data and Dask...
 
 Define a Dask Cluster and Load the Data
 ---------------------------------------
-We start by creating a Dask cluster on a DGX2 and loading in microscopy data provided by....
+
+We were provided sample data from [Prof. Shroff's](https://www.nibib.nih.gov/about-nibib/staff/hari-shroff) lab at the NIH.  The data originally was
+provided as a 3D TIFF file which we subsequently converted to Zarr with a shape of (950, 2048, 2048).
+
+We start by creating a Dask cluster on a DGX2 and loading in Zarr data:
 
 ```python
 from dask.distributed import Client
@@ -198,8 +202,7 @@ imgs = da.from_zarr("/public/NVMICROSCOPY/y1z1_C1_A.zarr/")
 </tr>
 </table>
 
-From the above you can see the data is a z-stack of 950 images where each slice is 2048x2048.  We can improve performance if we operate on larger chunks.
-The DGX2 has 16 GPUs so we `rechunk` the data for one chunk (or block) per GPU then apply the PSF to each block
+From the Dask output above you can see the data is a z-stack of 950 images where each slice is 2048x2048.  For this data set, we can improve GPU performance if we operate on larger chunks.  Because DGX2 has 16 GPUs and we can comfortably fit the data and perform FFTs on the GPUs we `rechunk` the data for one chunk (or block) per GPU then apply the deconvolution to each block:
 
 ```python
 # build bigger chunks
@@ -320,7 +323,7 @@ c_imgs = imgs.map_blocks(cupy.asarray)
 </table>
 
 
-What we now have is a Dask array composed of 16 CuPy blocks of data.  Notice how Dask provides nice typing information in the SVGs, when we moved from NumPy to CuPy, the block diagram above displays `Type: cupy.ndarray` -- these are especially to remind us we are operating on data which lives on the GPU.
+What we now have is a Dask array composed of 16 CuPy blocks of data.  Notice how Dask provides nice typing information in the SVG output.  When we moved from NumPy to CuPy, the block diagram above displays `Type: cupy.ndarray` -- these are especially helpful and remind us we are operating on data which lives on the GPU.
 
 The last piece we need before running the deconvolution is the PSF which should also be loaded onto the GPU:
 
@@ -339,8 +342,44 @@ out = da.map_blocks(deconvolve,
                     dtype=cp.float32)
 ```
 
+TIMING INFO
 
 <a href="/images/deconvolve.png">
     <img src="/images/deconvolve.png" width="100%"></a>
 
-Something about the images and how deconvolution has happened and the image is....
+IMAGE DESCRIPTION
+
+Napari + Remote GPUs
+--------------------
+
+Deconvolution is just one operation and one tool, an image scientist or microscopist will need.  They will need other tools to help as the push to understand
+more of the underlying biology.  As a first step though, they will need tools to visualize the data. [Napari](https://napari.org/) is a multi-dimensional image viewer popular in the PyData Bio ecosystem.  As an experiment, we extended the demo above to not only work with Napari, but to also work on remote GPUs provided
+by [coiled.io](https://coiled.io/)
+
+By adding another `map_blocks` call to our array, we can move _back_ from GPU to CPU (device to host)
+
+```python
+def cupy_to_numpy(x):
+    import cupy as cp
+    return cp.asnumpy(x)
+
+np_out = out.map_blocks(cupy_to_numpy, meta=out)
+```
+
+<a href="/images/napari-deconv.png">
+    <img src="/images/napari-deconv.png" width="100%"></a>
+
+When the user moves the slider on the Napari UI, we are instructing dask to the following:
+- Load the data from S3 onto the GPU (CuPy)
+- Compute the deconvolution
+- Move back to the host (NumPy)
+- Download the data from EC2 to the local Jupyter instance and the visualize with Napari
+
+This has about 1 second latency which is great for a naive implementation!  We can improve this by adding compression, caching, and other
+optimizations within Napari.
+
+It is becoming increasingly more common to operate on hardware not co-located with the scientist/developer/user.  This might be an HPC cluster outfitted with exotic
+accelerated computing and networking devices or now common place cloud based infrastructure.
+
+Summary
+-------
