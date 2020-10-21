@@ -99,6 +99,8 @@ provided as a 3D TIFF file which we subsequently converted to Zarr with a shape 
 
 We start by creating a Dask cluster on a DGX2 and loading in Zarr data:
 
+[Example Notebook](https://gist.github.com/quasiben/bdd34369d6fb3beba35af0cfce1d99e8)
+
 ```python
 from dask.distributed import Client
 from dask_cuda import LocalCUDACluster
@@ -354,7 +356,7 @@ Napari + Remote GPUs
 
 Deconvolution is just one operation and one tool, an image scientist or microscopist will need.  They will need other tools to help as the push to understand
 more of the underlying biology.  As a first step though, they will need tools to visualize the data. [Napari](https://napari.org/) is a multi-dimensional image viewer popular in the PyData Bio ecosystem.  As an experiment, we extended the demo above to not only work with Napari, but to also work on remote GPUs provided
-by [coiled.io](https://coiled.io/)
+by [coiled.io](https://coiled.io/) [Example Notebook](https://gist.github.com/quasiben/29901204b20421b18f029e1fd07ed0cf)
 
 By adding another `map_blocks` call to our array, we can move _back_ from GPU to CPU (device to host)
 
