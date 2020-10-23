@@ -14,32 +14,50 @@ Summary
 Image Analysis Redux
 --------------------
 
-[Last year](https://blog.dask.org/2019/08/09/image-itk) we experimented with Dask/ITK/Scikit-Image
-to perform large scale image analysis on a stack of 3D images.  Specifically, we looked at `deconvolution`,
-a common method to _deblur_ images.  Now, a year later, we return to these experiments with a better
-understanding of how Dask and CuPy can interact, enhanced serialization methods, and support from the
-open-source community.
+[Last year](https://blog.dask.org/2019/08/09/image-itk) we experimented with
+Dask/ITK/Scikit-Image to perform large scale image analysis on a stack of 3D
+images.  Specifically, we looked at `deconvolution`, a common method to
+_deblur_ images.  Now, a year later, we return to these experiments with a
+better understanding of how Dask and CuPy can interact, enhanced serialization
+methods, and support from the open-source community.
 
-Previously we used the [Richardson Lucy (RL)](https://en.wikipedia.org/wiki/Richardson%E2%80%93Lucy_deconvolution) deconvolution
-algorithm from ITK and [Scikit-Image](https://github.com/scikit-image/scikit-image/blob/master/skimage/restoration/deconvolution.py#L329).
-We left off at theorizing how GPUs could potentially help accelerate these workflows.  Starting with Scikit-Image's
-implementation, we naively tried replacing `scipy.signal.convolve` calls with `cupyx.scipy.ndimage.convolve`, and while
-performance improved, it did not improve _significantly_ -- that is, we did not get the 100X speed we were looking for.
+Previously we used the [Richardson Lucy
+(RL)](https://en.wikipedia.org/wiki/Richardson%E2%80%93Lucy_deconvolution)
+deconvolution algorithm from ITK and
+[Scikit-Image](https://github.com/scikit-image/scikit-image/blob/master/skimage/restoration/deconvolution.py#L329).
+We left off at theorizing how GPUs could potentially help accelerate these
+workflows.  Starting with Scikit-Image's implementation, we naively tried
+replacing `scipy.signal.convolve` calls with `cupyx.scipy.ndimage.convolve`,
+and while performance improved, it did not improve _significantly_ -- that is,
+we did not get the 100X speed we were looking for.
 
-Often, in working with images, we hit performance roadblocks in real space where data represents position.  When this happens,
-we can reach for a common tool, the [Fast-Fourirer Transform FFT](https://en.wikipedia.org/wiki/Fast_Fourier_transform).  FFTs convert
-the data to from real space to frequency space where data now represents the rate of change of intensity between pixels.  This conversion
-is extremely fast on both CPUs and GPUs and the algorithm we can write with FFTs similarly are accelerated.
-And while it is challenging to write an equivalent algorithm in FFT space (thank you mathematicians!)
-the cost of transformation + the cost of the algorithm is still lower than performing the original algorithm in real space.
-We (and others before us) found this was the case for Richardson Lucy (on both CPUs and GPUs) and performance continued increasing
-when we parallelized with Dask over multiple GPUs.
+Often, in working with images, we hit performance roadblocks in real space
+where data represents position.  When this happens, we can reach for a common
+tool, the [Fast-Fourirer Transform
+FFT](https://en.wikipedia.org/wiki/Fast_Fourier_transform).  FFTs convert the
+data to from real space to frequency space where data now represents the rate
+of change of intensity between pixels.  This conversion is extremely fast on
+both CPUs and GPUs and the algorithm we can write with FFTs similarly are
+accelerated.  And while it is challenging to write an equivalent algorithm in
+FFT space (thank you mathematicians!) the cost of transformation + the cost of
+the algorithm is still lower than performing the original algorithm in real
+space.  We (and others before us) found this was the case for Richardson Lucy
+(on both CPUs and GPUs) and performance continued increasing when we
+parallelized with Dask over multiple GPUs.
 
 Help from Open-Source
 ---------------------
 
-An FFT RL equivalent has been around for some time and the good folks at the [Solar Dynamics Observatory](https://sdo.gsfc.nasa.gov/mission/instruments.php) built and shared a NumPy/CuPy implementation as part the [Atmospheric Imaging Assembly](https://aiapy.readthedocs.io/en/v0.2.0/_modules/aiapy/psf/deconvolve.html) Python package (aiapy).  We slightly modified their implementation to handle 3D as well as 2D [Point Spread Functions](https://en.wikipedia.org/wiki/Point_spread_function) and to take advantage of
-[NEP-18](https://numpy.org/neps/nep-0018-array-function-protocol.html) for convenient dispatching of NumPy and CuPy to NumPy and CuPy functions:
+An FFT RL equivalent has been around for some time and the good folks at the
+[Solar Dynamics Observatory](https://sdo.gsfc.nasa.gov/mission/instruments.php)
+built and shared a NumPy/CuPy implementation as part the [Atmospheric Imaging
+Assembly](https://aiapy.readthedocs.io/en/v0.2.0/_modules/aiapy/psf/deconvolve.html)
+Python package (aiapy).  We slightly modified their implementation to handle 3D
+as well as 2D [Point Spread
+Functions](https://en.wikipedia.org/wiki/Point_spread_function) and to take
+advantage of
+[NEP-18](https://numpy.org/neps/nep-0018-array-function-protocol.html) for
+convenient dispatching of NumPy and CuPy to NumPy and CuPy functions:
 
 
 ```python
@@ -88,14 +106,17 @@ For a 1.3 GB image we measured the following:
 - CuPy ~3 seconds for 20 iterations
 - NumPy ~36 seconds for 2 iterations
 
-We see 10x increase in speed for 10 times the number of iterations -- very close to our desired 100X speedup!  Let's explore how this implementation
+We see 10x increase in speed for 10 times the number of iterations -- very
+close to our desired 100X speedup!  Let's explore how this implementation
 performs with real biological data and Dask...
 
 Define a Dask Cluster and Load the Data
 ---------------------------------------
 
-We were provided sample data from [Prof. Shroff's](https://www.nibib.nih.gov/about-nibib/staff/hari-shroff) lab at the NIH.  The data originally was
-provided as a 3D TIFF file which we subsequently converted to Zarr with a shape of (950, 2048, 2048).
+We were provided sample data from [Prof.
+Shroff's](https://www.nibib.nih.gov/about-nibib/staff/hari-shroff) lab at the
+NIH.  The data originally was provided as a 3D TIFF file which we subsequently
+converted to Zarr with a shape of (950, 2048, 2048).
 
 We start by creating a Dask cluster on a DGX2 and loading in Zarr data:
 
@@ -204,7 +225,11 @@ imgs = da.from_zarr("/public/NVMICROSCOPY/y1z1_C1_A.zarr/")
 </tr>
 </table>
 
-From the Dask output above you can see the data is a z-stack of 950 images where each slice is 2048x2048.  For this data set, we can improve GPU performance if we operate on larger chunks.  As we did our work on a DGX2, which has 16 GPUs, we can comfortably fit the data and perform deconvolution on each GPU if we `rechunk` the data accordingly:
+From the Dask output above you can see the data is a z-stack of 950 images
+where each slice is 2048x2048.  For this data set, we can improve GPU
+performance if we operate on larger chunks.  As we did our work on a DGX2,
+which has 16 GPUs, we can comfortably fit the data and perform deconvolution on
+each GPU if we `rechunk` the data accordingly:
 
 ```python
 # build bigger chunks
@@ -226,8 +251,10 @@ imgs
 </table>
 </td>
 
-Next, we convert to `float32` as the data may not already be of floating point type. Also 32-bit is a bit faster than 64-bit when computing and saves a bit on memory.
-Below we map `cupy.asarray` onto each block of data.  `cupy.asarray` moves the data from host memory (NumPy) to the device/GPU (CuPy).
+Next, we convert to `float32` as the data may not already be of floating point
+type. Also 32-bit is a bit faster than 64-bit when computing and saves a bit on
+memory.  Below we map `cupy.asarray` onto each block of data.  `cupy.asarray`
+moves the data from host memory (NumPy) to the device/GPU (CuPy).
 
 ```python
 imgs = imgs.astype(np.float32)
@@ -325,9 +352,13 @@ c_imgs = imgs.map_blocks(cupy.asarray)
 </table>
 
 
-What we now have is a Dask array composed of 16 CuPy blocks of data.  Notice how Dask provides nice typing information in the SVG output.  When we moved from NumPy to CuPy, the block diagram above displays `Type: cupy.ndarray` -- this is a nice sanity check.
+What we now have is a Dask array composed of 16 CuPy blocks of data.  Notice
+how Dask provides nice typing information in the SVG output.  When we moved
+from NumPy to CuPy, the block diagram above displays `Type: cupy.ndarray` --
+this is a nice sanity check.
 
-The last piece we need before running the deconvolution is the PSF which should also be loaded onto the GPU:
+The last piece we need before running the deconvolution is the PSF which should
+also be loaded onto the GPU:
 
 ```python
 avg_psf = skimage.io.imread("/public/NVMICROSCOPY/AVG_PSF.tif")
@@ -344,7 +375,8 @@ out = da.map_blocks(deconvolve,
                     dtype=cp.float32)
 ```
 
-With Dask and multiple GPUs, we measured deconvolution of an 8GB image in ~10 seconds! But this is just the first step towards accelerated image science.
+With Dask and multiple GPUs, we measured deconvolution of an 8GB image in ~10
+seconds! But this is just the first step towards accelerated image science.
 
 <a href="/images/deconvolve.png">
     <img src="/images/deconvolve.png" width="100%"></a>
@@ -354,10 +386,21 @@ IMAGE DESCRIPTION
 Napari + Remote GPUs
 --------------------
 
-Deconvolution is just one operation and one tool, an image scientist or microscopist will need.  They will need other tools as they study the underlying biology.  Before getting to those next steps, they will need tools to visualize the data. [Napari](https://napari.org/), a multi-dimensional image viewer used in the PyData Bio ecosystem, is a good tool for visualizing this data.  As an experiment, we extended the demo above to not only work with Napari, but to also work on remote GPUs provided
-by [coiled.io](https://coiled.io/) [Example Notebook](https://gist.github.com/quasiben/29901204b20421b18f029e1fd07ed0cf). We explored this setup as it is relatively quick to setup and easy for users to access. Though one could imagine other setups using cloud or local cluster resources instead.
+Deconvolution is just one operation and one tool, an image scientist or
+microscopist will need.  They will need other tools as they study the
+underlying biology.  Before getting to those next steps, they will need tools
+to visualize the data. [Napari](https://napari.org/), a multi-dimensional image
+viewer used in the PyData Bio ecosystem, is a good tool for visualizing this
+data.  As an experiment, we extended the demo above to not only work with
+Napari, but to also work on remote GPUs provided by
+[coiled.io](https://coiled.io/) [Example
+Notebook](https://gist.github.com/quasiben/29901204b20421b18f029e1fd07ed0cf).
+We explored this setup as it is relatively quick to setup and easy for users to
+access. Though one could imagine other setups using cloud or local cluster
+resources instead.
 
-By adding another `map_blocks` call to our array, we can move our data _back_ from GPU to CPU (device to host).
+By adding another `map_blocks` call to our array, we can move our data _back_
+from GPU to CPU (device to host).
 
 ```python
 def cupy_to_numpy(x):
@@ -370,17 +413,22 @@ np_out = out.map_blocks(cupy_to_numpy, meta=out)
 <a href="/images/napari-deconv.png">
     <img src="/images/napari-deconv.png" width="100%"></a>
 
-When the user moves the slider on the Napari UI, we are instructing dask to the following:
+When the user moves the slider on the Napari UI, we are instructing dask to the
+following:
 - Load the data from S3 onto the GPU (CuPy)
 - Compute the deconvolution
 - Move back to the host (NumPy)
-- Download the data from EC2 to the local Jupyter instance and then visualize it with Napari
+- Download the data from EC2 to the local Jupyter instance and then visualize
+  it with Napari
 
-This has about 1 second latency which is great for a naive implementation!  We can improve this by adding compression, caching, and other
-optimizations within Napari.
+This has about 1 second latency which is great for a naive implementation!  We
+can improve this by adding compression, caching, and other optimizations within
+Napari.
 
-It is becoming increasingly more common to operate on hardware not co-located with the scientist/developer/user.  This might be an HPC cluster outfitted with exotic
-accelerated computing and networking devices or now common place cloud based infrastructure.
+It is becoming increasingly more common to operate on hardware not co-located
+with the scientist/developer/user.  This might be an HPC cluster outfitted with
+exotic accelerated computing and networking devices or now common place cloud
+based infrastructure.
 
 Summary
 -------
