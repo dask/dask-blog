@@ -31,19 +31,22 @@ replacing `scipy.signal.convolve` calls with `cupyx.scipy.ndimage.convolve`,
 and while performance improved, it did not improve _significantly_ -- that is,
 we did not get the 100X speed we were looking for.
 
-Often, in working with images, we hit performance roadblocks in real space
-where data represents position.  When this happens, we can reach for a common
-tool, the [Fast-Fourirer Transform
-FFT](https://en.wikipedia.org/wiki/Fast_Fourier_transform).  FFTs convert the
-data to from real space to frequency space where data now represents the rate
-of change of intensity between pixels.  This conversion is extremely fast on
-both CPUs and GPUs and the algorithm we can write with FFTs similarly are
-accelerated.  And while it is challenging to write an equivalent algorithm in
-FFT space (thank you mathematicians!) the cost of transformation + the cost of
-the algorithm is still lower than performing the original algorithm in real
-space.  We (and others before us) found this was the case for Richardson Lucy
-(on both CPUs and GPUs) and performance continued increasing when we
-parallelized with Dask over multiple GPUs.
+As it often turns out in mathematics a problem that can be inefficient to solve
+in one representation can often be made more efficent by transforming the data
+beforehand. In this new representation we can solve the same problem
+(convolution in this case) more easily before transforming the result back into
+a more familiar representation. When it comes to convolution, the
+transformation we apply is called [Fast-Fourirer Transform
+(FFT)](https://en.wikipedia.org/wiki/Fast_Fourier_transform). Once this is
+applied we are able to convolve data using a simple multiplication.
+
+As it turns out this FFT transformation is extremely fast on both CPUs and
+GPUs. Similarly the algorithm we can write with FFTs are accelerated.  Despite
+the added step of doing FFTs, the cost of transformation + the cost of the
+algorithm is still lower than performing the original algorithm in real space.
+We (and others before us) found this was the case for Richardson Lucy (on both
+CPUs and GPUs) and performance continued increasing when we parallelized with
+Dask over multiple GPUs.
 
 Help from Open-Source
 ---------------------
