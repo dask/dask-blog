@@ -435,4 +435,12 @@ based infrastructure.
 Conclusion
 ----------
 
-
+We have now shown with Dask + CuPy how one can perform Richardson-Lucy
+Deconvolution. This required a minimal amount of code. We also showed how one
+could leverage a compute resource (in our case Coiled) to perform this
+computation. Combining this with an image viewer (Napari), we were able to
+inspect the data and our result. All of this performed reasonably well with
+very little work. Hopefully this provides you a good template to get started
+analyzing your own data. If you run into any challenges, please reach out on
+[the Dask issue tracker]( https://github.com/dask/dask/issues ) and we would be
+happy to engage with you :)
