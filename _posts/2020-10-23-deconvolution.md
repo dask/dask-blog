@@ -204,7 +204,7 @@ imgs = da.from_zarr("/public/NVMICROSCOPY/y1z1_C1_A.zarr/")
 </tr>
 </table>
 
-From the Dask output above you can see the data is a z-stack of 950 images where each slice is 2048x2048.  For this data set, we can improve GPU performance if we operate on larger chunks.  Because DGX2 has 16 GPUs and we can comfortably fit the data and perform FFTs on the GPUs we `rechunk` the data for one chunk (or block) per GPU then apply the deconvolution to each block:
+From the Dask output above you can see the data is a z-stack of 950 images where each slice is 2048x2048.  For this data set, we can improve GPU performance if we operate on larger chunks.  As we did our work on a DGX2, which has 16 GPUs, we can comfortably fit the data and perform deconvolution on each GPU if we `rechunk` the data accordingly:
 
 ```python
 # build bigger chunks
@@ -226,7 +226,7 @@ imgs
 </table>
 </td>
 
-Next, we convert to float32 for faster GPU computation and load the data onto each GPU (note: this takes about 1.5 seconds for an 8GB image).
+Next, we convert to `float32` as the data may not already be of floating point type. Also 32-bit is a bit faster than 64-bit when computing and saves a bit on memory.
 Below we map `cupy.asarray` onto each block of data.  `cupy.asarray` moves the data from host memory (NumPy) to the device/GPU (CuPy).
 
 ```python
@@ -325,7 +325,7 @@ c_imgs = imgs.map_blocks(cupy.asarray)
 </table>
 
 
-What we now have is a Dask array composed of 16 CuPy blocks of data.  Notice how Dask provides nice typing information in the SVG output.  When we moved from NumPy to CuPy, the block diagram above displays `Type: cupy.ndarray` -- these are especially helpful and remind us we are operating on data which lives on the GPU.
+What we now have is a Dask array composed of 16 CuPy blocks of data.  Notice how Dask provides nice typing information in the SVG output.  When we moved from NumPy to CuPy, the block diagram above displays `Type: cupy.ndarray` -- this is a nice sanity check.
 
 The last piece we need before running the deconvolution is the PSF which should also be loaded onto the GPU:
 
@@ -354,11 +354,10 @@ IMAGE DESCRIPTION
 Napari + Remote GPUs
 --------------------
 
-Deconvolution is just one operation and one tool, an image scientist or microscopist will need.  They will need other tools to help as the push to understand
-more of the underlying biology.  As a first step though, they will need tools to visualize the data. [Napari](https://napari.org/) is a multi-dimensional image viewer popular in the PyData Bio ecosystem.  As an experiment, we extended the demo above to not only work with Napari, but to also work on remote GPUs provided
-by [coiled.io](https://coiled.io/) [Example Notebook](https://gist.github.com/quasiben/29901204b20421b18f029e1fd07ed0cf)
+Deconvolution is just one operation and one tool, an image scientist or microscopist will need.  They will need other tools as they study the underlying biology.  Before getting to those next steps, they will need tools to visualize the data. [Napari](https://napari.org/), a multi-dimensional image viewer used in the PyData Bio ecosystem, is a good tool for visualizing this data.  As an experiment, we extended the demo above to not only work with Napari, but to also work on remote GPUs provided
+by [coiled.io](https://coiled.io/) [Example Notebook](https://gist.github.com/quasiben/29901204b20421b18f029e1fd07ed0cf). We explored this setup as it is relatively quick to setup and easy for users to access. Though one could imagine other setups using cloud or local cluster resources instead.
 
-By adding another `map_blocks` call to our array, we can move _back_ from GPU to CPU (device to host)
+By adding another `map_blocks` call to our array, we can move our data _back_ from GPU to CPU (device to host).
 
 ```python
 def cupy_to_numpy(x):
@@ -375,7 +374,7 @@ When the user moves the slider on the Napari UI, we are instructing dask to the 
 - Load the data from S3 onto the GPU (CuPy)
 - Compute the deconvolution
 - Move back to the host (NumPy)
-- Download the data from EC2 to the local Jupyter instance and the visualize with Napari
+- Download the data from EC2 to the local Jupyter instance and then visualize it with Napari
 
 This has about 1 second latency which is great for a naive implementation!  We can improve this by adding compression, caching, and other
 optimizations within Napari.
