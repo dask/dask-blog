@@ -109,7 +109,7 @@ For a 1.3 GB image we measured the following:
 - NumPy ~36 seconds for 2 iterations
 
 We see 10x increase in speed for 10 times the number of iterations -- very
-close to our desired 100X speedup!  Let's explore how this implementation
+close to our desired 100x speedup!  Let's explore how this implementation
 performs with real biological data and Dask...
 
 Define a Dask Cluster and Load the Data
