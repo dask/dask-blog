@@ -389,8 +389,8 @@ We explored this setup as it is relatively quick to setup and easy for users to
 access. Though one could imagine other setups using cloud or local cluster
 resources instead.
 
-By adding another `map_blocks` call to our array, we can move our data _back_
-from GPU to CPU (device to host).
+By adding a `map_blocks` call to our array, we can move our data _back_ from
+GPU to CPU (device to host).
 
 ```python
 def cupy_to_numpy(x):
