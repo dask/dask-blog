@@ -64,42 +64,26 @@ convenient dispatching of NumPy and CuPy to NumPy and CuPy functions:
 
 ```python
 def deconvolve(img, psf=None, iterations=20):
-    """
-    """
-    # 2D vs 3D psfs
-    if len(psf.shape) == 2:
-        psf = psf
-    else:
-        psf = psf[0]
-
-    # pad psf with zeros to match image shape
-    # use NumPy for padding
-    pad_l, pad_r = np.divmod(np.array(img[0].shape) - np.array(psf.shape), 2)
+    # Pad PSF with zeros to match image shape
+    pad_l, pad_r = np.divmod(np.array(img.shape) - np.array(psf.shape), 2)
     pad_r += pad_l
-
     psf = np.pad(psf, tuple(zip(pad_l, pad_r)), 'constant', constant_values=0)
 
-    # padding centers the PSF so we no longer need to roll
-    # Center PSF at pixel (0,0)
+    # Recenter PSF at the origin
+    # Needed to ensure PSF doesn't introduce an offset when
+    # convolving with image
     for i in range(psf.ndim):
-        psf = np.roll(psf, psf.shape[i]//2, axis=i)
+        psf = np.roll(psf, psf.shape[i] // 2, axis=i)
 
     # Convolution requires FFT of the PSF
     psf = np.fft.rfftn(psf)
-    psf = psf[None]
 
-    psf_conj = psf.conj()
-
+    # Perform deconvolution in-place on a copy of the image
+    # (avoids changing the original)
     img_decon = np.copy(img)
     for _ in range(iterations):
-        ratio = (
-            img / np.fft.irfftn(np.fft.rfftn(img_decon,
-                                             axes=tuple(range(1, psf.ndim))) * psf,
-                                             axes=tuple(range(1, psf.ndim)))
-        )
-        img_decon *= np.fft.irfftn(np.fft.rfftn(ratio,
-                                                axes=tuple(range(1, psf.ndim))) * psf_conj,
-                                                axes=tuple(range(1, psf.ndim)))
+        ratio = img / np.fft.irfftn(np.fft.rfftn(img_decon) * psf)
+        img_decon *= np.fft.irfftn((np.fft.rfftn(ratio).conj() * psf).conj())
     return img_decon
 ```
 
