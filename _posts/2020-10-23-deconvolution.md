@@ -354,11 +354,15 @@ c_avg_psf = cp.asarray(avg_psf)
 Lastly, we map the `deconvolve` function onto each block in our Dask array:
 
 ```
-out = da.map_blocks(deconvolve,
-                    c_imgs,
-                    c_psf,
-                    iterations=20,
-                    dtype=cp.float32)
+out = da.map_overlap(
+    deconvolve,
+    c_imgs,
+    psf=c_psf,
+    iterations=20,
+    meta=c_imgs,
+    depth=c_psf.shape,
+    boundary="none"
+)
 ```
 
 With Dask and multiple GPUs, we measured deconvolution of an 8GB image in ~10
