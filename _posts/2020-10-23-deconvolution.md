@@ -353,7 +353,7 @@ c_avg_psf = cp.asarray(avg_psf)
 
 Lastly, we map the `deconvolve` function onto each block in our Dask array:
 
-```
+```python
 out = da.map_overlap(
     deconvolve,
     c_imgs,
