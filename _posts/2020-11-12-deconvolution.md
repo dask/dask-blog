@@ -417,7 +417,7 @@ following:
 - Render with Napari
 
 This has about a second latency which is great for a naive implementation!  We
-can improve this by adding caching, improving communications with map_overlap,
+can improve this by adding caching, improving communications with `map_overlap`,
 and optimizing the deconvolution kernel.
 
 Conclusion
