@@ -370,7 +370,7 @@ out = da.map_overlap(
     iterations=20,
     meta=c_imgs._meta,
     depth=tuple(np.array(c_psf.shape) // 2),
-    boundary="none"
+    boundary="periodic"
 )
 out
 ```
