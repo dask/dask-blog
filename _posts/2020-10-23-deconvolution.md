@@ -104,19 +104,28 @@ Shroff's](https://www.nibib.nih.gov/about-nibib/staff/hari-shroff) lab at the
 NIH.  The data originally was provided as a 3D TIFF file which we subsequently
 converted to Zarr with a shape of (950, 2048, 2048).
 
-We start by creating a Dask cluster on a DGX2 and loading in Zarr data:
+We start by creating a Dask cluster on a DGX2 (16 GPUs in a single node) and
+loading the image stored in Zarr :
 
-[Example Notebook](https://gist.github.com/quasiben/bdd34369d6fb3beba35af0cfce1d99e8)
+[Example Notebook](https://gist.github.com/quasiben/3a638bb9a4f075ac9041bf66974ebb45)
 
 ```python
 from dask.distributed import Client
 from dask_cuda import LocalCUDACluster
 import dask.array as da
 
+import rmm
+import cupy as cp
+
 cluster = LocalCUDACluster(local_directory="/tmp/bzaitlen",
+                           enable_nvlink=True,
                            rmm_pool_size="26GB",
                     )
 client = Client(cluster)
+
+client.run(cp.cuda.set_allocator,
+           rmm.rmm_cupy_allocator
+          )
 
 imgs = da.from_zarr("/public/NVMICROSCOPY/y1z1_C1_A.zarr/")
 ```
@@ -218,8 +227,8 @@ which has 16 GPUs, we can comfortably fit the data and perform deconvolution on
 each GPU if we `rechunk` the data accordingly:
 
 ```python
-# build bigger chunks
-imgs = imgs.rechunk(chunks={0: 60})
+# chunk with respect to PSF shape (128, 128, 128)
+imgs = imgs.rechunk(chunks={0: 190, 1: 512, 2: 512})
 imgs
 ```
 
@@ -229,9 +238,9 @@ imgs
     <tr><td> </td><th> Array </th><th> Chunk </th></tr>
   </thead>
   <tbody>
-    <tr><th> Bytes </th><td> 7.97 GB </td> <td> 503.32 MB </td></tr>
-    <tr><th> Shape </th><td> (950, 2048, 2048) </td> <td> (60, 2048, 2048) </td></tr>
-    <tr><th> Count </th><td> 967 Tasks </td><td> 16 Chunks </td></tr>
+    <tr><th> Bytes </th><td> 7.97 GB </td> <td> 99.61 MB </td></tr>
+    <tr><th> Shape </th><td> (950, 2048, 2048) </td> <td> (190, 512, 512) </td></tr>
+    <tr><th> Count </th><td> 967 Tasks </td><td> 80 Chunks </td></tr>
     <tr><th> Type </th><td> uint16 </td><td> numpy.ndarray </td></tr>
   </tbody>
 </table>
@@ -255,9 +264,9 @@ c_imgs = imgs.map_blocks(cupy.asarray)
     <tr><td> </td><th> Array </th><th> Chunk </th></tr>
   </thead>
   <tbody>
-    <tr><th> Bytes </th><td> 15.94 GB </td> <td> 1.01 GB </td></tr>
-    <tr><th> Shape </th><td> (950, 2048, 2048) </td> <td> (60, 2048, 2048) </td></tr>
-    <tr><th> Count </th><td> 999 Tasks </td><td> 16 Chunks </td></tr>
+    <tr><th> Bytes </th><td> 15.94 GB </td> <td> 199.23 MB </td></tr>
+    <tr><th> Shape </th><td> (950, 2048, 2048) </td> <td> (190, 512, 512) </td></tr>
+    <tr><th> Count </th><td> 80 Tasks </td><td> 80 Chunks </td></tr>
     <tr><th> Type </th><td> float32 </td><td> cupy.ndarray </td></tr>
   </tbody>
 </table>
@@ -267,66 +276,56 @@ c_imgs = imgs.map_blocks(cupy.asarray)
 
   <!-- Horizontal lines -->
   <line x1="10" y1="0" x2="42" y2="32" style="stroke-width:2" />
+  <line x1="10" y1="30" x2="42" y2="62" />
+  <line x1="10" y1="60" x2="42" y2="92" />
+  <line x1="10" y1="90" x2="42" y2="122" />
   <line x1="10" y1="120" x2="42" y2="152" style="stroke-width:2" />
 
   <!-- Vertical lines -->
   <line x1="10" y1="0" x2="10" y2="120" style="stroke-width:2" />
-  <line x1="12" y1="2" x2="12" y2="122" />
-  <line x1="14" y1="4" x2="14" y2="124" />
   <line x1="16" y1="6" x2="16" y2="126" />
-  <line x1="18" y1="8" x2="18" y2="128" />
-  <line x1="20" y1="10" x2="20" y2="130" />
-  <line x1="22" y1="12" x2="22" y2="132" />
-  <line x1="24" y1="14" x2="24" y2="134" />
-  <line x1="26" y1="16" x2="26" y2="136" />
-  <line x1="28" y1="18" x2="28" y2="138" />
-  <line x1="30" y1="20" x2="30" y2="140" />
-  <line x1="32" y1="22" x2="32" y2="142" />
-  <line x1="34" y1="24" x2="34" y2="144" />
+  <line x1="23" y1="13" x2="23" y2="133" />
+  <line x1="29" y1="19" x2="29" y2="139" />
   <line x1="36" y1="26" x2="36" y2="146" />
-  <line x1="38" y1="28" x2="38" y2="148" />
-  <line x1="41" y1="31" x2="41" y2="151" />
   <line x1="42" y1="32" x2="42" y2="152" style="stroke-width:2" />
 
   <!-- Colored Rectangle -->
-  <polygon points="10.000000,0.000000 42.743566,32.743566 42.743566,152.743566 10.000000,120.000000" style="fill:#ECB172A0;stroke-width:0"/>
+  <polygon points="10.0,0.0 42.74356617647059,32.74356617647059 42.74356617647059,152.74356617647058 10.0,120.0" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Horizontal lines -->
   <line x1="10" y1="0" x2="130" y2="0" style="stroke-width:2" />
-  <line x1="12" y1="2" x2="132" y2="2" />
-  <line x1="14" y1="4" x2="134" y2="4" />
   <line x1="16" y1="6" x2="136" y2="6" />
-  <line x1="18" y1="8" x2="138" y2="8" />
-  <line x1="20" y1="10" x2="140" y2="10" />
-  <line x1="22" y1="12" x2="142" y2="12" />
-  <line x1="24" y1="14" x2="144" y2="14" />
-  <line x1="26" y1="16" x2="146" y2="16" />
-  <line x1="28" y1="18" x2="148" y2="18" />
-  <line x1="30" y1="20" x2="150" y2="20" />
-  <line x1="32" y1="22" x2="152" y2="22" />
-  <line x1="34" y1="24" x2="154" y2="24" />
+  <line x1="23" y1="13" x2="143" y2="13" />
+  <line x1="29" y1="19" x2="149" y2="19" />
   <line x1="36" y1="26" x2="156" y2="26" />
-  <line x1="38" y1="28" x2="158" y2="28" />
-  <line x1="41" y1="31" x2="161" y2="31" />
   <line x1="42" y1="32" x2="162" y2="32" style="stroke-width:2" />
 
   <!-- Vertical lines -->
   <line x1="10" y1="0" x2="42" y2="32" style="stroke-width:2" />
+  <line x1="40" y1="0" x2="72" y2="32" />
+  <line x1="70" y1="0" x2="102" y2="32" />
+  <line x1="100" y1="0" x2="132" y2="32" />
   <line x1="130" y1="0" x2="162" y2="32" style="stroke-width:2" />
 
   <!-- Colored Rectangle -->
-  <polygon points="10.000000,0.000000 130.000000,0.000000 162.743566,32.743566 42.743566,32.743566" style="fill:#ECB172A0;stroke-width:0"/>
+  <polygon points="10.0,0.0 130.0,0.0 162.74356617647058,32.74356617647059 42.74356617647059,32.74356617647059" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Horizontal lines -->
   <line x1="42" y1="32" x2="162" y2="32" style="stroke-width:2" />
+  <line x1="42" y1="62" x2="162" y2="62" />
+  <line x1="42" y1="92" x2="162" y2="92" />
+  <line x1="42" y1="122" x2="162" y2="122" />
   <line x1="42" y1="152" x2="162" y2="152" style="stroke-width:2" />
 
   <!-- Vertical lines -->
   <line x1="42" y1="32" x2="42" y2="152" style="stroke-width:2" />
+  <line x1="72" y1="32" x2="72" y2="152" />
+  <line x1="102" y1="32" x2="102" y2="152" />
+  <line x1="132" y1="32" x2="132" y2="152" />
   <line x1="162" y1="32" x2="162" y2="152" style="stroke-width:2" />
 
   <!-- Colored Rectangle -->
-  <polygon points="42.743566,32.743566 162.743566,32.743566 162.743566,152.743566 42.743566,152.743566" style="fill:#ECB172A0;stroke-width:0"/>
+  <polygon points="42.74356617647059,32.74356617647059 162.74356617647058,32.74356617647059 162.74356617647058,152.74356617647058 42.74356617647059,152.74356617647058" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Text -->
   <text x="102.743566" y="172.743566" font-size="1.0rem" font-weight="100" text-anchor="middle" >2048</text>
@@ -347,22 +346,22 @@ The last piece we need before running the deconvolution is the PSF which should
 also be loaded onto the GPU:
 
 ```python
-avg_psf = skimage.io.imread("/public/NVMICROSCOPY/AVG_PSF.tif")
-c_avg_psf = cp.asarray(avg_psf)
+psf = skimage.io.imread("/public/NVMICROSCOPY/PSF.tif")
+c_psf = cp.asarray(psf)
 ```
 
-Lastly, we map the `deconvolve` function onto each block in our Dask array:
+Lastly, we call `map_overlap` with the `deconvolve` function across the Dask array:
 
 ```python
-out = da.map_overlap(
-    deconvolve,
-    c_imgs,
-    psf=c_psf,
-    iterations=20,
-    meta=c_imgs,
-    depth=c_psf.shape,
-    boundary="none"
+out = da.map_overlap(deconvolve,
+                     c_imgs,
+                     psf=c_psf,
+                     iterations=20,
+                     meta=c_imgs._meta,
+                     depth=tuple(np.array(c_psf.shape) // 2),
+                     boundary="none"
 )
+out
 ```
 
 With Dask and multiple GPUs, we measured deconvolution of an 8GB image in ~10
@@ -373,21 +372,18 @@ seconds! But this is just the first step towards accelerated image science.
 
 The image above is taken from a mouse intestine.
 
-Napari + Remote GPUs
---------------------
+Napari
+------
 
 Deconvolution is just one operation and one tool, an image scientist or
 microscopist will need.  They will need other tools as they study the
 underlying biology.  Before getting to those next steps, they will need tools
 to visualize the data. [Napari](https://napari.org/), a multi-dimensional image
 viewer used in the PyData Bio ecosystem, is a good tool for visualizing this
-data.  As an experiment, we extended the demo above to not only work with
-Napari, but to also work on remote GPUs provided by
-[coiled.io](https://coiled.io/) [Example
-Notebook](https://gist.github.com/quasiben/29901204b20421b18f029e1fd07ed0cf).
-We explored this setup as it is relatively quick to setup and easy for users to
-access. Though one could imagine other setups using cloud or local cluster
-resources instead.
+data.  As an experiment, we ran the same workflow on a local workstation with
+2 Quadro RTX 8000 GPUs connected with NVLink.
+[Example
+Notebook](https://gist.github.com/quasiben/02b3dabba8fb3415e40e685b3cb2ca4a)
 
 By adding a `map_blocks` call to our array, we can move our data _back_ from
 GPU to CPU (device to host).
@@ -405,30 +401,25 @@ np_out = out.map_blocks(cupy_to_numpy, meta=out)
 
 When the user moves the slider on the Napari UI, we are instructing dask to the
 following:
-- Load the data from S3 onto the GPU (CuPy)
+- Load the data from disk onto the GPU (CuPy)
 - Compute the deconvolution
 - Move back to the host (NumPy)
-- Download the data from EC2 to the local Jupyter instance and then visualize
-  it with Napari
+- Render with Napari
 
-This has about 1 second latency which is great for a naive implementation!  We
-can improve this by adding compression, caching, and other optimizations within
-Napari.
-
-It is becoming increasingly more common to operate on hardware not co-located
-with the scientist/developer/user.  This might be an HPC cluster outfitted with
-exotic accelerated computing and networking devices or now common place cloud
-based infrastructure.
+This has about a second latency which is great for a naive implementation!  We
+can improve this by adding caching, improving communications with map_overlap,
+and optimizing the deconvolution kernel.
 
 Conclusion
 ----------
 
 We have now shown with Dask + CuPy how one can perform Richardson-Lucy
-Deconvolution. This required a minimal amount of code. We also showed how one
-could leverage a compute resource (in our case Coiled) to perform this
-computation. Combining this with an image viewer (Napari), we were able to
-inspect the data and our result. All of this performed reasonably well with
-very little work. Hopefully this provides you a good template to get started
-analyzing your own data. If you run into any challenges, please reach out on
-[the Dask issue tracker]( https://github.com/dask/dask/issues ) and we would be
+Deconvolution. This required a minimal amount of code.  Combining this
+with an image viewer (Napari), we were able to inspect the data
+and our result. All of this performed reasonably well by assembling PyData
+libraries: Dask, CuPy, Zarr, and Napari with a new deconvolution kernel.
+Hopefully this provides you a good template to get started
+analyzing your own data and demonstrates the richness and easy expression of custom
+workflows. If you run into any challenges, please reach out on
+[the Dask issue tracker](https://github.com/dask/dask/issues) and we would be
 happy to engage with you :)
