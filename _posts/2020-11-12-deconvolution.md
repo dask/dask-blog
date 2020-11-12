@@ -364,13 +364,13 @@ out = da.map_overlap(deconvolve,
 out
 ```
 
-With Dask and multiple GPUs, we measured deconvolution of an 8GB image in ~10
-seconds! But this is just the first step towards accelerated image science.
-
 <a href="/images/deconvolve.png">
     <img src="/images/deconvolve.png" width="100%"></a>
 
 The image above is taken from a mouse intestine.
+
+With Dask and multiple GPUs, we measured deconvolution of an 8GB image in ~10
+seconds! But this is just the first step towards accelerated image science.
 
 Napari
 ------
