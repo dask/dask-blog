@@ -230,10 +230,10 @@ imgs = da.from_zarr("/public/NVMICROSCOPY/y1z1_C1_A.zarr/")
 From the Dask output above you can see the data is a z-stack of 950 images
 where each slice is 2048x2048.  For this data set, we can improve GPU
 performance if we operate on larger chunks.  Additionally, we need to ensure
-the chunks are are least as big as the PSF which in this case is,
-(128, 128, 128).  As we did our work on a DGX2,  which has 16 GPUs,
-we can comfortably fit the data and perform deconvolution on each
-GPU if we `rechunk` the data accordingly:
+the chunks are are least as big as the PSF which in this case is, (128, 128,
+128).  As we did our work on a DGX2,  which has 16 GPUs, we can comfortably fit
+the data and perform deconvolution on each GPU if we `rechunk` the data
+accordingly:
 
 ```python
 # chunk with respect to PSF shape (128, 128, 128)
@@ -417,8 +417,8 @@ following:
 - Render with Napari
 
 This has about a second latency which is great for a naive implementation!  We
-can improve this by adding caching, improving communications with `map_overlap`,
-and optimizing the deconvolution kernel.
+can improve this by adding caching, improving communications with
+`map_overlap`, and optimizing the deconvolution kernel.
 
 Conclusion
 ----------
