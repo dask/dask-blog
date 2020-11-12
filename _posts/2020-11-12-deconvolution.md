@@ -360,13 +360,14 @@ c_psf = cp.asarray(psf)
 Lastly, we call `map_overlap` with the `deconvolve` function across the Dask array:
 
 ```python
-out = da.map_overlap(deconvolve,
-                     c_imgs,
-                     psf=c_psf,
-                     iterations=20,
-                     meta=c_imgs._meta,
-                     depth=tuple(np.array(c_psf.shape) // 2),
-                     boundary="none"
+out = da.map_overlap(
+    deconvolve,
+    c_imgs,
+    psf=c_psf,
+    iterations=20,
+    meta=c_imgs._meta,
+    depth=tuple(np.array(c_psf.shape) // 2),
+    boundary="none"
 )
 out
 ```
