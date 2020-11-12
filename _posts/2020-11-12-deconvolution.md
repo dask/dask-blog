@@ -357,7 +357,8 @@ psf = skimage.io.imread("/public/NVMICROSCOPY/PSF.tif")
 c_psf = cp.asarray(psf)
 ```
 
-Lastly, we call `map_overlap` with the `deconvolve` function across the Dask array:
+Lastly, we call `map_overlap` with the `deconvolve` function across the Dask
+array:
 
 ```python
 out = da.map_overlap(
@@ -388,9 +389,8 @@ microscopist will need.  They will need other tools as they study the
 underlying biology.  Before getting to those next steps, they will need tools
 to visualize the data. [Napari](https://napari.org/), a multi-dimensional image
 viewer used in the PyData Bio ecosystem, is a good tool for visualizing this
-data.  As an experiment, we ran the same workflow on a local workstation with
-2 Quadro RTX 8000 GPUs connected with NVLink.
-[Example
+data.  As an experiment, we ran the same workflow on a local workstation with 2
+Quadro RTX 8000 GPUs connected with NVLink.  [Example
 Notebook](https://gist.github.com/quasiben/02b3dabba8fb3415e40e685b3cb2ca4a)
 
 By adding a `map_blocks` call to our array, we can move our data _back_ from
@@ -422,12 +422,12 @@ Conclusion
 ----------
 
 We have now shown with Dask + CuPy how one can perform Richardson-Lucy
-Deconvolution. This required a minimal amount of code.  Combining this
-with an image viewer (Napari), we were able to inspect the data
-and our result. All of this performed reasonably well by assembling PyData
-libraries: Dask, CuPy, Zarr, and Napari with a new deconvolution kernel.
-Hopefully this provides you a good template to get started
-analyzing your own data and demonstrates the richness and easy expression of custom
-workflows. If you run into any challenges, please reach out on
-[the Dask issue tracker](https://github.com/dask/dask/issues) and we would be
-happy to engage with you :)
+Deconvolution. This required a minimal amount of code.  Combining this with an
+image viewer (Napari), we were able to inspect the data and our result. All of
+this performed reasonably well by assembling PyData libraries: Dask, CuPy,
+Zarr, and Napari with a new deconvolution kernel.  Hopefully this provides you
+a good template to get started analyzing your own data and demonstrates the
+richness and easy expression of custom workflows. If you run into any
+challenges, please reach out on [the Dask issue
+tracker](https://github.com/dask/dask/issues) and we would be happy to engage
+with you :)
