@@ -122,15 +122,17 @@ import dask.array as da
 import rmm
 import cupy as cp
 
-cluster = LocalCUDACluster(local_directory="/tmp/bzaitlen",
-                           enable_nvlink=True,
-                           rmm_pool_size="26GB",
-                    )
+cluster = LocalCUDACluster(
+    local_directory="/tmp/bzaitlen",
+    enable_nvlink=True,
+    rmm_pool_size="26GB",
+)
 client = Client(cluster)
 
-client.run(cp.cuda.set_allocator,
-           rmm.rmm_cupy_allocator
-          )
+client.run(
+    cp.cuda.set_allocator,
+    rmm.rmm_cupy_allocator
+)
 
 imgs = da.from_zarr("/public/NVMICROSCOPY/y1z1_C1_A.zarr/")
 ```
