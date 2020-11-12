@@ -12,10 +12,15 @@ Summary
 
 [Last year](https://blog.dask.org/2019/08/09/image-itk) we experimented with
 Dask/ITK/Scikit-Image to perform large scale image analysis on a stack of 3D
-images.  Specifically, we looked at deconvolution, a common method to
-_deblur_ images.  Now, a year later, we return to these experiments with a
-better understanding of how Dask and CuPy can interact, enhanced serialization
-methods, and support from the open-source community.
+images.  Specifically, we looked at deconvolution, a common method to _deblur_
+images.  Now, a year later, we return to these experiments with a better
+understanding of how Dask and CuPy can interact, enhanced serialization
+methods, and support from the open-source community. This post looks at the
+following:
+
+1. Implementing a common deconvolution method for CPU + GPU
+2. Leveraging Dask to perform deconvolution on a larger dataset
+3. Exploring the results with the Napari image viewer
 
 Image Analysis Redux
 --------------------
