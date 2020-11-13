@@ -263,7 +263,7 @@ moves the data from host memory (NumPy) to the device/GPU (CuPy).
 
 ```python
 imgs = imgs.astype(np.float32)
-c_imgs = imgs.map_blocks(cupy.asarray)
+c_imgs = imgs.map_blocks(cp.asarray)
 ```
 
 <table>
