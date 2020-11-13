@@ -45,12 +45,13 @@ transformation we apply is called [Fast-Fourier Transform
 applied we are able to convolve data using a simple multiplication.
 
 As it turns out this FFT transformation is extremely fast on both CPUs and
-GPUs. Similarly the algorithm we can write with FFTs is accelerated.  Despite
-the added step of doing FFTs, the cost of transformation + the cost of the
-algorithm is still lower than performing the original algorithm in real space.
-We (and others before us) found this was the case for Richardson Lucy (on both
-CPUs and GPUs) and performance continued increasing when we parallelized with
-Dask over multiple GPUs.
+GPUs. Similarly the algorithm we can write with FFTs is accelerated. This is a
+commonly used technique in the image processing field to speed up convolutions.
+Despite the added step of doing FFTs, the cost of transformation + the cost of
+the algorithm is still lower than performing the original algorithm in real
+space.  We (and others before us) found this was the case for Richardson Lucy
+(on both CPUs and GPUs) and performance continued increasing when we
+parallelized with Dask over multiple GPUs.
 
 Help from Open-Source
 ---------------------
