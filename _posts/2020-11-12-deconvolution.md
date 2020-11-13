@@ -368,7 +368,7 @@ out = da.map_overlap(
     deconvolve,
     c_imgs,
     psf=c_psf,
-    iterations=20,
+    iterations=100,
     meta=c_imgs._meta,
     depth=tuple(np.array(c_psf.shape) // 2),
     boundary="periodic"
