@@ -383,7 +383,7 @@ out
 
 The image above is taken from a mouse intestine.
 
-With Dask and multiple GPUs, we measured deconvolution of an 8GB image in ~10
+With Dask and multiple GPUs, we measured deconvolution of an 16GB image in ~30
 seconds! But this is just the first step towards accelerated image science.
 
 Napari
