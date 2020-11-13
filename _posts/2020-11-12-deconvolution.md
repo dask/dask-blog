@@ -40,7 +40,7 @@ in one representation can often be made more efficent by transforming the data
 beforehand. In this new representation we can solve the same problem
 (convolution in this case) more easily before transforming the result back into
 a more familiar representation. When it comes to convolution, the
-transformation we apply is called [Fast-Fourirer Transform
+transformation we apply is called [Fast-Fourier Transform
 (FFT)](https://en.wikipedia.org/wiki/Fast_Fourier_transform). Once this is
 applied we are able to convolve data using a simple multiplication.
 
