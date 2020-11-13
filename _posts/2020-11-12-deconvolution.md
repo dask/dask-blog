@@ -356,6 +356,8 @@ The last piece we need before running the deconvolution is the PSF which should
 also be loaded onto the GPU:
 
 ```python
+import skimage.io
+
 psf = skimage.io.imread("/public/NVMICROSCOPY/PSF.tif")
 c_psf = cp.asarray(psf)
 ```
