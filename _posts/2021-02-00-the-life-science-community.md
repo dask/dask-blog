@@ -73,14 +73,11 @@ The information we found out is likely to be biased in a few different ways.
 
 My network is strongest among imaging scientists, and among people in Australia (Genevieve). It's much less strong for other fields in life science, as my training is in physics.
 
-The Dask project has strong links to other open source python projects, including scientific software. They are likely to be over-represented among the people we spoke to.
-
-The Dask developer community has strong representation from companies including NVIDIA, Quansight, and others. This also means people linked to these companies are also likely to be over-represented among the people we spoke to.
+The Dask project has strong links to other open source python projects, including scientific software. The Dask developer community also has strong links from companies including NVIDIA, Quansight, and others. They are likely to be over-represented among the people we spoke to.
 
 It's much harder to find people who aren't using Dask at all yet but have problems that would be a good fit for it. These people are very unlikely to be, say following [Dask on twitter](https://twitter.com/dask_dev/), and probably won't be aware that we're looking for them.
 
 I don't think there are any perfect solutions to these problems.
-
 We've tried to mitigate these effects by using loose second and third degree connections to spread awareness, as well as posting in science public forums.
 
 Methods
