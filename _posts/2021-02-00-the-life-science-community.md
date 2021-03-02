@@ -67,20 +67,48 @@ GPU support was also commonly mentioned. Comments about GPUs fit into two of the
 ### From other software libraries
 We didn't only talk with individual users of Dask. We also spoke to developers of scientific software projects.
 
-Some of the software projects we spoke to include:
-* [sgkit](https://github.com/pystatgen/sgkit)
-* [scanpy](https://scanpy.readthedocs.io/en/stable/)
-* [squidpy](https://github.com/theislab/squidpy)
-* [ilastik](https://www.ilastik.org/)
-* [CellProfiler](https://cellprofiler.org/)
-* [napari](https://napari.org/)
-
-Some projects, like [napari](https://napari.org/), already use Dask under the hood. Other projects don't use Dask at all, but think that it might be able to help them.
+#### Why would other software libraries adopt Dask?
 
 Software projects wanted to solve problems related to:
 * Easier deployment to distributed clusters
 * Managing memory when processing large datasets
 * Parallelization of existing functionality
+
+Dask is good at solving those kinds of problems, and might be a good solution for this.
+
+#### Who we've talked to
+
+Some of the software projects we spoke to include:
+* [napari](https://napari.org/)
+* [sgkit](https://pystatgen.github.io/sgkit/latest/)
+* [scanpy](https://scanpy.readthedocs.io/en/stable/)
+* [squidpy](https://squidpy.readthedocs.io/en/latest/)
+* [ilastik](https://www.ilastik.org/)
+* [CellProfiler](https://cellprofiler.org/)
+
+#### Current status
+
+[napari](https://napari.org/) is a python based image viewer. Dask is already well-integrated with napari. Areas for opportunity here include:
+* Improved documentation about how to work efficiently with Dask arrays in napari.
+* Smarter caching of neighbouring image chunks to avoid lag.
+* Guides for how to create plugins for napari, so the community can grow.
+
+[sgkit](https://pystatgen.github.io/sgkit/latest/) is a statistical genetics toolkit. Dask is already well-integrated with sgkit. The developers would like improved infrastructure in the main Dask repositories that they can benefit from. Wishlist items include:
+* Better ways to understand how things like array chunks change as they move through a Dask computation.
+* Better high level graph visualizations. Graph visualizations showing all the low level operations can be overwhelming.
+* Better ways to identify poorly efficient areas in Dask computations.
+* Stability when new versions of Dask are released
+* Making it easier to run Dask in the cloud. They are currently using [dask-cloudprovider](https://github.com/dask/dask-cloudprovider) and finding that very useful.
+
+[scanpy](https://scanpy.readthedocs.io/en/stable/) and [anndata](https://anndata.readthedocs.io/en/latest/)
+
+[squidpy](https://squidpy.readthedocs.io/en/latest/) is a tool for the analysis and visualization of spatial molecular data. It builds on top of scanpy and anndata. Because squidpy involves large imaging data on top of what we'd normally see for datasets in scanpy/anndata, this is a project with a large area of opportunity for Dask.
+* Integrating Dask with the squidpy ImageContainer class is a good first step towards handling large image data within the availabe RAM constraints.
+
+[ilastik](https://www.ilastik.org/) does not currently use Dask at all. They are curious to see if Dask can make it easier to scale up from a single machine to a cluster.
+Users generally train an ilastik model interactively, and then want to apply it to many images. This second step is often when people want an easy way to scale up the computing resources available.
+
+[CellProfiler](https://cellprofiler.org/) has very briefly experimented with Dask before.
 
 ## Opportunities we see
 
