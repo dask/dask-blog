@@ -100,7 +100,9 @@ Some of the software projects we spoke to include:
 * Stability when new versions of Dask are released
 * Making it easier to run Dask in the cloud. They are currently using [dask-cloudprovider](https://github.com/dask/dask-cloudprovider) and finding that very useful.
 
-[scanpy](https://scanpy.readthedocs.io/en/stable/) and [anndata](https://anndata.readthedocs.io/en/latest/)
+[scanpy](https://scanpy.readthedocs.io/en/stable/) is a library for single cell analysis in Python. It is built together with [anndata](https://anndata.readthedocs.io/en/latest/), an annotated data structure.
+* Data size is less of an issue for scanpy users, although anndata developers do think support for Dask would be a useful thing to add.
+* Support for sparse arrays is very important for these communities.
 
 [squidpy](https://squidpy.readthedocs.io/en/latest/) is a tool for the analysis and visualization of spatial molecular data. It builds on top of scanpy and anndata. Because squidpy involves large imaging data on top of what we'd normally see for datasets in scanpy/anndata, this is a project with a large area of opportunity for Dask.
 * Integrating Dask with the squidpy ImageContainer class is a good first step towards handling large image data within the availabe RAM constraints.
@@ -108,7 +110,12 @@ Some of the software projects we spoke to include:
 [ilastik](https://www.ilastik.org/) does not currently use Dask at all. They are curious to see if Dask can make it easier to scale up from a single machine to a cluster.
 Users generally train an ilastik model interactively, and then want to apply it to many images. This second step is often when people want an easy way to scale up the computing resources available.
 
-[CellProfiler](https://cellprofiler.org/) has very briefly experimented with Dask before.
+[CellProfiler](https://cellprofiler.org/) is a pipeline tool for image processing. They have briefly experimented with Dask before.
+* Primarily, they want to parallelize existing functionality.
+* Most common pipelines fall into three major "user stories" where focussing effort would make the most impact:
+    1. Image processing
+    2. Object processing
+    3. Measurements
 
 ## Opportunities we see
 
