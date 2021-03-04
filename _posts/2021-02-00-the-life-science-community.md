@@ -143,12 +143,16 @@ We'll aim to spend around 60% of project effort on infrastructure.
 ### Outreach
 Outreach activities include blogposts, talks, webinars, tutorials, and creating examples for documentation. We aim to spend around 20% of project effort on outreach.
 
+If you have outreach ideas you want to share (perhaps you run a student group or popular meetup) then you can [get in touch with us here](https://docs.google.com/forms/d/e/1FAIpQLScBi8YOx3gGkL9rz8TsRTIZYiRha9qYOvXu4EZx9qGLtjLGCw/viewform?usp=sf_link).
+
 ### Applications
 The final stream focusses on the application of Dask to a specific problem in life science.
 
 These projects generally involve collaborating with individual labs or group, and have an end goal of summarizing their workflow in a blogpost. This feeds back into our outreach, so others in the community can learn from it.
 
 Ideally these are short term projects, so we can showcase many different applications of Dask. We aim to spend around 20% of project effort on applications.
+
+If you use Dask and have an example in mind you'd like to share, then you can [get in touch with us here](https://docs.google.com/forms/d/e/1FAIpQLScBi8YOx3gGkL9rz8TsRTIZYiRha9qYOvXu4EZx9qGLtjLGCw/viewform?usp=sf_link).
 
 ### How will we know what success looks like?
 The role of Dask Life Science Fellow has a very broad scope, so there are a lot of different ways we could be successful within this space.
@@ -191,3 +195,7 @@ We used a variety of approaches to gather feedback from the life science communi
 * We emailed other life scientists in our network, asking them to let their networks know too
 * We contacted a number of life science researchers directly.
 * We contacted several other scientific software groups directly and spoke with the developers.
+
+## Join the discussion
+
+Come join us in the Dask slack! We have a #life-science channel so there's a place to discuss things relevant to the Dask life science community. You can [request an invite to the Slack here](https://docs.google.com/forms/d/e/1FAIpQLScBi8YOx3gGkL9rz8TsRTIZYiRha9qYOvXu4EZx9qGLtjLGCw/viewform?usp=sf_link).
