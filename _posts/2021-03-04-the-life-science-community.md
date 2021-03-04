@@ -22,7 +22,7 @@ We've learned that:
 Our strategic plan for this year involves three parallel streams:
 * [INFRASTRUCTURE](#Infrastructure) (60%) - improvements to Dask, or to other software with many life science users.
 * [OUTREACH](#Outreach) (20%) - blogposts, talks, webinars, tutorials, and examples.
-* [APPLICATIONS](#Applications) (20%) - the application of Dask to a specific life science problem, collaborating with individual labs or graoups.
+* [APPLICATIONS](#Applications) (20%) - the application of Dask to a specific life science problem, collaborating with individual labs or groups.
 
 If you still want to have your say, it's not too late -
 [click this link to get in touch!](https://t.co/0NeknSdrO9?amp=1)
