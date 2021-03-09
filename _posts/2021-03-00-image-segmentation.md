@@ -9,9 +9,7 @@ theme: twitter
 
 ## Executive Summary
 
-A basic image segmentation pipeline
-
-[dask-image](http://image.dask.org/en/latest/)
+We look at how to create a basic image segmentation pipeline, using the [dask-image](http://image.dask.org/en/latest/) library.
 
 ## Contents
 * [Just show me the code](#Just-show-me-the-code)
@@ -115,7 +113,7 @@ By default, each individual `.tif` file on disk has become one chunk in our Dask
 
 ### Step 2: Filtering images
 
-Denoising images with a small amount of blur can improve segmentation later on. This is a common first step in a lot of image segmentation pipelines.
+Denoising images with a small amount of blur can improve segmentation later on. This is a common first step in a lot of image segmentation pipelines. We can do this with the dask-image [`gaussian_filter`](http://image.dask.org/en/latest/dask_image.ndfilters.html#dask_image.ndfilters.gaussian_filter) function.
 
 
 ```python
@@ -127,15 +125,17 @@ smoothed = ndfilters.gaussian_filter(images, sigma=[0, 1, 1])
 
 ### Step 3: Segmenting objects
 
-#### Absolute threshold
-Pixels below the threshold value are background.
+Next, we want to separate the objects in our images from the background. There are lots of different ways we could do this. Because we have fluorescent microscopy images, we'll use a thresholding method.
 
+#### Absolute threshold
+
+We could set an absolute threshold value, where we'd consider pixels with intensity values below this threshold to be part of the background.
 
 ```python
 absolute_threshold = smoothed > 160
 ```
 
-Let's have a look at these images with napari. First we'll need to use the `%gui qt` magic:
+Let's have a look at these images with the napari image viewer. First we'll need to use the `%gui qt` magic:
 
 ```python
 %gui qt
@@ -153,11 +153,15 @@ viewer.add_image(images, contrast_limits=[0, 2000])
 
 ![Absolute threshold napari screenshot](../images/2021-image-segmentation/napari-absolute-threshold.png)
 
+But there's a problem here.
+
+When we look at the results for different image frames, it becomes clear that there is no "one size fits all" we can use for an absolute threshold value. Some images in the dataset have quite bright backgrounds, others have fluorescent nuclei with low brightness. We'll have to try a different kind of thresholding method.
+
 #### Local threshold
 
-A better segmentation using local thresholding.
+We can improve the segmentation using a local thresholding method.
 
-
+If we calculate a threshold value independently for each image frame then we can avoid the problem caused by fluctuating background intensity between frames.
 
 ```python
 thresh = ndfilters.threshold_local(smoothed, images.chunksize)
@@ -166,15 +170,17 @@ threshold_images = smoothed > thresh
 
 
 ```python
-# Let's take a look at the images
+# Let's take a look at the images with napari
 viewer.add_image(threshold_images)
 ```
 
 ![Local threshold napari screenshot](../images/2021-image-segmentation/napari-local-threshold.png)
 
-
+The results here look much better, this is a much cleaner separation of nuclei from the background and it looks good for all the image frames.
 
 ### Step 4: Morphological operations
+
+Now that we have a binary mask from our threshold, we can clean it up a bit with some morphological operations.
 
 Morphological operations are changes we make to the shape of structures a binary image. We'll briefly describe some of the basic concepts here, but for a more detailed reference you can look at [this excellent page of the OpenCV documentation](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html).
 
@@ -245,6 +251,10 @@ Here's a screenshot of the label image generated from our mask.
 
 ![Label image napari screenshot](../images/2021-image-segmentation/napari-label-image.png)
 
+
+The dask-image [ndmeasure subpackage](http://image.dask.org/en/latest/dask_image.ndmeasure.html) includes a number of different measurement functions. In this example, we'll choose to measure:
+1. The area in pixels of each object, and
+2. The average intensity of each object.
 
 
 ```python
