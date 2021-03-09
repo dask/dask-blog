@@ -176,26 +176,31 @@ viewer.add_image(threshold_images)
 
 ### Step 4: Morphological operations
 
-Morphological operations are changes we make to the shape of structures a binary image.
+Morphological operations are changes we make to the shape of structures a binary image. We'll briefly describe some of the basic concepts here, but for a more detailed reference you can look at [this excellent page of the OpenCV documentation](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html).
 
+**Erosion** is an operation where the edges of structures in a binary image are eaten away, or eroded.
 
-https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html
+![Example: Erosion of a binary image](../images/2021-image-segmentation/erosion.png)
 
+Image credit: [OpenCV documentation](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html)
 
+**Dilation** is the opposite of an erosion. With dilation, the edges of structures in a binary image are expanded.
 
-**Erosion**
+![Example: Dilation of a binary image](../images/2021-image-segmentation/dilation.png)
 
-![Erosion of a binary image](../images/2021-image-segmentation/erosion.png)
-
-**Dilation**
-
-![Dilation of a binary image](../images/2021-image-segmentation/dilation.png)
+Image credit: [OpenCV documentation](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html)
 
 We can combine morphological operations in different ways to get useful effects.
 
 A **morphological opening** operation is an erosion, followed by a dilation.
 
-![Morphological opening of a binary image](../images/2021-image-segmentation/opening.png)
+![Example: Morphological opening of a binary image](../images/2021-image-segmentation/opening.png)
+
+Image credit: [OpenCV documentation](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html)
+
+In the example image above, we can see the left hand side has a noisy, speckled background. If the structuring element used for the morphological operations is larger than the size of the noisy speckles, they will disappear completely in the first erosion step. Then when it is time to do the second dilation step, there's nothing left of the noise in the background to dilate. So we have removed the noise in the background, while the major structures we are interested in (in this example, the J shape) are restored almost perfectly.
+
+Let's use this morphological opening trick to clean up the binary images in our segmentation pipeline.
 
 ```python
 from dask_image import ndmorph
@@ -209,9 +214,22 @@ binary_images = ndmorph.binary_opening(threshold_images, structure=structuring_e
 
 ```
 
-### Step 5: Measuring objects
-Each image has many individual nuclei, so for the sake of time we'll measure a small subset of the data.
+You'll notice here that we need to be a little bit careful about the structuring element. All our image frames are combined in a single Dask array, but we only want to apply the morphological operation independently to each frame.
+To do this, we sandwich the default 2D structuring element between two layers of zeros. This means the neighbouring image frames have no effect on the result.
 
+```python
+# Default 2D structuring element
+
+[[0, 1, 0],
+ [1, 1, 1],
+ [0, 1, 0]]
+```
+
+### Step 5: Measuring objects
+
+The last step in any image processing pipeline is to make some kind of measurement. We'll turn our binary mask into a label image, and then measure the intensity and size of those objects.
+
+For the sake of keeping the computation time in this tutorial nice and quick, we'll measure only a small subset of the data. Let's measure all the objects in the first three image frames (roughly 300 nuclei).
 
 ```python
 from dask_image import ndmeasure
@@ -223,17 +241,10 @@ print("Number of nuclei:", num_features.compute())
 
 ```
 
-    Number of nuclei: 271
+Here's a screenshot of the label image generated from our mask.
 
+![Label image napari screenshot](../images/2021-image-segmentation/napari-label-image.png)
 
-
-```python
-# Let's look at the labels
-viewer.add_labels(label_images)
-viewer.dims.set_point(0, 0)
-```
-
-Measuring objects (continued)
 
 
 ```python
@@ -242,7 +253,6 @@ area = ndmeasure.area(images[:3], label_images, index)
 mean_intensity = ndmeasure.mean(images[:3], label_images, index)
 ```
 
-![Label image napari screenshot](../images/2021-image-segmentation/napari-label-image.png)
 
 
 ```python
@@ -254,7 +264,6 @@ plt.gca().update(dict(title="Area vs mean intensity", xlabel='Area (pixels)', yl
 plt.show()
 
 ```
-
 
 
 ![Matplotlib graph of dask-image measurement results: ](../images/2021-image-segmentation/dask-image-matplotlib-output.png)
