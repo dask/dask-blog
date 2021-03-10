@@ -22,8 +22,12 @@ We look at how to create a basic image segmentation pipeline, using the [dask-im
     * [Step 4: Morphological operations](#Step-4:-Morphological-operations)
     * [Step 5: Measuring objects](#Step-5:-Measuring-objects)
 * [Custom functions](#Custom-functions)
+    * [Dask map_overlap and map_blocks](#Dask-map_overlap-and-map_blocks)
+    * [Dask delayed decorator](#Dask-delayed)
+    * [scikit-image apply_parallel](#scikit-image-apply_parallel-function)
 * [Scaling up computation](#Scaling-up-computation)
 * [Bonus content: using arrays on GPU](#Bonus-content:-using-arrays-on-GPU)
+* [How you can get involved](#How-you-can-get-involved)
 
 The content of this blog post originally appeared as a conference talk in 2020.
 
@@ -243,14 +247,19 @@ from dask_image import ndmeasure
 # Create labelled mask
 label_images, num_features = ndmeasure.label(binary_images[:3], structuring_element)
 index = np.arange(num_features - 1) + 1  # [1, 2, 3, ...num_features]
-print("Number of nuclei:", num_features.compute())
-
 ```
 
 Here's a screenshot of the label image generated from our mask.
 
 ![Label image napari screenshot](../images/2021-image-segmentation/napari-label-image.png)
 
+```python
+>>> print("Number of nuclei:", num_features.compute())
+
+Number of nuclei: 271
+```
+
+#### Measure objects in images
 
 The dask-image [ndmeasure subpackage](http://image.dask.org/en/latest/dask_image.ndmeasure.html) includes a number of different measurement functions. In this example, we'll choose to measure:
 1. The area in pixels of each object, and
@@ -258,15 +267,14 @@ The dask-image [ndmeasure subpackage](http://image.dask.org/en/latest/dask_image
 
 
 ```python
-# Measure objects in images
 area = ndmeasure.area(images[:3], label_images, index)
 mean_intensity = ndmeasure.mean(images[:3], label_images, index)
 ```
 
+#### Run computation and plot results
 
 
 ```python
-# Run computation and plot results
 import matplotlib.pyplot as plt
 
 plt.scatter(area, mean_intensity, alpha=0.5)
@@ -282,13 +290,18 @@ plt.show()
 
 What if you want to do something that isn't included?
 
-* scikit-image [apply_parallel()](https://scikit-image.org/docs/dev/api/skimage.util.html#skimage.util.apply_parallel)
 * dask [map_overlap](https://docs.dask.org/en/latest/array-overlap.html?highlight=map_overlap#dask.array.map_overlap) / [map_blocks](https://docs.dask.org/en/latest/array-api.html?highlight=map_blocks#dask.array.map_blocks)
 * dask [delayed](https://docs.dask.org/en/latest/delayed.html)
+* scikit-image [apply_parallel()](https://scikit-image.org/docs/dev/api/skimage.util.html#skimage.util.apply_parallel)
+
+### Dask map_overlap and map_blocks
+### Dask delayed
+
+### scikit-image apply_parallel function
 
 ## Scaling up computation
 
-Use [dask-distributed](https://distributed.dask.org/en/latest/) to scale up from a laptop onto a supercomputing cluster.
+You can use [dask-distributed](https://distributed.dask.org/en/latest/) to scale up from a laptop onto a supercomputing cluster.
 
 ```python
 from dask.distributed import Client
@@ -300,12 +313,11 @@ client.cluster
 
 ```
 
+See the [documentation here](https://distributed.dask.org/en/latest/) to get set up for your system.
 
 ## Bonus content: using arrays on GPU
 
-We're able to add GPU support to `dask-image` by using [CuPy](https://cupy.dev/). [CuPy](https://cupy.dev/) is an array library with a numpy-like API, accelerated with NVIDIA CUDA. Instead of having Dask arrays which contain numpy chunks, we can have Dask arrays containing cupy chunks instead.
-
-This [blogpost](https://blog.dask.org/2019/01/03/dask-array-gpus-first-steps) explains the benefits of GPU acceleration and gives some benchmarks for computations on CPU, a single GPU, and multiple GPUs.
+We're able to add GPU support to `dask-image` by using [CuPy](https://cupy.dev/). [CuPy](https://cupy.dev/) is an array library with a numpy-like API, accelerated with NVIDIA CUDA. Instead of having Dask arrays which contain numpy chunks, we can have Dask arrays containing cupy chunks instead. This [blogpost](https://blog.dask.org/2019/01/03/dask-array-gpus-first-steps) explains the benefits of GPU acceleration and gives some benchmarks for computations on CPU, a single GPU, and multiple GPUs.
 
 ### GPU support available in dask-image
 
@@ -315,28 +327,15 @@ For `dask-image` version 0.6.0, there is GPU array support for four of the six s
 * ndinterp
 * ndmorph
 
-Subpackages of `dask-image` that do not yet have GPU support are.
+Subpackages of `dask-image` that do *not* yet have GPU support are.
 * ndfourier
 * ndmeasure
 
 We hope to add GPU support to these in the future.
 
+### An example
 
-### Reading in images onto the GPU
-
-```python
-from dask_image.imread import imread
-
-images = imread('data/BBBC039/images/*.tif')
-images_on_gpu = imread('data/BBBC039/images/*.tif', arraytype="cupy")
-
-```
-
-###
-
-Remember, you can't mix arrays on the CPU and arrays on the GPU in the same computation.
-
-Here's an example of an image convolution with Dask
+Here's an example of an image convolution with Dask on the CPU:
 ```python
 # CPU example
 import numpy as np
@@ -350,6 +349,8 @@ result = convolve(a, w)
 result.compute()
 ```
 
+And here's the same example of an image convolution with Dask on the GPU. The only thing necessary to change is the type of input arrays.
+
 ```python
 # Same example moved to the GPU
 import cupy  # <- import cupy instead of numpy (version >=7.7.0)
@@ -362,3 +363,26 @@ w = cupy.ones(a.ndim * (3,))  # <- cupy array
 result = convolve(a, w)
 result.compute()
 ```
+
+You can't mix arrays on the CPU and arrays on the GPU in the same computation. This is why the weights `w` must be a cupy array in the second example above.
+
+Additionally, you can transfer data between the CPU and GPU. So in situations where the GPU speedup is larger than than cost associated with transferring data, this may be useful to do.
+
+### Reading in images onto the GPU
+
+Generally, we want to start our image processing by reading in data from images stored on disk. We can use the [`imread`](http://image.dask.org/en/latest/dask_image.imread.html) function with the `arraytype=cupy` keyword argument to do this.
+
+```python
+from dask_image.imread import imread
+
+images = imread('data/BBBC039/images/*.tif')
+images_on_gpu = imread('data/BBBC039/images/*.tif', arraytype="cupy")
+
+```
+
+## How you can get involved
+
+Create and share your own segmentation or image processing workflows with Dask ([join the current discussion on segmentation](https://github.com/dask/dask-blog/issues/47) or [propose a new blogpost topic here](https://github.com/dask/dask-blog/issues/new?assignees=&labels=%5B%22type%2Ffeature%22%2C+%22needs-triage%22%5D&template=feature-request.md))
+
+
+Contribute to adding GPU support to dask-image: https://github.com/dask/dask-image/issues/133
