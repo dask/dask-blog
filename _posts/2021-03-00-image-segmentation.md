@@ -288,20 +288,42 @@ plt.show()
 
 ## Custom functions
 
-What if you want to do something that isn't included?
+What if you want to do something that isn't included in the dask-image API? There are several options we can use to write custom functions.
 
 * dask [map_overlap](https://docs.dask.org/en/latest/array-overlap.html?highlight=map_overlap#dask.array.map_overlap) / [map_blocks](https://docs.dask.org/en/latest/array-api.html?highlight=map_blocks#dask.array.map_blocks)
 * dask [delayed](https://docs.dask.org/en/latest/delayed.html)
 * scikit-image [apply_parallel()](https://scikit-image.org/docs/dev/api/skimage.util.html#skimage.util.apply_parallel)
 
 ### Dask map_overlap and map_blocks
+
+The Dask array [`map_overlap`](https://docs.dask.org/en/latest/array-overlap.html#dask.array.map_overlap) and [`map_blocks`](https://docs.dask.org/en/latest/array-api.html#dask.array.map_blocks) are what is used to build most of the functions in `dask-image`. You can use them yourself too. They will apply a function to each chunk in a Dask array.
+
+```python
+import dask.array as da
+
+def my_custom_function(args):
+    # ... does something really cool
+
+result = da.map_overlap(my_custom_function, my_dask_array, args)
+```
+
+You can read more about [overlapping computations here](https://docs.dask.org/en/latest/array-overlap.html).
+
+
 ### Dask delayed
+
+If you want more flexibility and fine-grained control over your computation, then you can use [Dask delayed](https://docs.dask.org/en/latest/delayed.html). You can get started [with the Dask delayed tutorial here](https://tutorial.dask.org/01_dask.delayed.html).
 
 ### scikit-image apply_parallel function
 
+If you're a person who does a lot of image processing in python, one tool you're likely to already be using is [scikit-image](https://scikit-image.org/). I'd like to draw your attention to the [`apply_parallel`](https://scikit-image.org/docs/dev/api/skimage.util.html?highlight=apply_parallel#skimage.util.apply_parallel) function available in scikit-image. It uses `map-overlap`, and can be very helpful.
+
+It's useful not only when when you have big data, but also in cases where your data fits into memory but the computation you want to apply to the data is memory intensive. This might cause you to exceed the available RAM, and [`apply_parallel`](https://scikit-image.org/docs/dev/api/skimage.util.html?highlight=apply_parallel#skimage.util.apply_parallel) is great for these situations too.
+
+
 ## Scaling up computation
 
-You can use [dask-distributed](https://distributed.dask.org/en/latest/) to scale up from a laptop onto a supercomputing cluster.
+When you want to scale up from a laptop onto a supercomputing cluster, you can use [dask-distributed](https://distributed.dask.org/en/latest/) to handle that.
 
 ```python
 from dask.distributed import Client
@@ -317,7 +339,9 @@ See the [documentation here](https://distributed.dask.org/en/latest/) to get set
 
 ## Bonus content: using arrays on GPU
 
-We're able to add GPU support to `dask-image` by using [CuPy](https://cupy.dev/). [CuPy](https://cupy.dev/) is an array library with a numpy-like API, accelerated with NVIDIA CUDA. Instead of having Dask arrays which contain numpy chunks, we can have Dask arrays containing cupy chunks instead. This [blogpost](https://blog.dask.org/2019/01/03/dask-array-gpus-first-steps) explains the benefits of GPU acceleration and gives some benchmarks for computations on CPU, a single GPU, and multiple GPUs.
+We've recently been adding GPU support to `dask-image`.
+
+We're able to add GPU support using a library called [CuPy](https://cupy.dev/). [CuPy](https://cupy.dev/) is an array library with a numpy-like API, accelerated with NVIDIA CUDA. Instead of having Dask arrays which contain numpy chunks, we can have Dask arrays containing cupy chunks instead. This [blogpost](https://blog.dask.org/2019/01/03/dask-array-gpus-first-steps) explains the benefits of GPU acceleration and gives some benchmarks for computations on CPU, a single GPU, and multiple GPUs.
 
 ### GPU support available in dask-image
 
