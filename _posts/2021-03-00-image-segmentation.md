@@ -345,7 +345,7 @@ We're able to add GPU support using a library called [CuPy](https://cupy.dev/). 
 
 ### GPU support available in dask-image
 
-For `dask-image` version 0.6.0, there is GPU array support for four of the six subpackages:
+From `dask-image` version 0.6.0, there is GPU array support for four of the six subpackages:
 * imread
 * ndfilters
 * ndinterp
