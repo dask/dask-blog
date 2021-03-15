@@ -72,7 +72,7 @@ And to do that, I created a new tool.
 
 ### Using `dask-memusage`
 
-Since the gene sequencing code is proprietary, inaccessible to me, and quite complex, let's use a different example.
+Since the gene sequencing code is proprietary and quite complex, let's use a different example.
 We're going to count the occurrence of words in some text files, and then report the top-10 most common words in each file.
 You can imagine combining the data later on, but we won't bother with that in this simple example.
 
