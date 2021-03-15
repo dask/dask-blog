@@ -218,7 +218,7 @@ So the next step was to reduce memory usage.
 ## Reducing memory usage with Fil {#fil}
 
 If we look at the `dask-memusage` output for our word-counting example, the memory usage seems rather high: for a 25MB file, we're using 330MB of RAM to count words.
-Thinking through how an ideal version of this code might work, we ought to be able to process the file with much less memory.
+Thinking through how an ideal version of this code might work, we ought to be able to process the file with much less memory (for example we could redesign our code to process the file line by line, reducing memory).
 
 **And that's another way in which `dask-memusage` can be helpful: it can point us at specific code that needs memory usage optimized, at the granularity of a task.**
 A task can be a rather large chunk of code, though, so the next step is to use a memory profiler that can point to specific lines of code.
