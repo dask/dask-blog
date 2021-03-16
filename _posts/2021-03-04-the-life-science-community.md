@@ -198,4 +198,4 @@ We used a variety of approaches to gather feedback from the life science communi
 
 ## Join the discussion
 
-Come join us in the Dask slack! We have a #life-science channel so there's a place to discuss things relevant to the Dask life science community. You can [request an invite to the Slack here](https://docs.google.com/forms/d/e/1FAIpQLScBi8YOx3gGkL9rz8TsRTIZYiRha9qYOvXu4EZx9qGLtjLGCw/viewform?usp=sf_link).
+Come join us in the Dask slack! We have a #life-science channel so there's a place to discuss things relevant to the Dask life science community. You can [request an invite to the Slack here](https://join.slack.com/t/dask/shared_invite/zt-mfmh7quc-nIrXL6ocgiUH2haLYA914g).
