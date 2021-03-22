@@ -29,7 +29,7 @@ We look at how to create a basic image segmentation pipeline, using the [dask-im
 * [Bonus content: using arrays on GPU](#Bonus-content:-using-arrays-on-GPU)
 * [How you can get involved](#How-you-can-get-involved)
 
-The content of this blog post originally appeared as a conference talk in 2020.
+The content of this blog post originally appeared as [a conference talk in 2020](https://github.com/genevieveBuckley/dask-image-talk-2020).
 
 ## Just show me the code
 
@@ -61,7 +61,6 @@ mean_intensity = ndmeasure.mean(images, label_images, index)
 ```
 
 You can keep reading for a step by step walkthrough of this image segmentation pipeline, or you can skip ahead to the sections on [custom functions](#Custom-functions), [scaling up computation](#Scaling-up-computation), or [GPU acceleration](#Bonus-content:-using-arrays-on-GPU).
-
 
 ## Image segmentation pipeline
 
