@@ -91,7 +91,7 @@ To use napari from IPython or jupyter, run the `%gui qt` magic in a cell before 
 
 ### Download the example data
 
-We'll use the publically available image dataset [BBBC039](https://bbbc.broadinstitute.org/BBBC039) Caicedo et al. 2018, available from the Broad Bioimage Benchmark Collection [Ljosa et al., Nature Methods, 2012](http://dx.doi.org/10.1038/nmeth.2083). You can download the dataset here: https://bbbc.broadinstitute.org/BBBC039
+We'll use the publically available image dataset [BBBC039](https://bbbc.broadinstitute.org/BBBC039) Caicedo et al. 2018, available from the Broad Bioimage Benchmark Collection [Ljosa et al., Nature Methods, 2012](http://dx.doi.org/10.1038/nmeth.2083). You can download the dataset here: [https://bbbc.broadinstitute.org/BBBC039](https://bbbc.broadinstitute.org/BBBC039)
 
 ![Example image from the BBBC039 dataset, Broad Bioimage Benchmark Collection](../images/2021-image-segmentation/BBBC039-example-image.png)
 
