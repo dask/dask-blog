@@ -99,10 +99,12 @@ def unet_featurize(image, model):
     import numpy as np
     import torch
 
-    # remove leading two length-one dimensions
+    # Extract the 2D image data from the Dask array
+    # Original Dask array dimensions were (time, z-slice, y, x)
     img = image[0, 0, ...]
 
-    # make sure image has four dimentions (b,c,w,h)
+    # Put the data into a shape PyTorch expects
+    # Expected dimensions are (Batch x Channel x Width x Height)
     img = np.expand_dims(np.expand_dims(img, 0), 0)
     img = np.transpose(img, (1,0,2,3))
 
