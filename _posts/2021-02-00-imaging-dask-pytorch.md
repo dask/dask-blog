@@ -17,7 +17,17 @@ We cover a simple example applying a pre-trained UNet to a stack of images to ge
 A Worked Example
 -----------------
 
-Let’s start with an example applying a pre-trained [UNet](https://arxiv.org/abs/1505.04597) to a stack of light sheet microscopy data. This particular UNet takes in an 2D image and returns a 2D x 16 array, where each pixel is now associate with a feature vector of length 16. Thanks to Mars Huang for training this particular UNet on a corpous of biological images to produce biologically relevant feature vectors during his work on [interactive bio-image segmentation](https://github.com/transformify-plugins/segmentify). These features can then be used for more downstream image processing tasks such as image segmentation. We will use the same data that we analysed in our last [blogpost on Dask and ITK](https://blog.dask.org/2019/08/09/image-itk), and you should note the similarities to that workflow even though we are now using new libaries and performing different analyses.
+Let’s start with an example applying a pre-trained [UNet](https://arxiv.org/abs/1505.04597) to a stack of light sheet microscopy data.
+
+In this example, we:
+1. Load data from Zarr into a multi-chunked Dask array
+2. Load a pre-trained PyTorch model that featurizes images
+3. Construct a function to apply the model onto each chunk
+4. Apply that function across the dask array with the dask.array.map_blocks function.
+5. Store the result back into Zarr format
+
+
+This particular UNet takes in an 2D image and returns a 2D x 16 array, where each pixel is now associate with a feature vector of length 16. Thanks to Mars Huang for training this particular UNet on a corpous of biological images to produce biologically relevant feature vectors during his work on [interactive bio-image segmentation](https://github.com/transformify-plugins/segmentify). These features can then be used for more downstream image processing tasks such as image segmentation. We will use the same data that we analysed in our last [blogpost on Dask and ITK](https://blog.dask.org/2019/08/09/image-itk), and you should note the similarities to that workflow even though we are now using new libaries and performing different analyses.
 
 
 ```
@@ -104,13 +114,5 @@ dask.array<unet_featurize, shape=(20, 199, 768, 1024, 16), dtype=float32, chunks
 # Trigger computation and store
 out.to_zarr("AOLLSM_featurized.zarr", overwrite=True)
 ```
-
-So in the example above we …
-
-1. Load data from Zarr into a multi-chunked Dask array
-2. Load a pre-trained PyTorch model that featurizes images
-3. Construct a function to apply the model onto each chunk
-4. Apply that function across the dask array with the dask.array.map_blocks function.
-5. Store the result back into Zarr format
 
 This workflow was very similar to our example using the dask.array.map_blocks function with ITK to perform image deconvolution. Because Dask arrays are just made out of Numpy arrays which are easily converted to Torch arrays, we're now also able to leverage the power of machine learning at scale.
