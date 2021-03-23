@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Dask with PyTorch for large scale image analysis
-author: Nicholas Sofroniew, Matthew Rocklin
+author: Nicholas Sofroniew, Genevieve Buckley
 tags: [imaging]
 theme: twitter
 ---
