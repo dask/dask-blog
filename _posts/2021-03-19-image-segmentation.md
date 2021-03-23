@@ -53,7 +53,7 @@ smoothed = ndfilters.gaussian_filter(images, sigma=[0, 1, 1])
 thresh = ndfilters.threshold_local(smoothed, blocksize=images.chunksize)
 threshold_images = smoothed > thresh
 structuring_element = np.array([[[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 1, 0], [1, 1, 1], [0, 1, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]]])
-binary_images = ndmorph.binary_closing(threshold_image)
+binary_images = ndmorph.binary_closing(threshold_image, structure=structuring_element)
 label_images, num_features = ndmeasure.label(binary_image)
 index = np.arange(num_features)
 area = ndmeasure.area(images, label_images, index)
