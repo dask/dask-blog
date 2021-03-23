@@ -106,7 +106,6 @@ def unet_featurize(image, model):
     # Put the data into a shape PyTorch expects
     # Expected dimensions are (Batch x Channel x Width x Height)
     img = np.expand_dims(np.expand_dims(img, 0), 0)
-    img = np.transpose(img, (1,0,2,3))
 
     # convert image to torch Tensor
     img = torch.Tensor(img).float()
