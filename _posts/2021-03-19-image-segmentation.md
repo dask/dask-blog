@@ -93,7 +93,7 @@ To use napari from IPython or jupyter, run the `%gui qt` magic in a cell before 
 
 We'll use the publically available image dataset [BBBC039](https://bbbc.broadinstitute.org/BBBC039) Caicedo et al. 2018, available from the Broad Bioimage Benchmark Collection [Ljosa et al., Nature Methods, 2012](http://dx.doi.org/10.1038/nmeth.2083). You can download the dataset here: https://bbbc.broadinstitute.org/BBBC039
 
-![Example image from the BBBC039 dataset, Broad Bioimage Benchmark Collection](../images/2021-image-segmentation/BBBC039-example-image.png)
+![Example image from the BBBC039 dataset, Broad Bioimage Benchmark Collection](/images/2021-image-segmentation/BBBC039-example-image.png)
 
 These are fluorescence microscopy images, where we see the nuclei in individual cells.
 
@@ -110,7 +110,7 @@ images = imread('data/BBBC039/images/*.tif')
 
 ```
 
-![](../images/2021-image-segmentation/dask-array-html-repr.png)
+![HTML reprsentation of a Dask array](/images/2021-image-segmentation/dask-array-html-repr.png)
 
 By default, each individual `.tif` file on disk has become one chunk in our Dask array.
 
@@ -154,7 +154,7 @@ viewer.add_image(absolute_threshold)
 viewer.add_image(images, contrast_limits=[0, 2000])
 ```
 
-![Absolute threshold napari screenshot](../images/2021-image-segmentation/napari-absolute-threshold.png)
+![Absolute threshold napari screenshot](/images/2021-image-segmentation/napari-absolute-threshold.png)
 
 But there's a problem here.
 
@@ -177,7 +177,7 @@ threshold_images = smoothed > thresh
 viewer.add_image(threshold_images)
 ```
 
-![Local threshold napari screenshot](../images/2021-image-segmentation/napari-local-threshold.png)
+![Local threshold napari screenshot](/images/2021-image-segmentation/napari-local-threshold.png)
 
 The results here look much better, this is a much cleaner separation of nuclei from the background and it looks good for all the image frames.
 
@@ -189,13 +189,13 @@ Morphological operations are changes we make to the shape of structures a binary
 
 **Erosion** is an operation where the edges of structures in a binary image are eaten away, or eroded.
 
-![Example: Erosion of a binary image](../images/2021-image-segmentation/erosion.png)
+![Example: Erosion of a binary image](/images/2021-image-segmentation/erosion.png)
 
 Image credit: [OpenCV documentation](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html)
 
 **Dilation** is the opposite of an erosion. With dilation, the edges of structures in a binary image are expanded.
 
-![Example: Dilation of a binary image](../images/2021-image-segmentation/dilation.png)
+![Example: Dilation of a binary image](/images/2021-image-segmentation/dilation.png)
 
 Image credit: [OpenCV documentation](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html)
 
@@ -203,7 +203,7 @@ We can combine morphological operations in different ways to get useful effects.
 
 A **morphological opening** operation is an erosion, followed by a dilation.
 
-![Example: Morphological opening of a binary image](../images/2021-image-segmentation/opening.png)
+![Example: Morphological opening of a binary image](/images/2021-image-segmentation/opening.png)
 
 Image credit: [OpenCV documentation](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html)
 
@@ -250,7 +250,7 @@ index = np.arange(num_features - 1) + 1  # [1, 2, 3, ...num_features]
 
 Here's a screenshot of the label image generated from our mask.
 
-![Label image napari screenshot](../images/2021-image-segmentation/napari-label-image.png)
+![Label image napari screenshot](/images/2021-image-segmentation/napari-label-image.png)
 
 ```python
 >>> print("Number of nuclei:", num_features.compute())
@@ -283,7 +283,7 @@ plt.show()
 ```
 
 
-![Matplotlib graph of dask-image measurement results: ](../images/2021-image-segmentation/dask-image-matplotlib-output.png)
+![Matplotlib graph of dask-image measurement results: ](/images/2021-image-segmentation/dask-image-matplotlib-output.png)
 
 ## Custom functions
 
