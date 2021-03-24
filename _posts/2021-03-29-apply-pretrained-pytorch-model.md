@@ -155,4 +155,4 @@ Here we've shown how to apply a pre-trained PyTorch model to a Dask array of ima
 
 Because our Dask array chunks are Numpy arrays, they can be easily converted to Torch arrays. This way, we're able to leverage the power of machine learning at scale.
 
-This workflow was very similar to [our example](https://blog.dask.org/2020/11/12/deconvolution) using the dask.array.map_blocks function with ITK to perform image deconvolution. This shows you can easily adapt the same type of workflow to achieve many different types of analysis with Dask.
+This workflow was very similar to [our example](https://blog.dask.org/2019/08/09/image-itk) using the dask.array.map_blocks function with ITK to perform image deconvolution. This shows you can easily adapt the same type of workflow to achieve many different types of analysis with Dask.
