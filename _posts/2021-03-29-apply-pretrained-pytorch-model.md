@@ -2,7 +2,7 @@
 layout: post
 title: Dask with PyTorch for large scale image analysis
 author: Nicholas Sofroniew, Genevieve Buckley
-tags: [imaging]
+tags: [imaging, deep learning, PyTorch]
 theme: twitter
 ---
 {% include JB/setup %}
