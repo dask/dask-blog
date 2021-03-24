@@ -30,7 +30,9 @@ In this example, we:
 
 First, we load the image data into a Dask array.
 
- We were provided sample data from [Prof. Shroff’s lab](https://www.nibib.nih.gov/about-nibib/staff/hari-shroff) at the NIH. The data originally was provided as a 3D TIFF file which we subsequently converted to Zarr with a shape of (950, 2048, 2048). That's a z-stack of 950 images where each slice is 2048x2048 pixels.
+The example dataset we're using here is lattice lightsheet microscopy of the tail region of a zebrafish embryo. It is described in [this Science paper](http://dx.doi.org/10.1126/science.aaq1392) (see Figure 4), and provided with permission from Srigokul Upadhyayula.
+
+> Liu *et al.* 2018 "Observing the cell in its native state: Imaging subcellular dynamics in multicellular organisms" *Science*, Vol. 360, Issue 6386, eaaq1392 DOI: 10.1126/science.aaq1392 ([link](http://dx.doi.org/10.1126/science.aaq1392))
 
 This is the same data that we analysed in our last [blogpost on Dask and ITK](https://blog.dask.org/2019/08/09/image-itk). You should note the similarities to that workflow even though we are now using new libaries and performing different analyses.
 
