@@ -124,6 +124,10 @@ def unet_featurize(image, model):
 
 ```
 
+Note: Very observant readers might notice that the steps for extracting the 2D image data and then putting it into a shape PyTorch expects appear to be redundant. It is redundant for our particular example, but that might easily not have been the case.
+
+To explain this in more detail, the UNet expects 4D input, with dimensions `(Batch x Channel x Width x Height)`. The original Dask array dimensions were `(time, z-slice, y, x)`. In our example it just so happens those match in a way that makes removing and then adding the leading dimensions redundant, but depending on the shape of the original Dask array this might not have been true.
+
 ### Step 4. Apply that function across the Dask array
 Now we apply that function to the data in our Dask array using [`dask.array.map_blocks`](https://docs.dask.org/en/latest/array-api.html?highlight=map_blocks#dask.array.map_blocks).
 
