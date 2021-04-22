@@ -20,22 +20,22 @@ We've learned that:
 * Managing memory constraints when working with big data is a common pain point.
 
 Our strategic plan for this year involves three parallel streams:
-* [INFRASTRUCTURE](#Infrastructure) (60%) - improvements to Dask, or to other software with many life science users.
-* [OUTREACH](#Outreach) (20%) - blogposts, talks, webinars, tutorials, and examples.
-* [APPLICATIONS](#Applications) (20%) - the application of Dask to a specific life science problem, collaborating with individual labs or groups.
+* [INFRASTRUCTURE](#infrastructure) (60%) - improvements to Dask, or to other software with many life science users.
+* [OUTREACH](#outreach) (20%) - blogposts, talks, webinars, tutorials, and examples.
+* [APPLICATIONS](#applications) (20%) - the application of Dask to a specific life science problem, collaborating with individual labs or groups.
 
 If you still want to have your say, it's not too late -
 [click this link to get in touch!](https://t.co/0NeknSdrO9?amp=1)
 
 ## Contents
-* [Background](#Background)
-* [What we learned](#What-we-learned)
-    * [From Dask users](#From-Dask-users)
-    * [From other software libraries](#From-other-software-libraries)
-* [Opportunities we see](#Opportunities-we-see)
+* [Background](#background)
+* [What we learned](#what-we-learned)
+    * [From Dask users](#from-dask-users)
+    * [From other software libraries](#from-other-software-libraries)
+* [Opportunities we see](#opportunities-we-see)
 * [Strategic plan](#strategic-plan)
-* [Limitations](#Limitations)
-* [Methods](#Methods)
+* [Limitations](#limitations)
+* [Methods](#methods)
 
 ## Background
 
@@ -127,9 +127,9 @@ Finally, continuing to build support for Dask arrays with non-numpy chunks is al
 
 ## Strategic direction
 We're going to manage this project with three parallel streams:
-* [INFRASTRUCTURE](#Infrastructure) (60%)
-* [OUTREACH](#Outreach) (20%)
-* [APPLICATIONS](#Applications) (20%)
+* [INFRASTRUCTURE](#infrastructure) (60%)
+* [OUTREACH](#outreach) (20%)
+* [APPLICATIONS](#applications) (20%)
 
 Each stream will likely have one primary project at any time, with many more queued. Within each stream, proposed projects will be ranked according to: level of impact, time commitment required, and the availability of other developer resources.
 
