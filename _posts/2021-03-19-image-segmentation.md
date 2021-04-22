@@ -12,22 +12,22 @@ theme: twitter
 We look at how to create a basic image segmentation pipeline, using the [dask-image](http://image.dask.org/en/latest/) library.
 
 ## Contents
-* [Just show me the code](#Just-show-me-the-code)
-* [Image segmentation pipeline](#Image-segmentation-pipeline)
-    * [Set up your python environment](#Set-up-your-python-environment)
-    * [Download the example data](#Download-the-example-data)
-    * [Step 1: Reading in data](#Step-1:-Reading-in-data)
-    * [Step 2: Filtering images](#Step-2:-Filtering-images)
-    * [Step 3: Segmenting objects](#Step-3:-Segmenting-objects)
-    * [Step 4: Morphological operations](#Step-4:-Morphological-operations)
-    * [Step 5: Measuring objects](#Step-5:-Measuring-objects)
-* [Custom functions](#Custom-functions)
-    * [Dask map_overlap and map_blocks](#Dask-map_overlap-and-map_blocks)
-    * [Dask delayed decorator](#Dask-delayed)
+* [Just show me the code](#just-show-me-the-code)
+* [Image segmentation pipeline](#image-segmentation-pipeline)
+    * [Set up your python environment](#set-up-your-python-environment)
+    * [Download the example data](#download-the-example-data)
+    * [Step 1: Reading in data](#step-1-reading-in-data)
+    * [Step 2: Filtering images](#step-2-siltering-images)
+    * [Step 3: Segmenting objects](#step-3-segmenting-objects)
+    * [Step 4: Morphological operations](#step-4-morphological-operations)
+    * [Step 5: Measuring objects](#step-5-measuring-objects)
+* [Custom functions](#custom-functions)
+    * [Dask map_overlap and map_blocks](#dask-map_overlap-and-map_blocks)
+    * [Dask delayed decorator](#dask-delayed)
     * [scikit-image apply_parallel](#scikit-image-apply_parallel-function)
-* [Scaling up computation](#Scaling-up-computation)
-* [Bonus content: using arrays on GPU](#Bonus-content:-using-arrays-on-GPU)
-* [How you can get involved](#How-you-can-get-involved)
+* [Scaling up computation](#scaling-up-computation)
+* [Bonus content: using arrays on GPU](#bonus-content-using-arrays-on-gpu)
+* [How you can get involved](#how-you-can-get-involved)
 
 The content of this blog post originally appeared as [a conference talk in 2020](https://github.com/genevieveBuckley/dask-image-talk-2020).
 
