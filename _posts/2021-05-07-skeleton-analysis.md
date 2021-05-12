@@ -91,10 +91,6 @@ This project was originally intended to be a quick & easy one. Famous last words
 
 What I wanted to do was to put the image data in a Dask array, and then use the [`map_overlap`](https://docs.dask.org/en/latest/array-overlap.html) function to do the image filtering, thresholding, skeletonizing, and skeleton analysis. What I soon found was that although the image filtering, thresholding, and skeletonization worked well, the skeleton analysis step had some problems:
 
-
-
-*
-
 * Dask's map_overlap function doesn't handle ragged or non-uniformly shaped results from different image chunks very well, and...
 
 * Internal function in the skan library were written in a way that was incompatible with distributed computation.
