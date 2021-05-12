@@ -106,9 +106,9 @@ What I wanted to do was to put the image data in a Dask array, and then use the 
 The [`skeletonize`](https://scikit-image.org/docs/dev/auto_examples/edges/plot_skeleton.html) function of [scikit-image](https://scikit-image.org/) is very memory intensive, and was crashing on a laptop with 16GB RAM.
 
 We solved this by:
-* putting our image data into a Dask array with [dask-image `imread`](http://image.dask.org/en/latest/dask_image.imread.html),
-* [rechunking](https://docs.dask.org/en/latest/array-chunks.html?highlight=rechunk#rechunking) the Dask array to stay under the memory threshold needed for skeletonize, and then
-* running the skeletonize function on those chunks with Dask's [`map_overlap`](https://docs.dask.org/en/latest/array-overlap.html) function.
+* Putting our image data into a Dask array with [dask-image `imread`](http://image.dask.org/en/latest/dask_image.imread.html),
+* [Rechunking](https://docs.dask.org/en/latest/array-chunks.html?highlight=rechunk#rechunking) the Dask array. We need to change the chunk shapes from 2D slices to small cuboid volumes, so the next step in the computation is efficient. We can choose the overall size of the chunks so that we can stay under the memory threshold needed for skeletonize.
+* Finally, we run the [`skeletonize` function](https://scikit-image.org/docs/dev/auto_examples/edges/plot_skeleton.html) on the Dask array chunks using the [`map_overlap` function](https://docs.dask.org/en/latest/array-overlap.html). By limiting the size of the array chunks, we stay under our memory threshold!
 
 ### Problem 2: Ragged or non-uniform output from Dask array chunks
 
