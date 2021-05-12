@@ -207,7 +207,7 @@ def slices_from_chunks_overlap(chunks, array_shape, depth=1):
     return list(product(*slices))
 ```
 
-Now that we can slice an image chunk plus an extra pixel of overlap, all we need is a way to do that for all the chunks in an array. Drawing inspiration from this [block iteration](https://github.com/dask/dask-image/blob/63543bf2f6553a8150f45289492bf614e1945ac0/dask_image/ndmeasure/__init__.py#L299-L303) (contributed to dask-image]() by [Juan Nunez-Iglesias](https://github.com/jni/)) we make a similar iterator.
+Now that we can slice an image chunk plus an extra pixel of overlap, all we need is a way to do that for all the chunks in an array. Drawing inspiration from this [block iteration](https://github.com/dask/dask-image/blob/63543bf2f6553a8150f45289492bf614e1945ac0/dask_image/ndmeasure/__init__.py#L299-L303) we make a similar iterator.
 
 ```python
 block_iter = zip(
