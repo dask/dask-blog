@@ -9,7 +9,7 @@ theme: twitter
 
 ## Executive Summary
 
-In this blogpost, we show how to modify a skeleton network analysis with Dask to work with constrained RAM (eg: on your laptop). This makes it more accessible: it can run on a small laptop, instead of requiring access to a supercomputing cluster.
+In this blogpost, we show how to modify a skeleton network analysis with Dask to work with constrained RAM (eg: on your laptop). This makes it more accessible: it can run on a small laptop, instead of requiring access to a supercomputing cluster. Example code is also [provided here](https://github.com/GenevieveBuckley/distributed-skeleton-analysis/blob/main/distributed-skeleton-analysis-with-dask.ipynb).
 
 ## Contents
 
@@ -252,11 +252,37 @@ Then finally we can calculate the summary branch statistics:
 from skan import summarize
 
 statistics = summarize(skel_obj)
+statistics.head()
 ```
+
+|    |   skeleton-id |   node-id-src |   node-id-dst |   branch-distance |   branch-type |   mean-pixel-value |   stdev-pixel-value |   image-coord-src-0 |   image-coord-src-1 |   image-coord-src-2 |   image-coord-dst-0 |   image-coord-dst-1 |   image-coord-dst-2 |   coord-src-0 |   coord-src-1 |   coord-src-2 |   coord-dst-0 |   coord-dst-1 |   coord-dst-2 |   euclidean-distance |
+|---:|--------------:|--------------:|--------------:|------------------:|--------------:|-------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|---------------------:|
+|  0 |             1 |             1 |             2 |           1       |             2 |           0.474584 |          0.00262514 |                  22 |                 400 |                 595 |                  22 |                 400 |                 596 |            22 |           400 |           595 |            22 |           400 |           596 |              1       |
+|  1 |             2 |             3 |             9 |           8.19615 |             2 |           0.464662 |          0.00299629 |                  37 |                 400 |                 622 |                  43 |                 392 |                 590 |            37 |           400 |           622 |            43 |           392 |           590 |             33.5261  |
+|  2 |             3 |            10 |            11 |           1       |             2 |           0.483393 |          0.00771038 |                  49 |                 391 |                 589 |                  50 |                 391 |                 589 |            49 |           391 |           589 |            50 |           391 |           589 |              1       |
+|  3 |             5 |            13 |            19 |           6.82843 |             2 |           0.464325 |          0.0139064  |                  52 |                 389 |                 588 |                  55 |                 385 |                 588 |            52 |           389 |           588 |            55 |           385 |           588 |              5       |
+|  4 |             7 |            21 |            23 |           2       |             2 |           0.45862  |          0.0104024  |                  57 |                 382 |                 587 |                  58 |                 380 |                 586 |            57 |           382 |           587 |            58 |           380 |           586 |              2.44949 |
+
+
+```python
+statistics.describe()
+```
+
+|       |   skeleton-id |   node-id-src |   node-id-dst |   branch-distance |   branch-type |   mean-pixel-value |   stdev-pixel-value |   image-coord-src-0 |   image-coord-src-1 |   image-coord-src-2 |   image-coord-dst-0 |   image-coord-dst-1 |   image-coord-dst-2 |   coord-src-0 |   coord-src-1 |   coord-src-2 |   coord-dst-0 |   coord-dst-1 |   coord-dst-2 |   euclidean-distance |
+|:------|--------------:|--------------:|--------------:|------------------:|--------------:|-------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|---------------------:|
+| count |      1095     |       1095    |       1095    |        1095       |  1095         |        1095        |      1095           |            1095     |            1095     |           1095      |            1095     |            1095     |           1095      |      1095     |      1095     |     1095      |      1095     |      1095     |     1095      |            1095      |
+| mean  |      2089.38  |      11520.1  |      11608.6  |          22.9079  |     2.00091   |           0.663422 |         0.0418607   |             591.939 |             430.303 |            377.409  |             594.325 |             436.596 |            373.419  |       591.939 |       430.303 |      377.409  |       594.325 |       436.596 |      373.419  |             190.13   |
+| std   |       636.377 |       6057.61 |       6061.18 |          24.2646  |     0.0302199 |           0.242828 |         0.0559064   |             174.04  |             194.499 |             97.0219 |             173.353 |             188.708 |             96.8276 |       174.04  |       194.499 |       97.0219 |       173.353 |       188.708 |       96.8276 |             151.171  |
+| min   |         1     |          1    |          2    |           1       |     2         |           0.414659 |         6.79493e-06 |              22     |              39     |            116      |              22     |              39     |            114      |        22     |        39     |      116      |        22     |        39     |      114      |               0      |
+| 25%   |      1586     |       6215.5  |       6429.5  |           1.73205 |     2         |           0.482    |         0.00710439  |             468.5   |             278.5   |            313      |             475     |             299.5   |            307      |       468.5   |       278.5   |      313      |       475     |       299.5   |      307      |              72.6946 |
+| 50%   |      2431     |      11977    |      12010    |          16.6814  |     2         |           0.552626 |         0.0189069   |             626     |             405     |            388      |             627     |             410     |            381      |       626     |       405     |      388      |       627     |       410     |      381      |             161.059  |
+| 75%   |      2542.5   |      16526.5  |      16583    |          35.0433  |     2         |           0.768359 |         0.0528814   |             732     |             579     |            434      |             734     |             590     |            432      |       732     |       579     |      434      |       734     |       590     |      432      |             265.948  |
+| max   |      8034     |      26820    |      26822    |         197.147   |     3         |           1.29687  |         0.357193    |             976     |             833     |            622      |             976     |             841     |            606      |       976     |       833     |      622      |       976     |       841     |      606      |             737.835  |
 
 Success!
 
 We've achieved distributed skeleton analysis with Dask.
+You can see the example notebook containing the full details of the skeleton analysis [here](https://github.com/GenevieveBuckley/distributed-skeleton-analysis/blob/main/distributed-skeleton-analysis-with-dask.ipynb).
 
 ## What's next?
 
@@ -266,5 +292,5 @@ A good next step is modifing the [skan](https://github.com/jni/skan) library cod
 
 If you'd like to get involved, there are a couple of options:
 
-1. Try a similar analysis on your own data. You can share or ask questions in the Dask slack or [on twitter](twitter.com/dask_dev).
+1. Try a similar analysis on your own data. The notebook with the full example code is [available here](https://github.com/GenevieveBuckley/distributed-skeleton-analysis/blob/main/distributed-skeleton-analysis-with-dask.ipynb). You can share or ask questions in the [Dask slack](https://join.slack.com/t/dask/shared_invite/zt-mfmh7quc-nIrXL6ocgiUH2haLYA914g) or [on twitter](twitter.com/dask_dev).
 2. Help add support for distributed skeleton analysis to skan. Head on over to the [skan issues page](https://github.com/jni/skan/issues/) and leave a comment if you'd like to join in.
