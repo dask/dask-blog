@@ -67,6 +67,8 @@ All the image pre-processing steps will be done with [dask-image](http://image.d
 
 We use [skan](https://jni.github.io/skan/) as the backbone of our analysis pipeline. [skan](https://jni.github.io/skan/) is a library for skeleton image analysis. Given a skeleton image, it can describe statistics of the branches. To make it fast, the library is accelerated with [numba](https://numba.pydata.org/) (if you're curious, you can hear more about that in [this talk](https://www.youtube.com/watch?v=0pUPNMglnaE) and its [related notebook](https://github.com/jni/skan-talk-scipy-2019)).
 
+There is an example notebook containing the full details of the skeleton analysis [available here](https://github.com/GenevieveBuckley/distributed-skeleton-analysis/blob/main/distributed-skeleton-analysis-with-dask.ipynb). You can read on to hear just the highlights.
+
 ## Results
 
 The statistics from the blood vessel branches in the healthy and herniated lung shows clear differences between the two.
