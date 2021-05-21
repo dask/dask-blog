@@ -84,13 +84,14 @@ have noticed
 1.  an increased sensitivity to version mismatches (as we change the Dask
     protocol different versions of Dask can no longer talk to each other well)
 2.  releases with stability issues (2020.12 was particularly rough)
-3.  ...
+3.  [tighter pinning](https://github.com/dask/community/issues/155) between dask and distributed versions during releases
 
 
 ### How this affects you tomorrow
 
-Literally tomorrow we're merging in a PR to change the default behavior when
-moving high level graphs to the scheduler for Dask Dataframes.  This should result in much
+We've merged in a [PR](https://github.com/dask/dask/pull/7620)
+to change the default behavior when moving [high level graphs](https://docs.dask.org/en/latest/high-level-graphs.html)
+to the scheduler for Dask Dataframes.  This should result in much
 less delay when submitting large computations and almost no delay in
 optimization.  It also opens up a conduit for us to send *a lot* more semantic
 information to the scheduler about your computation, which can result in new
