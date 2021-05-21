@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Dask User Summit 2021
+title: Stability of the Dask library
 author: Matthew Rocklin
 theme: twitter
 ---
