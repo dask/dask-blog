@@ -35,9 +35,11 @@ Who came?
 There was a strong geoscience focus.
 
 link to panel discussion on YouTube
-
+https://www.youtube.com/watch?v=WlSw7rhwGrA&list=PLJ0vO2F_f6OAXBfb_SAF2EbJve9k1vkQX&index=4
 
 Other talks
+
+Full playlist for the workshop here: https://www.youtube.com/playlist?list=PLJ0vO2F_f6OAXBfb_SAF2EbJve9k1vkQX
 
 TALK: Draga Doncila Pop, Interactive visualization and near real-time analysis on out-of-core satellite image
 
@@ -52,3 +54,16 @@ TALK: Nick Mortimer, Making the most of your schedule: From HPC to Local Cluster
 
 
 a call to action?
+1.
+setting up an Oceania Pangeo group - how to get involved
+https://confirmsubscription.com/h/j/E30A9F4EAC96EA73
+Thomas Moore, Paige Martin, and others
+(better if Pangeo is integrated with NCI 'national computing infrastructure')
+(also put this in the executive summary)
+
+2.
+Some people in the Pangeo community might be aware of the Python for Atmosphere and Ocean Science (PyAOS) website, which was established a number of years ago to provide information and resources to the user community:
+https://pyaos.github.io/
+In order to keep the site up-to-date, we are launching our first ever PyAOS census. It would be great if members of the Pangeo community could take a few minutes to fill out the survey:
+https://forms.gle/L84W7bsxmP86G3Ji9
+Please feel free to circulate the census link to anyone and everyone you know who uses Python in the atmosphere and ocean sciences. Once the results come in I’ll make the data available on the PyAOS GitHub repo and/or publish it on Zenodo so that those who are interested can take a look.
