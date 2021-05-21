@@ -12,7 +12,7 @@ theme: twitter
 Dask Down Under was a special event held for the first time during the 2021 Dask Summit.
 It featured talks, tutorials, and events tailored specifically for an Australian (and wider Oceania) audience.
 
-To get involved in the new Oceania Pangeo community group,
+To get involved in the new Pangeo Oceania community group,
 [register your interest here](https://confirmsubscription.com/h/j/E30A9F4EAC96EA73).
 
 
@@ -73,7 +73,7 @@ Featured talks include:
 
 Here's how you can get involved:
 
-1. Several people have discussed setting up a new Oceania Pangeo group. You can
+1. Several people have discussed setting up a new Pangeo Oceania group. You can
 [register your interest here](https://confirmsubscription.com/h/j/E30A9F4EAC96EA73).
 
 2. The 2021 Python for Atmosphere and Ocean Science (PyAOS) Census is out now. Please take a moment to [fill out the survey](https://forms.gle/L84W7bsxmP86G3Ji9)
