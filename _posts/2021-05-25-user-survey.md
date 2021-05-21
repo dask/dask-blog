@@ -10,7 +10,7 @@ theme: twitter
 
 The Dask User Survey is out again! Tell us how you use Dask, and help us make it better for everyone.
 
-[Click this link to take the survey](https://docs.google.com/forms/d/e/1FAIpQLSfio2RIQGIQsX1QTJh4JXmTFK8s-7BbsR0VnfmsWXu1Ccb2Yw/viewform).
+[Click this link to take the survey](https://forms.gle/F7QSGpSHwBWu8NCg8).
 
 ## Why take the survey?
 
