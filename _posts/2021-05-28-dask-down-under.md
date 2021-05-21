@@ -76,6 +76,8 @@ Here's how you can get involved:
 1. Several people have discussed setting up a new Pangeo Oceania group. You can
 [register your interest here](https://confirmsubscription.com/h/j/E30A9F4EAC96EA73).
 
+    > Soon we'll start holding regular Pangeo Oceania meetups for sharing information, support, training, and workflow advocacy across our region.  We look forward to you helping to shape the Pangeo Oceania community. And if you have a friend or colleague that should be here too, please share this sign-up link: http://bit.ly/Pangeo_email_signup
+
 2. The Python for Atmosphere and Ocean Science (PyAOS) provides information and resources to the user community: https://pyaos.github.io/
 To keep the site up-to-date, the first ever PyAOS census is being conducted. It would be great if Python users in the atmosphere and/or ocean science community could take a few minutes to fill out the survey.
 https://forms.gle/L84W7bsxmP86G3Ji9
