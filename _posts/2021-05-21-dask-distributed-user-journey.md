@@ -91,7 +91,7 @@ Organisations who have many users trying to perform large compute workloads will
 
 The platforms your organisation has will be the result of many somewhat arbitrary technology choices. What programming languages does your company use? What deals did vendors offer at the time of procurement? What skills do the current IT staff have? What did your CTO have for breakfast the day they chose a vendor?
 
-I'm not saying these decisions are made thoughtlessly, but the criteria that are considered are often orthogonal to how the resource will ultimately be used. Within Dask we don't care which platform decisions your organisations make and try to build deployment tools for as many popular platforms as we can including:
+I'm not saying these decisions are made thoughtlessly, but the criteria that are considered are often orthogonal to how the resource will ultimately be used. At Dask we don't care which platform decisions your organisations make. We try to build deployment tools for as many popular platforms as we can including:
 
 - Hadoop via [dask-yarn](https://github.com/dask/dask-yarn)
 - Kubernetes via [dask-kubernetes](https://github.com/dask/dask-kubernetes) and the [helm chart](https://github.com/dask/helm-chart)
