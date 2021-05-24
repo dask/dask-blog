@@ -98,13 +98,13 @@ I'm not saying these decisions are made thoughtlessly, but the criteria that are
 - HPC (with schedulers like SLURM, PBS and SGE) via [dask-jobqueue](https://github.com/dask/dask-jobqueue)
 - Cloud platforms (including AWS, Azure and GCP) with [dask-cloudprovider](https://github.com/dask/dask-cloudprovider)
 
-As a user within these organisations you may have been onboarded to one of these platforms. You've probably been given some credentials and a little training on how to launch jobs on it.
+As a user within an organisations you may have been onboarded to one of these platforms. You've probably been given some credentials and a little training on how to launch jobs on it.
 
 The `dask-foo` tools listed above are designed to sit on top of those platforms and submit jobs on your behalf as if they were individual compute jobs. But instead of submitting a Python script to the platform we submit Dask schedulers and workers and then connect to them to leverage the provisioned resource. Clusters on top of clusters.
 
 With this approach your IT team has full control over the compute resource. They can ensure folks get their fair share with quotas and queues. But you as a user gets the same Dask experience you are used to on your local machine.
 
-Your data may be in a slightly different place on these platforms though. Perhaps you are on the cloud and your data is in object storage for example. Thanks to tools built on [fsspec](https://filesystem-spec.readthedocs.io/en/latest/) like [s3fs](https://github.com/dask/s3fs) or [adlfs](https://pypi.org/project/adlfs/) we can read this data in pretty much the same way. So still not much change to your workflow.
+Your data may be in a slightly different place on these platforms though. Perhaps you are on the cloud and your data is in object storage for example. Thankfully we have tools built on [fsspec](https://filesystem-spec.readthedocs.io/en/latest/) like [s3fs](https://github.com/dask/s3fs) or [adlfs](https://pypi.org/project/adlfs/) we can read this data in pretty much the same way. So still not much change to your workflow.
 
 ```python
 from dask.distributed import Client
@@ -114,7 +114,7 @@ import dask.dataframe as dd
 cluster = AzureVMCluster(resource_group="<resource group>",
                          vnet="<vnet>",
                          security_group="<security group>",
-                         n_workers=1)
+                         n_workers=10)
 client = Client(cluster)
 
 df = dd.read_csv("adl://.../2018-*-*.csv")
@@ -129,9 +129,11 @@ The motivation to move to a managed service is often driven at the organisationa
 
 At the end of the day being an expert in deploying distributed systems is probably not listed in your job description and you probably have something more important to be getting on with like data science, finance, physics, biology or whatever it is Dask is helping you do.
 
-You may also be feeling some pressure from IT. You are running clusters on top of clusters and to them your Dask cluster is a black box and this can make them comfortable as they are the ones responsible for this hardware. It is common to feel constrained by your IT team, I know because I've been a sysadmin and used to constrain folks. But the motivations of your IT team are good ones, they are trying to save the organisation money, make best use of limited resources and ultimately get the IT out of your way so that you can get on with your job. So lean into this, engage with them, share your Dask knowledge and offer to become a pilot user for whatever they end up building.
+You may also be feeling some pressure from IT. You are running clusters on top of clusters and to them your Dask cluster is a black box and this can make them comfortable as they are the ones responsible for this hardware. It is common to feel constrained by your IT team, I know because I've been a sysadmin and used to constrain folks. But the motivations of your IT team are good ones, they are trying to save the organisation money, make best use of limited resources and ultimately get the IT out of your way so that you can get on with your job. So lean into this, engage with them, share your Dask knowledge and offer to become a pilot user for whatever solution they end up building.
 
 One approach you could recommend they take is to deploy [Dask Gateway](https://gateway.dask.org/). This can be deployed by an administrator and provides a central hub which launches Dask clusters on behalf of users. It supports many types of authentication so it can hook into whatever your organisation uses and supports many of the same backend compute platforms that the standalone tools do, including Kubernetes, Hadoop and HPC.
+
+This will allow them to ensure security settings are correct and consistent across clusters. If you are using containers they probably want you to use some official images which are regularly updated and vulnerability scanned. It may also give them more insight into what types of workloads folks are running and plan future systems more accurately. By using Dask Gateway this puts the control and responsibility of these things onto their side of the fence.
 
 Users will need to authenticate with the gateway, but then can launch Dask clusters in a platform agnostic way.
 
@@ -151,7 +153,7 @@ df = dd.read_csv("/data/.../2018-*-*.csv")
 df.groupby(df.account_id).balance.sum().compute()
 ```
 
-Again reading your data depends on how it is stored on the compute platform you are using, but the changes required are minimal.
+Again reading your data requires some knowledge on how it is stored on the underlying compute platform you the gateway is using, but the changes required are minimal.
 
 ## Managed services
 
@@ -159,9 +161,9 @@ If your organisation is too small to have an IT team to manage this for you, or 
 
 ## Future platforms
 
-Today the large cloud vendors also have managed data science platforms including [AWS Sagemaker](https://aws.amazon.com/sagemaker/), [Azure Machine Learning](https://azure.microsoft.com/en-gb/services/machine-learning/) and [Google Cloud AI Platform](https://cloud.google.com/vertex-ai). But these do not include Dask as a service.
+Today the large cloud vendors have managed data science platforms including [AWS Sagemaker](https://aws.amazon.com/sagemaker/), [Azure Machine Learning](https://azure.microsoft.com/en-gb/services/machine-learning/) and [Google Cloud AI Platform](https://cloud.google.com/vertex-ai). But these do not include Dask as a service.
 
-While the cloud services are focussed on batch processing and machine learning today these companies also have managed services for Spark. With Dask's increasing popularity it wouldn't surprise me if managed Dask services are released by these cloud vendors in the years to follow.
+These cloud services are focussed on batch processing and machine learning today, but these clouds also have managed services for Spark and other compute cluster offerings. With Dask's increasing popularity it wouldn't surprise me if managed Dask services are released by these cloud vendors in the years to follow.
 
 ## Summary
 
