@@ -87,7 +87,7 @@ have noticed
 3.  [tighter pinning](https://github.com/dask/community/issues/155) between dask and distributed versions during releases
 
 
-### How this affects you tomorrow
+### How this will affect you
 
 We've merged in a [PR](https://github.com/dask/dask/pull/7620)
 to change the default behavior when moving [high level graphs](https://docs.dask.org/en/latest/high-level-graphs.html)
