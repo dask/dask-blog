@@ -25,7 +25,7 @@ We often introduce the concept of the distributed scheduler early on, but you do
 # Switching from this
 import pandas as pd
 df = pd.read_csv('/data/.../2018-*-*.csv')
-df.groupby(df.account_id).balance.sum().compute()
+df.groupby(df.account_id).balance.sum()
 
 # To this
 import dask.dataframe as dd
@@ -51,7 +51,7 @@ df.groupby(df.account_id).balance.sum().compute()
 
 ## Breaking free from your machine
 
-Once you get used to task graphs and work scheduling you may begin thinking about how you can expand your computation beyond your computer.
+Once you get used to task graphs and work scheduling you may begin thinking about how you can expand your computation beyond your local machine.
 
 Our code doesn't really need to change much, we are already connecting a client and doing Dask work, all we need are more networked machines with the same user environments, data, etc.
 
@@ -89,9 +89,9 @@ Using (and abusing) hardware like desktops and shared servers will get you reaso
 
 Organisations who have many users trying to perform large compute workloads will probably be thinking about or already have some kind of platform that is designated for running this work.
 
-The platforms your organisation has will be the result of many arbitrary technology choices. What programming languages does your company use? What deals did vendors offer at the time of procurement? What skills do the current IT staff have? What did your CTO have for breakfast the day they chose a vendor?
+The platforms your organisation has will be the result of many somewhat arbitrary technology choices. What programming languages does your company use? What deals did vendors offer at the time of procurement? What skills do the current IT staff have? What did your CTO have for breakfast the day they chose a vendor?
 
-Within Dask we don't care which platform decisions your organisations make and try to build deployment tools for as many popular platforms as we can including:
+I'm not saying these decisions are made thoughtlessly, but the criteria that are considered are often orthogonal to how the resource will ultimately be used. Within Dask we don't care which platform decisions your organisations make and try to build deployment tools for as many popular platforms as we can including:
 
 - Hadoop via [dask-yarn](https://github.com/dask/dask-yarn)
 - Kubernetes via [dask-kubernetes](https://github.com/dask/dask-kubernetes) and the [helm chart](https://github.com/dask/helm-chart)
@@ -123,9 +123,15 @@ df.groupby(df.account_id).balance.sum().compute()
 
 ## Centralizing your Dask resources
 
-When your organisation gets enough folks adopting and using Dask it may be time for your IT team to step in and provide you with a managed service. Having many users submitting many ad-hoc clusters in a myriad of ways is likely to be less efficient than a centralised managed and more importantly ordained service from IT.
+When your organisation gets enough folks adopting and using Dask it may be time for your IT team to step in and provide you with a managed service. Having many users submitting many ad-hoc clusters in a myriad of ways is likely to be less efficient than a centrally managed and more importantly ordained service from IT.
 
-One approach they can take is to deploy [Dask Gatweay](https://gateway.dask.org/). This can be deployed by an administrator and provides a central hub which launches Dask clusters on behalf of users. It supports many types of authentication so it can hook into whatever your organisation uses and supports many of the same backend compute platforms that the standalone tools do, including Kubernetes, Hadoop and HPC.
+The motivation to move to a managed service is often driven at the organisational level rather than by individuals. Once you've reached this stage of Dask usage you're probably quite comfortable with your workflows and it may be inconvenient to change them. However the level of Dask deployment knowledge you've acquired to reach this stage is probably quite large, and as Dask usage at your organization grows it's not practical to expect everyone to reach the same level of competency.
+
+At the end of the day being an expert in deploying distributed systems is probably not listed in your job description and you probably have something more important to be getting on with like data science, finance, physics, biology or whatever it is Dask is helping you do.
+
+You may also be feeling some pressure from IT. You are running clusters on top of clusters and to them your Dask cluster is a black box and this can make them comfortable as they are the ones responsible for this hardware. It is common to feel constrained by your IT team, I know because I've been a sysadmin and used to constrain folks. But the motivations of your IT team are good ones, they are trying to save the organisation money, make best use of limited resources and ultimately get the IT out of your way so that you can get on with your job. So lean into this, engage with them, share your Dask knowledge and offer to become a pilot user for whatever they end up building.
+
+One approach you could recommend they take is to deploy [Dask Gateway](https://gateway.dask.org/). This can be deployed by an administrator and provides a central hub which launches Dask clusters on behalf of users. It supports many types of authentication so it can hook into whatever your organisation uses and supports many of the same backend compute platforms that the standalone tools do, including Kubernetes, Hadoop and HPC.
 
 Users will need to authenticate with the gateway, but then can launch Dask clusters in a platform agnostic way.
 
@@ -151,9 +157,11 @@ Again reading your data depends on how it is stored on the compute platform you 
 
 If your organisation is too small to have an IT team to manage this for you, or you just have a preference for managed services, there are startups popping up to provide this to you as a service including [Coiled](https://coiled.io/) and [Saturn Cloud](https://www.saturncloud.io/s/home/).
 
-The large cloud vendors also have managed data science platforms including [AWS Sagemaker](https://aws.amazon.com/sagemaker/), [Azure Machine Learning](https://azure.microsoft.com/en-gb/services/machine-learning/) and [Google Cloud AI Platform](https://cloud.google.com/vertex-ai).
+## Future platforms
 
-While the cloud services are focussed on batch processing and machine learning today these companies also have managed services for Spark and with Dask's increasing popularity it wouldn't surprise me if more managed Dask services appear in the years to follow.
+Today the large cloud vendors also have managed data science platforms including [AWS Sagemaker](https://aws.amazon.com/sagemaker/), [Azure Machine Learning](https://azure.microsoft.com/en-gb/services/machine-learning/) and [Google Cloud AI Platform](https://cloud.google.com/vertex-ai). But these do not include Dask as a service.
+
+While the cloud services are focussed on batch processing and machine learning today these companies also have managed services for Spark. With Dask's increasing popularity it wouldn't surprise me if managed Dask services are released by these cloud vendors in the years to follow.
 
 ## Summary
 
@@ -161,4 +169,4 @@ One of the most powerful features of Dask is that your code can stay pretty much
 
 But scaling up requires both user and organisational growth and folks already seem to be treading a common path on that journey.
 
-Hopefully this post will give you an idea of where you are on that path and where to jump to next. Whether you're new to the community and discovering the power of multi-core computing or an hold hand who is trying to wrangle hundreds of users who all love Dask, good luck!
+Hopefully this post will give you an idea of where you are on that path and where to jump to next. Whether you're new to the community and discovering the power of multi-core computing or an old hand who is trying to wrangle hundreds of users who all love Dask, good luck!
