@@ -15,7 +15,7 @@ We covered local deployments, SSH, Hadoop, Kubernetes, the Cloud and managed ser
 
 I wanted to share the journey that I've seen many Dask users take in the hopes that you may recognize yourself as being somewhere along this path and it may inform you where to look next.
 
-## In the begnning
+## In the beginning
 
 As a user who is new to Dask you're likely working your way through [the documentation](https://docs.dask.org/en/latest/index.html) or perhaps [a tutorial](https://github.com/dask/dask-tutorial).
 
