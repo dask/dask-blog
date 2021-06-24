@@ -8,7 +8,7 @@ theme: twitter
 
 ## Executive Summary
 
-There is a lot of work happening in Dask right now on high level graphs. We'd like to share a snapshot of current work in this area. This post is for people interested in technical details of behind the scenes work improving performance in Dask. You don't need to know anything about this in order to use Dask.
+There is a lot of work happening in Dask right now on high level graphs. We'd like to share a snapshot of current work in this area. This post is for people interested in technical details of behind the scenes work improving performance in Dask. You don't need to know anything about it in order to use Dask.
 
 ## Contents
 
@@ -92,12 +92,12 @@ Followup work
 ### Summary
 ### Work to date
  
-Major work, open PR: Array slicing HighLevelGraph layer #7655 https://github.com/dask/dask/pull/7655
+Open PR: Array slicing HighLevelGraph layer #7655 https://github.com/dask/dask/pull/7655
 
 
-Small bugfix, open PR: SimpleShuffleLayer should compare parts_out with set(self.parts_out) #7787 https://github.com/dask/dask/pull/7787
+Merged PR by Genevieve Buckley: SimpleShuffleLayer should compare parts_out with set(self.parts_out) #7787 https://github.com/dask/dask/pull/7787
 
-Small fix, merged: Make Layer get_output_keys officially an abstract method #7775 https://github.com/dask/dask/pull/7775
+Merged PR by Genevieve Buckley: Make Layer get_output_keys officially an abstract method #7775 https://github.com/dask/dask/pull/7775
 
 
 Array slicing
