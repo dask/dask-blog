@@ -9,7 +9,7 @@ theme: twitter
 
 ## Executive Summary
 
-Dask Down Under was a special event held for the first time during the 2021 Dask Summit.
+Dask Down Under was a special event held for the first time last month during the 2021 Dask Summit.
 It featured talks, tutorials, and events tailored specifically for an Australian (and wider Oceania) audience.
 
 To get involved in the new Pangeo Oceania community group,
