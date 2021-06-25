@@ -47,9 +47,9 @@ The [full playlist for the workshop is available here](https://www.youtube.com/p
 
 ### Panel discussion
 
-A panel discussion was held, bringing together a diverse group of users from novice to expert, academic to commercial. We hope this discussion will start a conversation about using Dask in Australia, how we build our community, contribute and stay in touch with the rest of the world. You can [watch it here](https://www.youtube.com/embed/WlSw7rhwGrA?list=PLJ0vO2F_f6OAXBfb_SAF2EbJve9k1vkQX):
+A panel discussion was held, bringing together a diverse group of users from novice to expert, academic to commercial. We hope this discussion will start a conversation about using Dask in Australia, how we build our community, contribute and stay in touch with the rest of the world. You can [watch it here](https://www.youtube.com/watch?v=mJTIcY1NLGg):
 
-<iframe width="900" height="506" src="https://www.youtube.com/embed/WlSw7rhwGrA?list=PLJ0vO2F_f6OAXBfb_SAF2EbJve9k1vkQX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="900" height="506" src="https://www.youtube.com/watch?v=mJTIcY1NLGg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 Moderator: Draga Doncila Pop\
 Panelists:
@@ -63,11 +63,11 @@ Panelists:
 The [full playlist for the workshop is available here](https://www.youtube.com/playlist?list=PLJ0vO2F_f6OAXBfb_SAF2EbJve9k1vkQX).
 
 Featured talks include:
-* Draga Doncila Pop, Interactive visualization and near real-time analysis on out-of-core satellite images
-* Tisham Dhar: Dask DevOps for Remote Sensing
-* Kirill Kouzoubov, Patterns for large scale temporal processing of geo-spatial data using Dask
-* Ben Leighton and Kim Opie, Image Processing Using Dask - Using dask and skimage to identity vegetation morphology across the Australian landscape
-* Nick Mortimer, Making the most of your schedule: From HPC to Local Cluster
+* Draga Doncila Pop, [Interactive visualization and near real-time analysis on out-of-core satellite images](https://www.youtube.com/watch?v=10Ws59NGDaE&list=PLJ0vO2F_f6OAXBfb_SAF2EbJve9k1vkQX&index=2)
+* Tisham Dhar: [Dask DevOps for Remote Sensing](https://www.youtube.com/watch?v=MderTABZvyA&list=PLJ0vO2F_f6OAXBfb_SAF2EbJve9k1vkQX&index=3)
+* Kirill Kouzoubov: [Patterns for large scale temporal processing of geo-spatial data using Dask](https://www.youtube.com/watch?v=9-zBmUSk29Q&list=PLJ0vO2F_f6OAXBfb_SAF2EbJve9k1vkQX&index=4)
+* Ben Leighton and Kim Opie: [Image Processing Using Dask - Using dask and skimage to identity vegetation morphology across the Australian landscape](https://www.youtube.com/watch?v=Fbh07T1K_IE&list=PLJ0vO2F_f6OAXBfb_SAF2EbJve9k1vkQX&index=6)
+* Nick Mortimer: [Making the most of your schedule: From HPC to Local Cluster](https://www.youtube.com/watch?v=YF_GNJdQRQ4&list=PLJ0vO2F_f6OAXBfb_SAF2EbJve9k1vkQX&index=7)
 
 ## What's next?
 
