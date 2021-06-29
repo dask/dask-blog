@@ -13,47 +13,45 @@ There is a lot of work happening in Dask right now on high level graphs. We'd li
 ## Contents
 
 * [Brief background](#brief-background)
-* [Blockwise layers](#blockwise-layers)
+* [Blockwise layers progress](#blockwise-layers-progress)
 * [A high level graph for `map_overlap`](#a-high-level-graph-for-`map_overlap`)
 * [Slicing and high level graphs](#slicing-and-high-level-graphs)
 * [Visualization](#visualization)
 * [Documentation](#documentation)
 
 ## Brief background
-What are high level graphs?
+### What are high level graphs?
 
 
-High level graphs are a more compact representation of the mapping
+High level graphs are a more compact representation of instructions needed to generate the full low level task graph.
+The documentation page on Dask high level graphs is here:
 https://docs.dask.org/en/latest/high-level-graphs.html
 
-Why are they useful?
+### Why are they useful?
 
-They are useful 
+High level graphs are useful for faster scheduling.
+Instead of sending very large task graphs between the scheduler and the workers, we can instead send the smaller high level graph representation to the worker. Reducing the amount of data that needs to be passed around allows us to improve the overall performance.
 
-[faster scheduling](https://blog.dask.org/2020/07/21/faster-scheduling)
+You can read more about faster scheduling in [our previous blogpost](https://blog.dask.org/2020/07/21/faster-scheduling).
+More recently, Adam Breindel has written about this over on the Coiled blog ([link](https://coiled.io/dask-under-the-hood-scheduler-refactor/)).
 
-Adam Breindel's post: https://coiled.io/dask-under-the-hood-scheduler-refactor/
 
-> "Starting with Dask 2021.05.0, Dask DataFrame computations will start sending HighLevelGraph's directly from the client to the scheduler by default. Because of this, users should observe a much smaller delay between when they call .compute() and when the corresponding tasks begin running on workers for large DataFrame computations. This is part of Dask’s ongoing performance improvement efforts." https://coiled.io/dask-heartbeat-by-coiled-2021-06-10/
+### Do I need to change my code to use them?
 
-Do I need to change my code to use them?
+No, you won't need to change anything. This work is being done under the hood in Dask, and you should see some speed improvements without having to change anything in your code.
 
-No, you won't need to change anything. This work is being done under the hood in Dask, and you should see some speed improvements without having to change anything about 
+In fact, you might already be benefitting from high level graphs:
+> "Starting with Dask 2021.05.0, Dask DataFrame computations will start sending HighLevelGraph's directly from the client to the scheduler by default. Because of this, users should observe a much smaller delay between when they call .compute() and when the corresponding tasks begin running on workers for large DataFrame computations" https://coiled.io/dask-heartbeat-by-coiled-2021-06-10/
 
-----
-#### Status
-#### Work to date
-#### Ongoing work
-#### What's next?
+Read on for a snapshot of progress in other areas.
 
-## Blockwise layers
-
+## Blockwise layers progress
 ### Summary
 
 The `Blockwise` high level graph layer was introduced in the 2020.12.0 Dask release. Since then, there has been a lot of effort made to use `Blockwise` high level graph layer whereever possible for improved performance, most especially for IO operations. The following is a non-exhaustive list.
 
 ### Work to date
-Highlights include, in no particular order:
+Highlights include (in no particular order):
 
 1. Merged PR by Rick Zamora: [Use Blockwise for DataFrame IO (parquet, csv, and orc) #7415](https://github.com/dask/dask/pull/7415)
 2. Merged PR by Rick Zamora: [Move read_hdf to Blockwise 7625](https://github.com/dask/dask/pull/7625)
@@ -61,54 +59,55 @@ Highlights include, in no particular order:
 4. Merged PR by John Kirkham: [Rewrite da.fromfunction w/ da.blockwise #7704](https://github.com/dask/dask/pull/7704)
 
 ### Ongoing work
-Lots of other work with `Blockwise` is currently in progress. In no particular order:
+Lots of other work with `Blockwise` is currently in progress:
 
 1. Ian Rose: [Blockwise array creation redux #7417](https://github.com/dask/dask/pull/7417). This PR creates blockwise implementations for the `from_array` and `from_zarr` functions.
 2. Rick Zamora: [Move DataFrame from_array and from_pandas to Blockwise #7628](https://github.com/dask/dask/pull/7628)
 3. Richard Berry: [Use BlockwiseDep for map_blocks with block_id or block_info #7686](https://github.com/dask/dask/pull/7686)
 
-
 ## A high level graph for `map_overlap`
-
 ### Summary
 
-Investigating a high level graph for Dask's `map_overlap` is a project driven by user needs. Users have told us that the time taken simply to generate the task graph before any computation takes place can sometimes be unacceptably large.This is a big user experience problem, and so 
+Investigating a high level graph for Dask's `map_overlap` is a project driven by user needs. People have told us that the time taken just to generate the task graph (before any actual computation takes place) can sometimes be a big user experience problem. So, we're looking in to ways to improve it.
 
 ### Work to date
 
 1. Merged PR by Genevieve Buckley: [A HighLevelGraph abstract layer for map_overlap #7595](https://github.com/dask/dask/pull/7595)
 
-This PR defers much of the computation involved in creating the Dask task graph, but does not eliminate it. 
+This PR defers much of the computation involved in creating the Dask task graph, but does not eliminate it. Further optimization is needed.
 
 ### Ongoing work
 
-optimization
-
-Followup work
+Followup work includes:
 1. Find number of tasks in overlap layer without materializing the layer #7788 https://github.com/dask/dask/issues/7788
 2. Implement cull method for ArrayOverlapLayer #7789 https://github.com/dask/dask/issues/7789
 
 ## Slicing and high level graphs
 ### Summary
+
+Profiling `map_overlap`, we saw that a lot of time is being spent in slicing operations. So, 
+
+Meanwhile, Rick Zamora has been working on the dataframe side of Dask, using high level graphs to improve dataframe slicing/selections.
+
 ### Work to date
- 
-Open PR: Array slicing HighLevelGraph layer #7655 https://github.com/dask/dask/pull/7655
 
+A couple of minor bugfixes/improvements:
+1. Merged PR by Genevieve Buckley: [SimpleShuffleLayer should compare parts_out with set(self.parts_out) #7787](https://github.com/dask/dask/pull/7787)
 
-Merged PR by Genevieve Buckley: SimpleShuffleLayer should compare parts_out with set(self.parts_out) #7787 https://github.com/dask/dask/pull/7787
+2. Merged PR by Genevieve Buckley: [Make Layer get_output_keys officially an abstract method #7775](https://github.com/dask/dask/pull/7775)
 
-Merged PR by Genevieve Buckley: Make Layer get_output_keys officially an abstract method #7775 https://github.com/dask/dask/pull/7775
+### Ongoing work
 
+1. Rick Zamora: [[WIP] Add DataFrameGetitemLayer to simplify HLG Optimizations #7663](https://github.com/dask/dask/pull/7663)
 
-Array slicing
-[Ian Rose](https://github.com/ian-r-rose)
-[Gabe Joseph](https://github.com/gjoseph92)
+2. Genevieve Buckley: [Array slicing HighLevelGraph layer #7655](https://github.com/dask/dask/pull/7655) (Note: benchmarking indicates that this approach is not substantially faster than the current )
 
-WIP, Rick: [WIP] Add DataFrameGetitemLayer to simplify HLG Optimizations #7663 https://github.com/dask/dask/pull/7663
 
 ## Visualization
 
 ### Summary
+
+We've also put some work into making better visualizations for Dask objects (including high level graphs).
 
 Defining a `_repr_html_` method for your classes is a great way to get nice HTML output when you're working with jupyter notebooks. You can read [this post](http://matthewrocklin.com/blog/2019/07/04/html-repr) to see more neat HTML representations in other scientific python libraries.
 
@@ -151,8 +150,11 @@ This gives us a much more meaningful representation, and is already being used b
 
 ## Documentation
 
-[Update HighLevelGraph documentation #7709](https://github.com/dask/dask/issues/7709)
+Finally, the documentation around high level graphs is sparse. This is because they're relatively new, and have also been undergoing quite a bit of change. However, this makes it difficult for people. We're planning to improve the documentation, for both users and devlopers of Dask.
 
-[Document dev process around high level graphs #7755](https://github.com/dask/dask/issues/7755)
+If you'd like to follow these discussions, or help out, you can subscribe to the issues:
+
+* For Dask users: [Update HighLevelGraph documentation #7709](https://github.com/dask/dask/issues/7709)
+* For Dask developers: [Document dev process around high level graphs #7755](https://github.com/dask/dask/issues/7755)
 
 
