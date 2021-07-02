@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Ragged output: how to handle awkward shaped results
+title: Ragged output, how to handle awkward shaped results
 author: Genevieve Buckley
 theme: twitter
 ---
