@@ -68,7 +68,7 @@ Lots of other work with `Blockwise` is currently in progress:
 ## A high level graph for map overlap
 ### Summary
 
-Investigating a high level graph for Dask's `map_overlap` is a project driven by user needs. People have told us that the time taken just to generate the task graph (before any actual computation takes place) can sometimes be a big user experience problem. So, we're looking in to ways to improve it.
+Investigating a high level graph for Dask's `map_overlap` is a project driven by [user needs](https://github.com/dask/dask/discussions/7404). People have told us that the time taken just to generate the task graph (before any actual computation takes place) can sometimes be a big user experience problem. So, we're looking in to ways to improve it.
 
 ### Work to date
 
