@@ -63,7 +63,7 @@ Lots of other work with `Blockwise` is currently in progress:
 
 1. Ian Rose: [Blockwise array creation redux #7417](https://github.com/dask/dask/pull/7417). This PR creates blockwise implementations for the `from_array` and `from_zarr` functions.
 2. Rick Zamora: [Move DataFrame from_array and from_pandas to Blockwise #7628](https://github.com/dask/dask/pull/7628)
-3. Richard Berry: [Use BlockwiseDep for map_blocks with block_id or block_info #7686](https://github.com/dask/dask/pull/7686)
+3. Bruce Merry: [Use BlockwiseDep for map_blocks with block_id or block_info #7686](https://github.com/dask/dask/pull/7686)
 
 ## A high level graph for map overlap
 ### Summary
