@@ -100,7 +100,7 @@ A couple of minor bugfixes/improvements:
 
 1. Rick Zamora: [[WIP] Add DataFrameGetitemLayer to simplify HLG Optimizations #7663](https://github.com/dask/dask/pull/7663)
 
-2. Genevieve Buckley: [Array slicing HighLevelGraph layer #7655](https://github.com/dask/dask/pull/7655) (Note: benchmarking indicates that this approach is not substantially faster than the current )
+2. Genevieve Buckley: [Array slicing HighLevelGraph layer #7655](https://github.com/dask/dask/pull/7655)
 
 
 ## Visualization
