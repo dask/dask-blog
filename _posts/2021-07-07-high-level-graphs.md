@@ -55,7 +55,7 @@ Highlights include (in no particular order):
 
 1. Merged PR by Rick Zamora: [Use Blockwise for DataFrame IO (parquet, csv, and orc) #7415](https://github.com/dask/dask/pull/7415)
 2. Merged PR by Rick Zamora: [Move read_hdf to Blockwise 7625](https://github.com/dask/dask/pull/7625)
-3. Merged PR by John Kirkham: [Move timeseries and daily-stock to Blockwise #7615](https://github.com/dask/dask/pull/7615)
+3. Merged PR by Rick Zamora: [Move timeseries and daily-stock to Blockwise #7615](https://github.com/dask/dask/pull/7615)
 4. Merged PR by John Kirkham: [Rewrite da.fromfunction w/ da.blockwise #7704](https://github.com/dask/dask/pull/7704)
 
 ### Ongoing work
@@ -63,7 +63,7 @@ Lots of other work with `Blockwise` is currently in progress:
 
 1. Ian Rose: [Blockwise array creation redux #7417](https://github.com/dask/dask/pull/7417). This PR creates blockwise implementations for the `from_array` and `from_zarr` functions.
 2. Rick Zamora: [Move DataFrame from_array and from_pandas to Blockwise #7628](https://github.com/dask/dask/pull/7628)
-3. Richard Berry: [Use BlockwiseDep for map_blocks with block_id or block_info #7686](https://github.com/dask/dask/pull/7686)
+3. Bruce Merry: [Use BlockwiseDep for map_blocks with block_id or block_info #7686](https://github.com/dask/dask/pull/7686)
 
 ## A high level graph for map overlap
 ### Summary
