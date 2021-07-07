@@ -55,7 +55,7 @@ Highlights include (in no particular order):
 
 1. Merged PR by Rick Zamora: [Use Blockwise for DataFrame IO (parquet, csv, and orc) #7415](https://github.com/dask/dask/pull/7415)
 2. Merged PR by Rick Zamora: [Move read_hdf to Blockwise 7625](https://github.com/dask/dask/pull/7625)
-3. Merged PR by John Kirkham: [Move timeseries and daily-stock to Blockwise #7615](https://github.com/dask/dask/pull/7615)
+3. Merged PR by Rick Zamora: [Move timeseries and daily-stock to Blockwise #7615](https://github.com/dask/dask/pull/7615)
 4. Merged PR by John Kirkham: [Rewrite da.fromfunction w/ da.blockwise #7704](https://github.com/dask/dask/pull/7704)
 
 ### Ongoing work
