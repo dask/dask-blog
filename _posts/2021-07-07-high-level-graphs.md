@@ -14,7 +14,7 @@ There is a lot of work happening in Dask right now on high level graphs. We'd li
 
 * [Brief background](#brief-background)
 * [Blockwise layers progress](#blockwise-layers-progress)
-* [A high level graph for `map_overlap`](#a-high-level-graph-for-`map_overlap`)
+* [A high level graph for map overlap](#a-high-level-graph-for-map-overlap)
 * [Slicing and high level graphs](#slicing-and-high-level-graphs)
 * [Visualization](#visualization)
 * [Documentation](#documentation)
@@ -65,7 +65,7 @@ Lots of other work with `Blockwise` is currently in progress:
 2. Rick Zamora: [Move DataFrame from_array and from_pandas to Blockwise #7628](https://github.com/dask/dask/pull/7628)
 3. Richard Berry: [Use BlockwiseDep for map_blocks with block_id or block_info #7686](https://github.com/dask/dask/pull/7686)
 
-## A high level graph for `map_overlap`
+## A high level graph for map overlap
 ### Summary
 
 Investigating a high level graph for Dask's `map_overlap` is a project driven by user needs. People have told us that the time taken just to generate the task graph (before any actual computation takes place) can sometimes be a big user experience problem. So, we're looking in to ways to improve it.
