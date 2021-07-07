@@ -130,7 +130,7 @@ Dask already uses HTML representations in lots of places (like the `Array` and `
 
 #### After (HTML representation):
 
-![Skeleton network of blood vessels within a healthy lung](/images/2021-highlevelgraph-html-repr.png)
+![HTML representation for a Dask high level graph](/images/2021-highlevelgraph-html-repr.png)
 #### After (text-only representation):
 ```python
 from dask.datasets import timeseries
