@@ -85,7 +85,7 @@ Followup work includes:
 ## Slicing and high level graphs
 ### Summary
 
-Profiling `map_overlap`, we saw that a lot of time is being spent in slicing operations. So, 
+Profiling `map_overlap`, we saw that a lot of time is being spent in slicing operations. So, slicing was a logical next step to investigate possible performance improvements with high level graphs.
 
 Meanwhile, Rick Zamora has been working on the dataframe side of Dask, using high level graphs to improve dataframe slicing/selections.
 
