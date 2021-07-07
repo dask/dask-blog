@@ -80,7 +80,7 @@ This PR defers much of the computation involved in creating the Dask task graph,
 
 Followup work includes:
 1. Find number of tasks in overlap layer without materializing the layer #7788 https://github.com/dask/dask/issues/7788
-2. Implement cull method for ArrayOverlapLayer #7789 https://github.com/dask/dask/issues/7789
+2. Implement cull method for ArrayOverlapLayer #7789 https://github.com/dask/dask/issues/7789 (culling is simplifying a Dask graph by removing unnecessary tasks)
 
 ## Slicing and high level graphs
 ### Summary
