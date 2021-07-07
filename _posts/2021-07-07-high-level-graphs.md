@@ -74,7 +74,7 @@ Investigating a high level graph for Dask's `map_overlap` is a project driven by
 
 1. Merged PR by Genevieve Buckley: [A HighLevelGraph abstract layer for map_overlap #7595](https://github.com/dask/dask/pull/7595)
 
-This PR defers much of the computation involved in creating the Dask task graph, but does not eliminate it. Further optimization is needed.
+This PR defers much of the computation involved in creating the Dask task graph, but does not does not reduce the total end-to-end computation time. Further optimization is therefore required.
 
 ### Ongoing work
 
