@@ -75,7 +75,7 @@ These libraries explicitly state that they use the Diataxis Framework. I will st
 
 Django uses the top nav for project-level links and the docs-level nav doesn't seem to really exist. There is a rather busy landing page which strongly pushes people into a special "intro" tutorial.
 
-<img src="/images/django-docs.png" width="50%">
+<img src="/images/django-docs.png" width="70%">
 
 They specifically refer to the framework, but then they also seem to be trying to bring together all the information about particular aspects of the library. This takes the form of sections like "The view layer" that has a bunch of links to tutorial, howto, explanation, and reference related to that particular feature.
 
@@ -83,11 +83,11 @@ They specifically refer to the framework, but then they also seem to be trying t
 
 Numpy has a stripped down landing page divided into "For Users" and "For developers/contributors". The top level nav has just "User Guide", "API Reference" and "Development" (no dropdowns).
 
-<img src="/images/numpy-docs.png" width="50%">
+<img src="/images/numpy-docs.png" width="70%">
 
 When you get into the "User Guide" there is an order to the pages that leads from "What is NumPy?" to "Installation", then "NumPy Quickstart" (a detour into "Numpy: the absolute basics for beginners") and then to "Numpy fundamentals".
 
-<img src="/images/numpy-user-guide.png" width="50%">
+<img src="/images/numpy-user-guide.png" width="70%">
 
 ## Dataframe Libraries
 These are the libraries that I consider the most similar to dask.
@@ -96,11 +96,11 @@ These are the libraries that I consider the most similar to dask.
 
 Pandas presents a stripped down landing page that forces the user into "Getting Started", "User guide", "API reference" or "Developer guide". The top-level nav are all just links (no drop-downs).
 
-<img src="/images/pandas-docs.png" width="50%">
+<img src="/images/pandas-docs.png" width="70%">
 
 The API reference is categorized by type of action that a user might take. Such as "Input/output" or "Series construction"
 
-<img src="/images/pandas-api-reference.png" width="50%">
+<img src="/images/pandas-api-reference.png" width="70%">
 
 "Getting Started" starts with installation and has its own tutorial that it tries to push people into. It also does comparisons with other tools.
 
@@ -112,7 +112,7 @@ Some interesting bits in here are the [FAQs/Gotchas](https://pandas.pydata.org/d
 
 The initial emphasis is on unsorted "API Reference", but there are subsections containing cookbook-style articles like "10 Minutes to cuDF and Dask-cuDF", "Basics", and "Input/Output".
 
-<img src="/images/cudf-docs.png" width="50%">
+<img src="/images/cudf-docs.png" width="70%">
 
 Tutorials, API and some explanations of internals are intermingled without a clear hierarchy.
 
@@ -120,13 +120,13 @@ Tutorials, API and some explanations of internals are intermingled without a cle
 
 There is no top-level nav at all and the left hand nav is split into "For Users", "For Developers/Contributors" and "Community".
 
-<img src="/images/xarray-docs.png" width="50%">
+<img src="/images/xarray-docs.png" width="70%">
 
 There are several subsections within "For Users" that have their own dropdowns such as "Getting Started" which has "Overview: Why xarray?", "Installation", "Quick overview" and "Frequently Asked Questions"
 
 There is also this "How do I ..." section:
 
-<img src="/images/xarray-how-do-I.png" width="50%">
+<img src="/images/xarray-how-do-I.png" width="70%">
 
 ## R libraries
 
@@ -138,7 +138,7 @@ The landing page contains most of the contents. Including an overview that inclu
 
 The most prominent links are to "Get Started", "Reference", and "Articles". "Get Started" links to the vignette which introduces concepts while working through a toy problem. "Reference" contains links to all functions grouped by rough use-case and development status.
 
-<img src="/images/r-dplyr-reference.png" width="50%">
+<img src="/images/r-dplyr-reference.png" width="70%">
 
 "Articles" links to something more like a traditional "User Guide" which provides explanation and more detail about particular methods.
 
@@ -148,7 +148,7 @@ The most prominent links are to "Get Started", "Reference", and "Articles". "Get
 
 The PyTorch docs feature the Python API very prominently, and also contain implementation notes. The "Get Started" and "Tutorial" are entirely separated from the "Docs", but are accessible from the top nav. "Get Started" uses tabs effectively to separate out Local vs Remote solutions.
 
-<img src="/images/pytorch-docs.png" width="50%">
+<img src="/images/pytorch-docs.png" width="70%">
 
 The Tutorial features "Introduction to PyTorch" and also contains content-area specific Tutorials such as "Audio" and "Text". It looks like this is an aggregation where individual contributors submit tutorials with keyword tags.
 
@@ -156,7 +156,7 @@ The Tutorial features "Introduction to PyTorch" and also contains content-area s
 
 TensorFlow takes a similar approach of totally separating the API docs from the "Tutorials" and has an additional concept of a "Guide" which provides explanations and context. Both "Tutorials" and "Guide" are under the category of "Learn". "Learn" has an overview page that contains two self-contained hello world examples and has text explaining how to navigate the docs.
 
-<img src="/images/tensorflow-tutorials.png" width="50%">
+<img src="/images/tensorflow-tutorials.png" width="70%">
 
 The Tutorials cover the same material as the PyTorch ones, but make the split between Beginner and Advanced with separate quickstarts for each type of user.
 
