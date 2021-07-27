@@ -14,11 +14,7 @@ This article is a survey of what other libraries are doing and what we can learn
 
 ## Contents
 
-* [Theory](#theory)
 * [Current Documentation](#current-documentation)
-* [Libraries that use Diataxis Framework](#libraries-that-use-diataxis-framework)
-  - [django](#django)
-  - [numpy](#numpy)
 * [Dataframe Libraries](#dataframe-libraries)
   - [pandas](#pandas)
   - [cudf](#cudf)
@@ -28,24 +24,16 @@ This article is a survey of what other libraries are doing and what we can learn
 * [ML libraries](#ml-libraries)
   - [PyTorch](#pytorch)
   - [TensorFlow](#tensorflow)
+* [Libraries that use Diataxis Framework](#libraries-that-use-diataxis-framework)
+  - [django](#django)
+  - [numpy](#numpy)
 * [Takeaways](#takeaways)
-
-
-## Theory
-
-I just learned about [Diátaxis Framework](https://diataxis.fr/) and I am thinking about how to organize the Dask docs in a way that is more consistent with this framework.
-
-![Diataxis Framework](/images/diataxis-framework.png)
-_Credit: https://diataxis.fr/_
-
 
 ## Current Documentation
 
-There are several different sites that comprise different aspects of dask documentation. Of particular interest are [Examples](https://examples.dask.org), [Tutorials](https://tutorial.dask.org) and [Docs](https://docs.dask.org). In this article I'll focus only on [Docs](https://docs.dask.org).
+In this article I'll focus only on [Docs](https://docs.dask.org).
 
-The bulk of the documentation that we currently have on [Docs](https://docs.dask.org) falls under "Explanation" and "Reference" but they are pretty intermingled.
-
-### How are they structured
+### How are they structured?
 
 The Dask docs have two levels of navigation. The top bar is uniform across all the side projects (dask-ml, dask-image, dask-kubernetes, dask-gateway) and contains links to any of the subprojects as well as links to related sites such as examples, the youtube channel, and github.
 
@@ -61,33 +49,10 @@ Along the left side there is site-level nav with the sections:
 
 From Google Analytics we can see the most commonly viewed pages.
 
-
 <img src="/images/docs-google-analytics.png" width="70%">
 
 It is hard to understand whether those pages are the most visible, or if they actually contain the information that people are trying to find. But either way, it conveys the importance of navigation in directing users.
 
-
-## Libraries that use Diataxis Framework
-
-These libraries explicitly state that they use the Diataxis Framework. I will start by looking at them to see how they've adapted it to meet their needs.
-
-### [django](https://docs.djangoproject.com/en/3.2/)
-
-Django uses the top nav for project-level links and the docs-level nav doesn't seem to really exist. There is a rather busy landing page which strongly pushes people into a special "intro" tutorial.
-
-<img src="/images/django-docs.png" width="70%">
-
-They specifically refer to the framework, but then they also seem to be trying to bring together all the information about particular aspects of the library. This takes the form of sections like "The view layer" that has a bunch of links to tutorial, howto, explanation, and reference related to that particular feature.
-
-### [numpy](https://numpy.org/doc/stable/)
-
-Numpy has a stripped down landing page divided into "For Users" and "For developers/contributors". The top level nav has just "User Guide", "API Reference" and "Development" (no dropdowns).
-
-<img src="/images/numpy-docs.png" width="70%">
-
-When you get into the "User Guide" there is an order to the pages that leads from "What is NumPy?" to "Installation", then "NumPy Quickstart" (a detour into "Numpy: the absolute basics for beginners") and then to "Numpy fundamentals".
-
-<img src="/images/numpy-user-guide.png" width="70%">
 
 ## Dataframe Libraries
 These are the libraries that I consider the most similar to dask.
@@ -160,12 +125,40 @@ TensorFlow takes a similar approach of totally separating the API docs from the 
 
 The Tutorials cover the same material as the PyTorch ones, but make the split between Beginner and Advanced with separate quickstarts for each type of user.
 
+## Libraries that use Diataxis Framework
+
+I just learned about [Diátaxis Framework](https://diataxis.fr/) and I am thinking about how to organize the Dask docs in a way that is more consistent with this framework.
+
+![Diataxis Framework](/images/diataxis-framework.png)
+_Credit: https://diataxis.fr/_
+
+More on this in the [next Docs blog post](https://blog.dask.org/2021/07/27/documentation-framework)...
+
+
+### [django](https://docs.djangoproject.com/en/3.2/)
+
+Django uses the top nav for project-level links and the docs-level nav doesn't seem to really exist. There is a rather busy landing page which strongly pushes people into a special "intro" tutorial.
+
+<img src="/images/django-docs.png" width="70%">
+
+They specifically refer to the framework, but then they also seem to be trying to bring together all the information about particular aspects of the library. This takes the form of sections like "The view layer" that has a bunch of links to tutorial, howto, explanation, and reference related to that particular feature.
+
+### [numpy](https://numpy.org/doc/stable/)
+
+Numpy has a stripped down landing page divided into "For Users" and "For developers/contributors". The top level nav has just "User Guide", "API Reference" and "Development" (no dropdowns).
+
+<img src="/images/numpy-docs.png" width="70%">
+
+When you get into the "User Guide" there is an order to the pages that leads from "What is NumPy?" to "Installation", then "NumPy Quickstart" (a detour into "Numpy: the absolute basics for beginners") and then to "Numpy fundamentals".
+
+<img src="/images/numpy-user-guide.png" width="70%">
+
 
 ## Takeaways
 
 - Don't do dropdowns on the top nav bar
 - Use the right margin for within-page nav
-- Use the landing page to visually direct people to exact pages
+- Use the landing page to visually direct people to exact pages - pare it down as much as possible
 - Use Guides for introducing concepts
 - Use Tutorials for specific topic-areas
 - Getting Started and User Guide should serve different purposes
