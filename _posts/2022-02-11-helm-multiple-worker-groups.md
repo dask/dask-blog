@@ -90,18 +90,20 @@ cluster = HelmCluster(release_name="my-dask")
 cluster
 ```
 <img src="/images/dask-cluster-four-workers.png" alt="Dask Cluster with four workers" width="1002" height="659">
+<br>
 ```python
 cluster.scale(5)  # scale the default worker group from 3 to 5 workers 
 cluster
 ```
 <img src="/images/dask-cluster-six-workers.png" alt="Dask Cluster with six cluster" width="1002" height="802">
+<br>
 ```python
 cluster.scale(2, worker_group = ”gpu-workers”)  # scale the GPU worker group from 1 to 2 workers
 cluster
 ```
 <img src="/images/dask-cluster-seven-workers.png" alt="Dask Cluster with seven cluster" width="992" height="845">
 
-## Example: Finding the average New York City taxi trip distance in January 2021
+## Example: Finding the average New York City taxi trip distance in April 2020
 ```python
 import dask.dataframe as dd
 import dask
