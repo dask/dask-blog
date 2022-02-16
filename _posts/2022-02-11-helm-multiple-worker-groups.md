@@ -7,13 +7,13 @@ theme: twitter
 ---
 
 ## Introduction
-Today, we’ll learn how to deploy Dask on a Kubernetes cluster with the Dask Helm Chart and then run and scale different worker types with annotations.
+Today, we’ll learn how to deploy [Dask](https://dask.org/) on a [Kubernetes](https://kubernetes.io/) cluster with the Dask Helm Chart and then run and scale different worker types with annotations.
 
 ### What is the Dask Helm Chart?
-The Dask Helm Chart is a convenient way of deploying Dask using Helm, a package manager for Kubernetes applications. After deploying Dask with the Dask Helm Chart, we can connect to our HelmCluster and begin scaling out workers.
+The [Dask Helm Chart](https://github.com/dask/helm-chart) is a convenient way of deploying Dask using [Helm](https://helm.sh/), a package manager for Kubernetes applications. After deploying Dask with the Dask Helm Chart, we can connect to our HelmCluster and begin scaling out workers.
 
 ### What is Dask Kubernetes?
-Dask Kubernetes allows you to deploy and manage your Dask deployment on a Kubernetes cluster. The Dask Kubernetes Python package has a HelmCluster class (among other things) that will enable you to manage your cluster from Python. In this tutorial, we will use the HelmCluster.
+[Dask Kubernetes](https://kubernetes.dask.org/en/latest/) allows you to deploy and manage your Dask deployment on a Kubernetes cluster. The Dask Kubernetes Python package has a HelmCluster class (among other things) that will enable you to manage your cluster from Python. In this tutorial, we will use the HelmCluster.
 
 ### Prerequisites:
 - To have Helm installed and be able to run the ‘helm’ commands
