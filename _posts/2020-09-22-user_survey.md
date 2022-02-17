@@ -5,6 +5,7 @@ author: Tom Augspurger
 tags: [User Survey]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 <style type="text/css">
@@ -17,7 +18,7 @@ table tr.even td {
 }
 
 table {
-	text-shadow: none;
+    text-shadow: none;
 }
 
 table tr:hover td {
@@ -25,7 +26,6 @@ table tr:hover td {
 }
 
 </style>
-
 
 This post presents the results of the 2020 Dask User Survey,
 which ran earlier this summer. Thanks to everyone who took the time to fill out the survey!
@@ -39,10 +39,10 @@ Let us know if you find anything in the data.
 
 ## Highlights
 
-* We had 240 responses to the survey (slightly fewer than last year, which had about 260).
-* Overall, results look mostly similar to last year's.
-* Our documentation has probably improved relative to last year
-* Respondents care more about performance relative to last year.
+- We had 240 responses to the survey (slightly fewer than last year, which had about 260).
+- Overall, results look mostly similar to last year's.
+- Our documentation has probably improved relative to last year
+- Respondents care more about performance relative to last year.
 
 ## New Questions
 
@@ -69,9 +69,9 @@ Just like last year, we'll look at resource usage grouped by how often they use 
 
 A few observations
 
-* GitHub issues are becoming relatively less popular,  which perhaps reflects better documentation or stability (assuming people go to the issue tracker when they can't find the answer in the docs or they hit a bug).
-* https://examples.dask.org is notably now more popular among occasinal users.
-* In response to last year's survey, we invested time in making https://tutorial.dask.org better, which we previously felt was lacking. Its usage is still about the same as last year's (pretty popular), so it's unclear whether we should dedicate additional focus there.
+- GitHub issues are becoming relatively less popular, which perhaps reflects better documentation or stability (assuming people go to the issue tracker when they can't find the answer in the docs or they hit a bug).
+- <https://examples.dask.org> is notably now more popular among occasinal users.
+- In response to last year's survey, we invested time in making <https://tutorial.dask.org> better, which we previously felt was lacking. Its usage is still about the same as last year's (pretty popular), so it's unclear whether we should dedicate additional focus there.
 
 ## How do you use Dask?
 
@@ -86,7 +86,6 @@ About 65% of our users are using Dask on a cluster at least some of the time, wh
 Respondents continue to say that more documentation and examples would be the most valuable improvements to the project.
 
 One interesting change comes from looking at "Which would help you most right now?" split by API group (`dask.dataframe`, `dask.array`, etc.). Last year showed that "More examples" in my field was the most important for all API groups (first table below). But in 2020 there are some differences (second table below).
-
 
 <style  type="text/css" >
     #T_0a8701b8_e96b_11ea_9e95_186590cd1c87row0_col0 {
@@ -195,6 +194,7 @@ One interesting change comes from looking at "Which would help you most right no
             background-color:  #f4eef6;
             color:  #000000;
         }</style><table id="T_0a8701b8_e96b_11ea_9e95_186590cd1c87" ><caption>2019 normalized by row. Darker means that a higher proporiton of users of that API prefer that priority.</caption><thead>    <tr>        <th class="index_name level0" >Which would help you most right now?</th>        <th class="col_heading level0 col0" >Bug fixes</th>        <th class="col_heading level0 col1" >More documentation</th>        <th class="col_heading level0 col2" >More examples in my field</th>        <th class="col_heading level0 col3" >New features</th>        <th class="col_heading level0 col4" >Performance improvements</th>    </tr>    <tr>        <th class="index_name level0" >Dask APIs</th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>    </tr></thead><tbody>
+
                 <tr>
                         <th id="T_0a8701b8_e96b_11ea_9e95_186590cd1c87level0_row0" class="row_heading level0 row0" >Array</th>
                         <td id="T_0a8701b8_e96b_11ea_9e95_186590cd1c87row0_col0" class="data row0 col0" >10</td>
@@ -252,7 +252,6 @@ One interesting change comes from looking at "Which would help you most right no
                         <td id="T_0a8701b8_e96b_11ea_9e95_186590cd1c87row6_col4" class="data row6 col4" >9</td>
             </tr>
     </tbody></table>
-
 
 <style  type="text/css" >
     #T_0a8d3eac_e96b_11ea_9e95_186590cd1c87row0_col0 {
@@ -361,6 +360,7 @@ One interesting change comes from looking at "Which would help you most right no
             background-color:  #86b0d3;
             color:  #000000;
         }</style><table id="T_0a8d3eac_e96b_11ea_9e95_186590cd1c87" ><caption>2020 normalized by row. Darker means that a higher proporiton of users of that API prefer that priority.</caption><thead>    <tr>        <th class="index_name level0" >Which would help you most right now?</th>        <th class="col_heading level0 col0" >Bug fixes</th>        <th class="col_heading level0 col1" >More documentation</th>        <th class="col_heading level0 col2" >More examples in my field</th>        <th class="col_heading level0 col3" >New features</th>        <th class="col_heading level0 col4" >Performance improvements</th>    </tr>    <tr>        <th class="index_name level0" >Dask APIs</th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>    </tr></thead><tbody>
+
                 <tr>
                         <th id="T_0a8d3eac_e96b_11ea_9e95_186590cd1c87level0_row0" class="row_heading level0 row0" >Array</th>
                         <td id="T_0a8d3eac_e96b_11ea_9e95_186590cd1c87row0_col0" class="data row0 col0" >12</td>
@@ -418,8 +418,6 @@ One interesting change comes from looking at "Which would help you most right no
                         <td id="T_0a8d3eac_e96b_11ea_9e95_186590cd1c87row6_col4" class="data row6 col4" >13</td>
             </tr>
     </tbody></table>
-
-
 
 Examples are again the most important (for all API groups except `Futures`). But "Performance improvements" is now the second-most important improvement (except for `Futures` where it's most important). How should we interpret this? A charitable interpretation is that Dask's users are scaling to larger problems and are running into new scaling challenges. A less charitable interpretation is that our user's workflows are the same but Dask is getting slower!
 

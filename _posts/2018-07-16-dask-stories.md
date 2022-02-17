@@ -5,9 +5,10 @@ title: Who uses Dask?
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-*This work is supported by [Anaconda Inc](http://anaconda.com)*
+_This work is supported by [Anaconda Inc](http://anaconda.com)_
 
 People often ask general questions like "Who uses Dask?" or more specific
 questions like the following:
@@ -18,21 +19,21 @@ questions like the following:
 4.  Does dask get used on imaging data?
 5.  Does anyone use Dask with Kubernetes/Yarn/SGE/Mesos/... ?
 6.  Does anyone in the insurance industry use Dask?
-6.  ...
+7.  ...
 
 This yields interesting and productive conversations where new users can dive
 into historical use cases which informs their choices if and how they use the
 project in the future.
 
-*New users can learn a lot from existing users.*
+_New users can learn a lot from existing users._
 
 To further enable this conversation we've made a new tiny project,
-[dask-stories](https://dask-stories.readthedocs.io).  This is a small
+[dask-stories](https://dask-stories.readthedocs.io). This is a small
 documentation page where people can submit how they use Dask and have that
 published for others to see.
 
 To seed this site six generous users have written down how their group uses
-Dask.  You can read about them here:
+Dask. You can read about them here:
 
 1.  [Sidewalk Labs: Civic Modeling](http://dask-stories.readthedocs.io/en/latest/sidewalk-labs.html)
 2.  [Genome Sequencing for Mosquitoes](http://dask-stories.readthedocs.io/en/latest/mosquito-sequencing.html)
@@ -52,20 +53,19 @@ feedback to get a complete picture.
 4.  What pain points did I run into with Dask?
 5.  What technology do I use around Dask?
 
-
 ### Easy to Contribute
 
 Contributions to this site are simple Markdown documents submitted as pull
 requests to
-[github.com/dask/dask-stories](https://github.com/dask/dask-stories).  The site
-is then built with ReadTheDocs and updated immediately.  We tried to make this
+[github.com/dask/dask-stories](https://github.com/dask/dask-stories). The site
+is then built with ReadTheDocs and updated immediately. We tried to make this
 as smooth and familiar to our existing userbase as possible.
 
-This is important.  Sharing real-world experiences like this are probably more
-valuable than code contributions to the Dask project at this stage.  Dask is
-more technically mature than it is well-known.  Users look to other users to
-help them understand a project (think of every time you've Googled for "*some
-tool* in *some topic*")
+This is important. Sharing real-world experiences like this are probably more
+valuable than code contributions to the Dask project at this stage. Dask is
+more technically mature than it is well-known. Users look to other users to
+help them understand a project (think of every time you've Googled for "_some
+tool_ in _some topic_")
 
 If you use Dask today in an interesting way then please share your story.
 The world would love to hear your voice.

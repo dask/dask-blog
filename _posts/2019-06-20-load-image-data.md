@@ -2,13 +2,13 @@
 layout: post
 title: Load Large Image Data with Dask Array
 author: John Kirkham
-tags: [python,scipy,scikit-image,dask-image]
+tags: [python, scipy, scikit-image, dask-image]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-Executive Summary
------------------
+## Executive Summary
 
 This post explores simple workflows to load large stacks of image data with Dask array.
 
@@ -102,10 +102,12 @@ or by writing your own Dask delayed image reader function.
   <polygon points="80.588235,70.588235 126.438982,70.588235 126.438982,131.722564 80.588235,131.722564" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Text -->
-  <text x="103.513608" y="151.722564" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
-  <text x="146.438982" y="101.155399" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,146.438982,101.155399)">1024</text>
-  <text x="35.294118" y="116.428446" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,35.294118,116.428446)">2010</text>
+
+<text x="103.513608" y="151.722564" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
+<text x="146.438982" y="101.155399" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,146.438982,101.155399)">1024</text>
+<text x="35.294118" y="116.428446" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,35.294118,116.428446)">2010</text>
 </svg>
+
 </td>
 </tr>
 </table>
@@ -119,15 +121,13 @@ Some day we'll eventually be able to perform complex calculations on this dask a
      width="45%"
      alt="Light Microscopy data rendered with NVidia IndeX">
 
-*Disclaimer: we're not going to produce rendered images like the above in this
-post.  These were created with [NVidia
+_Disclaimer: we're not going to produce rendered images like the above in this
+post. These were created with [NVidia
 IndeX](https://developer.nvidia.com/index), a completely separate tool chain
-from what is being discussed here.  This post covers the first step of image
-loading.*
+from what is being discussed here. This post covers the first step of image
+loading._
 
-
-Series Overview
----------------
+## Series Overview
 
 A common case in fields that acquire large amounts of imaging data is to write
 out smaller acquisitions into many small files. These files can tile a larger
@@ -150,8 +150,7 @@ improved. In this series of blogposts, we will outline ways for image
 scientists to leverage different tools to move towards a high level, friendly,
 cohesive, interactive analytical pipeline.
 
-Post Overview
--------------
+## Post Overview
 
 This post in particular focuses on loading and managing large stacks of image
 data in parallel from Python.
@@ -188,9 +187,7 @@ at UC Berkeley and discussed in
 though the workloads presented here should work for any kind of imaging data,
 or array data generally.
 
-
-Load image data with Dask
--------------------------
+## Load image data with Dask
 
 Let's start again with our image data from the top of the post:
 
@@ -219,7 +216,7 @@ To load a single image, we use [Scikit-Image](https://scikit-image.org/):
 (201, 1024, 768)
 ```
 
-Each filename corresponds to some 3d chunk of a larger image.  We can look at a
+Each filename corresponds to some 3d chunk of a larger image. We can look at a
 few 2d slices of this single 3d chunk to get some context.
 
 ```python
@@ -248,7 +245,6 @@ skimage.io.imshow(sample[0, :, :])
 <img src="https://raw.githubusercontent.com/mrocklin/raw-host/gh-pages/images/aollsm-sample-3.png"
      width="60%">
 
-
 ### Investigate Filename Structure
 
 These are slices from only one chunk of a much larger aggregate image.
@@ -276,9 +272,8 @@ for fn in filenames:
 
 However if our data is large then we can't load it all into memory at once like
 this into a single Numpy array, and instead we need to be a bit more clever to
-handle it efficiently.  One approach here is to use [Dask](https://dask.org),
+handle it efficiently. One approach here is to use [Dask](https://dask.org),
 which handles larger-than-memory workloads easily.
-
 
 ### Lazily load images with Dask Array
 
@@ -298,11 +293,11 @@ lazy_arrays = [da.from_delayed(x, shape=sample.shape, dtype=sample.dtype)
                for x in lazy_arrays]
 ```
 
-*Note: here we're assuming that all of the images have the same shape and dtype
-as the sample file that we loaded above.  This is not always the case.  See the
-`dask_image` note below in the Future Work section for an alternative.*
+_Note: here we're assuming that all of the images have the same shape and dtype
+as the sample file that we loaded above. This is not always the case. See the
+`dask_image` note below in the Future Work section for an alternative._
 
-We haven't yet stitched these together.  We have hundreds of single-chunk Dask
+We haven't yet stitched these together. We have hundreds of single-chunk Dask
 arrays, each of which lazily loads a single 3d chunk of data from disk. Lets look at a single array.
 
 ```python
@@ -358,25 +353,26 @@ arrays, each of which lazily loads a single 3d chunk of data from disk. Lets loo
   <polygon points="34.664918,24.664918 124.664918,24.664918 124.664918,144.664918 34.664918,144.664918" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Text -->
-  <text x="79.664918" y="164.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
-  <text x="144.664918" y="84.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,144.664918,84.664918)">1024</text>
-  <text x="12.332459" y="152.332459" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,12.332459,152.332459)">201</text>
+
+<text x="79.664918" y="164.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
+<text x="144.664918" y="84.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,144.664918,84.664918)">1024</text>
+<text x="12.332459" y="152.332459" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,12.332459,152.332459)">201</text>
 </svg>
+
 </td>
 </tr>
 </table>
 
-This is a lazy 3-dimensional Dask array of a *single* 300MB chunk of data.
-That chunk is created by loading in a particular TIFF file.  Normally Dask
-arrays are composed of *many* chunks.  We can concatenate many of these
+This is a lazy 3-dimensional Dask array of a _single_ 300MB chunk of data.
+That chunk is created by loading in a particular TIFF file. Normally Dask
+arrays are composed of _many_ chunks. We can concatenate many of these
 single-chunked Dask arrays into a multi-chunked Dask array with functions like
 [da.concatenate](https://docs.dask.org/en/latest/array-api.html#dask.array.concatenate)
 and
 [da.stack](https://docs.dask.org/en/latest/array-api.html#dask.array.stack).
 
-
 Here we concatenate the first ten Dask arrays along a few axes, to get an
-easier-to-understand picture of how this looks.  Take a look both at how the
+easier-to-understand picture of how this looks. Take a look both at how the
 shape changes as we change the `axis=` parameter both in the table on the left
 and the image on the right.
 
@@ -451,14 +447,15 @@ da.concatenate(lazy_arrays[:10], axis=0)
   <polygon points="80.588235,70.588235 126.438982,70.588235 126.438982,131.722564 80.588235,131.722564" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Text -->
-  <text x="103.513608" y="151.722564" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
-  <text x="146.438982" y="101.155399" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,146.438982,101.155399)">1024</text>
-  <text x="35.294118" y="116.428446" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,35.294118,116.428446)">2010</text>
+
+<text x="103.513608" y="151.722564" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
+<text x="146.438982" y="101.155399" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,146.438982,101.155399)">1024</text>
+<text x="35.294118" y="116.428446" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,35.294118,116.428446)">2010</text>
 </svg>
+
 </td>
 </tr>
 </table>
-
 
 ```python
 da.concatenate(lazy_arrays[:10], axis=1)
@@ -531,14 +528,15 @@ da.concatenate(lazy_arrays[:10], axis=1)
   <polygon points="27.014952,17.014952 63.963186,17.014952 63.963186,137.014952 27.014952,137.014952" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Text -->
-  <text x="45.489069" y="157.014952" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
-  <text x="83.963186" y="77.014952" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,83.963186,77.014952)">10240</text>
-  <text x="8.507476" y="148.507476" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,8.507476,148.507476)">201</text>
+
+<text x="45.489069" y="157.014952" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
+<text x="83.963186" y="77.014952" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,83.963186,77.014952)">10240</text>
+<text x="8.507476" y="148.507476" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,8.507476,148.507476)">201</text>
 </svg>
+
 </td>
 </tr>
 </table>
-
 
 ```python
 da.concatenate(lazy_arrays[:10], axis=2)
@@ -611,18 +609,20 @@ da.concatenate(lazy_arrays[:10], axis=2)
   <polygon points="27.988258,17.988258 147.988258,17.988258 147.988258,58.112379 27.988258,58.112379" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Text -->
-  <text x="87.988258" y="78.112379" font-size="1.0rem" font-weight="100" text-anchor="middle" >7680</text>
-  <text x="167.988258" y="38.050318" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,167.988258,38.050318)">1024</text>
-  <text x="8.994129" y="69.118250" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,8.994129,69.118250)">201</text>
+
+<text x="87.988258" y="78.112379" font-size="1.0rem" font-weight="100" text-anchor="middle" >7680</text>
+<text x="167.988258" y="38.050318" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,167.988258,38.050318)">1024</text>
+<text x="8.994129" y="69.118250" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,8.994129,69.118250)">201</text>
 </svg>
+
 </td>
 </tr>
 </table>
 
-Or, if we wanted to make a new dimension, we would use `da.stack`.  In this
+Or, if we wanted to make a new dimension, we would use `da.stack`. In this
 case note that we've run out of easily visible dimensions, so you should take
 note of the listed shape in the table input on the left more than the picture
-on the right.  Notice that we've stacked these 3d images into a 4d image.
+on the right. Notice that we've stacked these 3d images into a 4d image.
 
 ```python
 da.stack(lazy_arrays[:10])
@@ -664,9 +664,9 @@ da.stack(lazy_arrays[:10])
   <polygon points="0.000000,0.000000 25.412617,0.000000 25.412617,25.412617 0.000000,25.412617" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Text -->
-  <text x="12.706308" y="45.412617" font-size="1.0rem" font-weight="100" text-anchor="middle" >10</text>
-  <text x="45.412617" y="12.706308" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(0,45.412617,12.706308)">1</text>
 
+<text x="12.706308" y="45.412617" font-size="1.0rem" font-weight="100" text-anchor="middle" >10</text>
+<text x="45.412617" y="12.706308" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(0,45.412617,12.706308)">1</text>
 
   <!-- Horizontal lines -->
   <line x1="95" y1="0" x2="119" y2="24" style="stroke-width:2" />
@@ -702,10 +702,12 @@ da.stack(lazy_arrays[:10])
   <polygon points="119.664918,24.664918 209.664918,24.664918 209.664918,144.664918 119.664918,144.664918" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Text -->
-  <text x="164.664918" y="164.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
-  <text x="229.664918" y="84.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,229.664918,84.664918)">1024</text>
-  <text x="97.332459" y="152.332459" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,97.332459,152.332459)">201</text>
+
+<text x="164.664918" y="164.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
+<text x="229.664918" y="84.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,229.664918,84.664918)">1024</text>
+<text x="97.332459" y="152.332459" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,97.332459,152.332459)">201</text>
 </svg>
+
 </td>
 </tr>
 </table>
@@ -713,13 +715,11 @@ da.stack(lazy_arrays[:10])
 These are the common case situations, where you have a single axis along which
 you want to stitch images together.
 
-
 ### Full example
 
 This works fine for combining along a single axis. However if we need to
 combine across multiple we need to perform multiple concatenate steps.
-Fortunately there is a simpler option [da.block](
-https://docs.dask.org/en/latest/array-api.html#dask.array.block ), which can
+Fortunately there is a simpler option [da.block](https://docs.dask.org/en/latest/array-api.html#dask.array.block), which can
 concatenate along multiple axes at once if you give it a nested list of dask
 arrays.
 
@@ -730,13 +730,13 @@ a = da.block([[laxy_array_00, lazy_array_01],
 
 We now do the following:
 
--  Parse each filename to learn where it should live in the larger array
--  See how many files are in each of our relevant dimensions
--  Allocate a NumPy object-dtype array of the appropriate size, where each
-   element of this array will hold a single-chunk Dask array
--  Go through our filenames and insert the proper Dask array into the right
-   position
--  Call `da.block` on the result
+- Parse each filename to learn where it should live in the larger array
+- See how many files are in each of our relevant dimensions
+- Allocate a NumPy object-dtype array of the appropriate size, where each
+  element of this array will hold a single-chunk Dask array
+- Go through our filenames and insert the proper Dask array into the right
+  position
+- Call `da.block` on the result
 
 This code is a bit complex, but shows what this looks like in a real-world
 setting
@@ -996,9 +996,9 @@ a = da.block(a.tolist())
   <polygon points="0.000000,0.000000 41.887587,0.000000 41.887587,25.412617 0.000000,25.412617" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Text -->
-  <text x="20.943793" y="45.412617" font-size="1.0rem" font-weight="100" text-anchor="middle" >199</text>
-  <text x="61.887587" y="12.706308" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(0,61.887587,12.706308)">3</text>
 
+<text x="20.943793" y="45.412617" font-size="1.0rem" font-weight="100" text-anchor="middle" >199</text>
+<text x="61.887587" y="12.706308" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(0,61.887587,12.706308)">3</text>
 
   <!-- Horizontal lines -->
   <line x1="111" y1="0" x2="135" y2="24" style="stroke-width:2" />
@@ -1034,16 +1034,18 @@ a = da.block(a.tolist())
   <polygon points="135.664918,24.664918 225.664918,24.664918 225.664918,144.664918 135.664918,144.664918" style="fill:#ECB172A0;stroke-width:0"/>
 
   <!-- Text -->
-  <text x="180.664918" y="164.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
-  <text x="245.664918" y="84.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,245.664918,84.664918)">1024</text>
-  <text x="113.332459" y="152.332459" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,113.332459,152.332459)">201</text>
+
+<text x="180.664918" y="164.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" >768</text>
+<text x="245.664918" y="84.664918" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(-90,245.664918,84.664918)">1024</text>
+<text x="113.332459" y="152.332459" font-size="1.0rem" font-weight="100" text-anchor="middle" transform="rotate(45,113.332459,152.332459)">201</text>
 </svg>
+
 </td>
 </tr>
 </table>
 
 That's a 180 GB logical array, composed of around 600 chunks, each of size 300
-MB.  We can now do normal NumPy like computations on this array using [Dask
+MB. We can now do normal NumPy like computations on this array using [Dask
 Array](https://docs.dask.org/en/latest/array.html), but we'll save that for a
 future post.
 
@@ -1053,24 +1055,20 @@ future post.
 >>> a.sum().compute()
 ```
 
-Save Data
----------
+## Save Data
 
 To simplify data loading in the future, we store this in a large chunked
-array format like [Zarr]( https://zarr.readthedocs.io/ ) using the [to_zarr](
-https://docs.dask.org/en/latest/array-api.html#dask.array.Array.to_zarr )
+array format like [Zarr](https://zarr.readthedocs.io/) using the [to_zarr](https://docs.dask.org/en/latest/array-api.html#dask.array.Array.to_zarr)
 method.
 
 ```python
 a.to_zarr("mydata.zarr")
 ```
 
-We may add additional information about the image data as [attributes](
-https://zarr.readthedocs.io/en/stable/tutorial.html#user-attributes ). This
+We may add additional information about the image data as [attributes](https://zarr.readthedocs.io/en/stable/tutorial.html#user-attributes). This
 both makes things simpler for future users (they can read the full dataset with
-a single line using [da.from_zarr](
-http://docs.dask.org/en/latest/array-api.html#dask.array.from_zarr )) and much
-more performant because Zarr is an *analysis ready format* that is efficiently
+a single line using [da.from_zarr](http://docs.dask.org/en/latest/array-api.html#dask.array.from_zarr)) and much
+more performant because Zarr is an _analysis ready format_ that is efficiently
 encoded for computation.
 
 Zarr uses the [Blosc](http://blosc.org/) library for compression by default.
@@ -1083,13 +1081,12 @@ from numcodecs import Blosc
 a.to_zarr("mydata.zarr", compressor=Blosc(cname='zstd', clevel=3, shuffle=Blosc.BITSHUFFLE))
 ```
 
-Future Work
------------
+## Future Work
 
-The workload above is generic and straightforward.  It works well in simple
+The workload above is generic and straightforward. It works well in simple
 cases and also extends well to more complex cases, providing you're willing to
-write some for-loops and parsing code around your custom logic.  It works on a
-single small-scale laptop as well as a large HPC or Cloud cluster.  If you have
+write some for-loops and parsing code around your custom logic. It works on a
+single small-scale laptop as well as a large HPC or Cloud cluster. If you have
 a function that turns a filename into a NumPy array, you can generate large
 lazy Dask array using that function, [Dask
 Delayed](https://docs.dask.org/en/latest/delayed.html) and [Dask
@@ -1097,7 +1094,7 @@ Array](https://docs.dask.org/en/latest/array.html).
 
 ### Dask Image
 
-However, we can make things a bit easier for users if we specialize a bit.  For
+However, we can make things a bit easier for users if we specialize a bit. For
 example the [Dask Image](https://image.dask.org/en/latest/) library has a
 parallel image reader function, which automates much of our work above in the
 simple case.

@@ -35,7 +35,7 @@ df.groupby(df.account_id).balance.sum().compute()
 
 But by the time you're a few pages into the documentation you're already being encouraged to create `Client()` and `LocalCluster()` objects.
 
-*__Note__: When you create a `Client()` with no arguments/config set Dask will launch a `LocalCluster()` object for you under the hood. So often `Client()` is equivalent to `Client(LocalCluster())`.*
+_**Note**: When you create a `Client()` with no arguments/config set Dask will launch a `LocalCluster()` object for you under the hood. So often `Client()` is equivalent to `Client(LocalCluster())`._
 
 This is a common area for users to stick around in, launch a local distributed scheduler and do your work maximising the resources on your local machine.
 

@@ -5,6 +5,7 @@ author: Genevieve Buckley
 tags: [life science]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 ## Summary
@@ -15,9 +16,9 @@ theme: twitter
 
 - [Progress update](#progress-update)
 - [Personal reflections](#personal-reflections)
-    - [Highlights from this year](#highlights-from-this-year)
-    - [What worked well](#what-worked-well)
-    - [What didn't work so well](#what-didnt-work-so-well)
+  - [Highlights from this year](#highlights-from-this-year)
+  - [What worked well](#what-worked-well)
+  - [What didn't work so well](#what-didnt-work-so-well)
 - [What's next in Dask?](#whats-next-in-dask)
 
 ## Progress update
@@ -25,6 +26,7 @@ theme: twitter
 A previous progress update for February to September 2021 is [available here](https://blog.dask.org/2021/10/20/czi-eoss-update). Read on for a progress update for the period September to December 2021.
 
 To summarize, between September and December 2021 inclusive, there were:
+
 - 32 merged pull requests acorss 7 repositories (`dask`, `distributed`, `dask-image`, `dask-tutorial`, `ITK`, `napari`, and `napari.github.io`)
 - 8 pending pull requests
 - 1 new `dask-image` release
@@ -36,6 +38,7 @@ Read on for a more detailed description of special projects within this time.
 **Dask stale issues sprint**
 
 In two weeks I was able to:
+
 - close 117 stale issues, and
 - identify another 25 potential easy wins for the maintainer team to investigate further.
 
@@ -74,15 +77,15 @@ I implemented a `find_objects` function for `dask-image` in [PR #240](https://gi
 Dask blogposts published between September through to December 2021 include:
 
 - [Choosing good chunk sizes in Dask](https://blog.dask.org/2021/11/02/choosing-dask-chunk-sizes)
-    - This blogpost addresses some very common concerns and questions about using Dask.
+  - This blogpost addresses some very common concerns and questions about using Dask.
     I'm very pleased with this article, due to several thoughtful reviewers the final work is a much stronger and more comprehensive than the [twitter thread](https://twitter.com/DataNerdery/status/1424953376043790341) that inspired it.
-    - It's also high impact work. In the Dask survey the most common request is for more documentation, and this content helps to address that. Twitter analytics also show much higher engagement with this content than for other similar tweets, indicating a demand in the community for this type of explanation.
+  - It's also high impact work. In the Dask survey the most common request is for more documentation, and this content helps to address that. Twitter analytics also show much higher engagement with this content than for other similar tweets, indicating a demand in the community for this type of explanation.
 - [Mosaic Image Fusion](https://blog.dask.org/2021/12/01/mosaic-fusion) (co-authored with Volker Hisenstein and Marvin Albert)
-    - This blogpost was several months in the making (started in mid-August and published in December). It's fantastic to have people sharing some of the very cool work they do with Dask on real world problems.
+  - This blogpost was several months in the making (started in mid-August and published in December). It's fantastic to have people sharing some of the very cool work they do with Dask on real world problems.
 - [CZI EOSS Update](https://blog.dask.org/2021/10/20/czi-eoss-update)
-    - This blogpost shares with the community an interim progress update provided to CZI.
+  - This blogpost shares with the community an interim progress update provided to CZI.
 - [2021 Dask user survey results](https://blog.dask.org/2021/09/15/user-survey)
-    - Discussed in more detail above, the analysis results from the Dask User Survey were published in September 2021.
+  - Discussed in more detail above, the analysis results from the Dask User Survey were published in September 2021.
 
 **Tutorials**
 
@@ -93,10 +96,10 @@ Dask blogposts published between September through to December 2021 include:
 
 Reflecting back over the whole year, there were some things that worked well and some things that were less successful.
 
-
 ### Highlights from this year
 
 My personal highlights include:
+
 - ITK + Dask integration work (discussed in more detail above).
 - A find objects fucntion for `dask-image` (discussed in more detail above).
 - Visualization work, because it's very high impact. We're solving issues raised by life science groups, but the improved tools benefit EVERYONE who uses Dask.
@@ -108,24 +111,24 @@ My personal highlights include:
 **Dask stale issues sprint**
 
 - This was useful for the project, as well as useful for me.
-Sorting through old issues was an incredibly effective way to get familiar with who the experts are for particular topics. It would have been even better if this happened in the first few months of working on Dask, instead of the last few months.
-- It's been suggested that one good way to gain familiarity is spending 6 months full  time managing the issue tracker. Maybe that's true, but the much shorter stale issue sprint was a very efficient way of getting a lot of the same benefits in a short space of time. I'd recommend it for new maintainers or triage team members.
+  Sorting through old issues was an incredibly effective way to get familiar with who the experts are for particular topics. It would have been even better if this happened in the first few months of working on Dask, instead of the last few months.
+- It's been suggested that one good way to gain familiarity is spending 6 months full time managing the issue tracker. Maybe that's true, but the much shorter stale issue sprint was a very efficient way of getting a lot of the same benefits in a short space of time. I'd recommend it for new maintainers or triage team members.
 
 **Community building events**
 
 We had a very successful year in terms of community building and events. This included tutorials, workshops, conferences, and community outreach. Summary of major events:
+
 - Led a Dask tutorial at [ResBaz Sydney 2021](https://resbaz.github.io/resbaz2021/sydney/) in November.
 - Co-led a half-day tutorial on napari and Dask at the [Light Microscopy Australia Meeting](https://www.lmameeting.com.au/) in August.
 - SciPy 2021 presentation [Scaling Science: leveraging Dask for life sciences](https://www.youtube.com/watch?v=tY_lCGS1BMk&t=60s) in July.
 - Organized the [Dask Life Science workshop](https://blog.dask.org/2021/05/24/life-science-summit-workshop) at the Dask Summit in May 2021. The life science workshop included 15 pre-recorded talks, and 3 interactive discussions.
 - Co-organised the [Dask Down Under](https://blog.dask.org/2021/06/25/dask-down-under) workshop for the Dask Summit in May 2021. Dask Down Under contained 5 talks, 2 tutorials, 1 panel discussion, and 1 meet and greet networking event.
-Dask Down Under
+  Dask Down Under
 - Expert panelist at the [VIS2021 symposium](https://www.vis2021.com.au/) in February.
 
 **Visualization work**
 
 This has been very high impact work, and I'm pleased with what we've achieved. Improved tools for visualization were requested by users in our survey of the life science community. This was a high priority, because improvements to visuzliation tools benefit EVERYONE who uses Dask.
-
 
 ### What didn't work so well
 
@@ -172,17 +175,17 @@ More performance improvements related to rechunking is required (see [#7950](htt
 **High level graph work for arrays and slicing**
 
 The high level graph work for slicing and overlapping arrays has a number of next steps.
-Ian Rose has written [an excellent summary here](https://gist.github.com/ian-r-rose/4221ebf52f3423203640c498fb815f21). Briefly, the``cull`` and ``get_output_keys`` methods must be implemented, then low level fusion and optimizations can be done.
+Ian Rose has written [an excellent summary here](https://gist.github.com/ian-r-rose/4221ebf52f3423203640c498fb815f21). Briefly, the`cull` and `get_output_keys` methods must be implemented, then low level fusion and optimizations can be done.
 
 Relevant links:
-- Implement ``cull`` method for ArrayOverlapLayer [#7789](https://github.com/dask/dask/issues/7789)
-- Implement ``get_output_keys`` method for ArrayOverlapLayer [#7791](https://github.com/dask/dask/issues/7791)
+
+- Implement `cull` method for ArrayOverlapLayer [#7789](https://github.com/dask/dask/issues/7789)
+- Implement `get_output_keys` method for ArrayOverlapLayer [#7791](https://github.com/dask/dask/issues/7791)
 - [Array slicing HighLevelGraph layer #7655](https://github.com/dask/dask/pull/7655)
 
 **Documentation**
 
 - Dask needs better documentation for high level graphs. Both [user documentation](https://github.com/dask/dask/issues/7709) and [developer documentation](https://github.com/dask/dask/issues/7755) is required.
 
-- At some future point, it might be worthwhile integrating blogpost content from 
-[Choosing good chunk sizes in Dask](https://blog.dask.org/2021/11/02/choosing-dask-chunk-sizes) into the main [Dask documentation](https://docs.dask.org/en/latest/), for better discoverability.
-
+- At some future point, it might be worthwhile integrating blogpost content from
+  [Choosing good chunk sizes in Dask](https://blog.dask.org/2021/11/02/choosing-dask-chunk-sizes) into the main [Dask documentation](https://docs.dask.org/en/latest/), for better discoverability.

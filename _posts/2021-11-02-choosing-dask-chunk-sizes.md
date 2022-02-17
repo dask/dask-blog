@@ -5,6 +5,7 @@ author: Genevieve Buckley
 tags: [performance]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 ## Summary
@@ -18,10 +19,9 @@ It's a two step process:
 1. First, start by choosing a chunk size similar to data you know can be processed entirely within memory (i.e. without Dask), using these [rough rules of thumb](#rough-rules-of-thumb).
 2. Then, watch the Dask dashboard task stream and worker memory plots, and adjust if needed. [Here are the signs to watch out for](#what-to-watch-for-on-the-dashboard).
 
-
 ## Contents
 
-- [ What are Dask array chunks?](#what-are-dask-array-chunks)
+- [What are Dask array chunks?](#what-are-dask-array-chunks)
 - [Too small is a problem](#too-small-is-a-problemg)
 - [Too big is also a problem](#too-big-is-also-a-problem)
 - [Choosing an initial chunk size](#choosing-an-initial-chunk-size)
@@ -29,7 +29,7 @@ It's a two step process:
   - [Chunks should be aligned with array storage on disk](#chunks-should-be-aligned-with-array-storage-on-disk)
 - [Using the Dask dashboard](#using-the-dask-dashboard)
   - [What to watch for on the dashboard
-](#what-to-watch-for-on-the-dashboard)
+    ](#what-to-watch-for-on-the-dashboard)
 - [Rechunking arrays](#rechunking-arrays)
 - [Unmanaged memory](#unmanaged-memory)
 - [Thanks for reading](#thanks-for-reading)
@@ -46,7 +46,6 @@ You can find more information about Dask array chunks on this page of the docume
 ### How do I know what chunks my array has?
 
 If you have a Dask array, you can use the `chunksize` or `chunks` attribues to see information about the chunks. You can also visualize this with the Dask array HTML representation.
-
 
 <img src="/images/choosing-good-chunk-sizes/examine-dask-array-chunks.png" alt="Visualizating Dask array chunks with the HTML repr" width="611" height="523" />
 
@@ -104,6 +103,7 @@ From the Dask best practices on how to [orient your chunks](https://docs.dask.or
 > When reading data you should align your chunks with your storage format. Most array storage formats store data in chunks themselves. If your Dask array chunks aren’t multiples of these chunk shapes then you will have to read the same data repeatedly, which can be expensive. Note though that often storage formats choose chunk sizes that are much smaller than is ideal for Dask, closer to 1MB than 100MB. In these cases you should choose a Dask chunk size that aligns with the storage chunk size and that every Dask chunk dimension is a multiple of the storage chunk dimension.
 
 Some examples of data storage structures on disk include:
+
 - A HDF5 or [Zarr array](https://zarr.readthedocs.io/en/stable/api/core.html). The size and shape of chunks/blocks stored on disk should align well with the Dask array chunks you select.
 - A folder full of tiff files. You might decide that each tiff file should become a single chunk in the Dask array (or that multiple tiff files should be grouped into a single chunk).
 
@@ -123,6 +123,7 @@ It's a fantastic way to get a sense of what's working well, or poorly, so you ca
 ### What to watch for on the dashboard
 
 Bad signs to watch out for include:
+
 - Lots of white space in the task stream plot is a bad sign. White space means nothing is happening. Chunks may be too small.
 - Lots and lots of red in the task stream plot is a bad sign. Red means worker communication. Dask workers need some communication, but if they are doing almost nothing except communication then there is not much productive work going on.
 - On the worker memory plot, watch out for orange bars which are a sign you are getting close to the memory limit. Chunks may be too big.
@@ -131,7 +132,7 @@ Bad signs to watch out for include:
 Here is an example of the Dask dashboard during a good computation ([time 6:12 in this video](https://youtu.be/N_GqzcuGLCY?t=372)).
 ![Visualizating Dask array chunks with the HTML repr](/images/choosing-good-chunk-sizes/good-dask-dashboard.png)
 
-For comparison, here is an example of the Dask dashboard during a bad computation ([time 6:57 in this video](https://youtu.be/N_GqzcuGLCY?t=417)). 
+For comparison, here is an example of the Dask dashboard during a bad computation ([time 6:57 in this video](https://youtu.be/N_GqzcuGLCY?t=417)).
 
 In this example, it's inefficient because the chunks are much too small, so we see a lot of white space and red worker communication in the task stream plot.
 ![Visualizating Dask array chunks with the HTML repr](/images/choosing-good-chunk-sizes/bad-dask-dashboard-zoomedin.png)
@@ -145,6 +146,7 @@ rechunked_array = original_array.rechunk(new_shape)
 ```
 
 **Warning:** Rechunking Dask arrays comes at a cost.
+
 - The Dask graph must be rearranged to accomodate the new chunk structure. This happens immediately, and will block any other interaction with python until Dask has rearranged the task graph.
 - This also inserts new tasks into the Dask graph. At compute time, there are now more tasks to execute.
 
@@ -165,8 +167,8 @@ Last, remember that you don't only need to consider the size of the array chunks
 
 Here are some tips for handling unmanaged memory:
 
-* [Tackling unmanaged memory with Dask (Coiled blogpost)](https://coiled.io/blog/tackling-unmanaged-memory-with-dask/) by Guido Imperiale
-* [Handle Unmanaged Memory in Dask (8 minute video)](https://youtu.be/nwR6iGR0mb0)
+- [Tackling unmanaged memory with Dask (Coiled blogpost)](https://coiled.io/blog/tackling-unmanaged-memory-with-dask/) by Guido Imperiale
+- [Handle Unmanaged Memory in Dask (8 minute video)](https://youtu.be/nwR6iGR0mb0)
 
 ## Thanks for reading
 

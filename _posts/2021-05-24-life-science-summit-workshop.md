@@ -5,6 +5,7 @@ author: Genevieve Buckley
 tags: [Dask Summit, life science]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 ## Executive Summary
@@ -16,9 +17,10 @@ The Dask life science workshop ran as part of the 2021 Dask Summit. Lightning ta
 The Dask life science workshop ran as part of the 2021 Dask Summit. Currently many people in life sciences use Dask, but individual groups are relatively isolated from one another. This workshop gave us an opportunity to learn from each other, as well as opportunities to identify common frustrations and areas for improvement.
 
 The workshop involved:
-* Pre-recorded lightning talks
-* Interactive discussion times (accessible across timezones in Europe, Oceania, and the Americas)
-* Asynchronous text chat throughout the Dask Summit
+
+- Pre-recorded lightning talks
+- Interactive discussion times (accessible across timezones in Europe, Oceania, and the Americas)
+- Asynchronous text chat throughout the Dask Summit
 
 ## If I missed it, how can I catch up?
 
@@ -47,7 +49,7 @@ The responses give us an overview of the diversity of work people in the communi
 **What kind of science do you work on?** Computational Biology and Spatial transcriptomics\
 **Something you've tried (or would like to try) with Dask?** [dask-image](http://image.dask.org/en/latest/) for image processing.\
 **What do you want to do next with Dask? Further integration with [Squidpy](https://squidpy.readthedocs.io/en/latest/).\
-**Lightning talk:** [click here](https://www.youtube.com/watch?v=sGr7O8spfvE&list=PLJ0vO2F_f6OBAY6hjRHM_mIQ9yh32mWr0&index=8)
+**Lightning talk:\*\* [click here](https://www.youtube.com/watch?v=sGr7O8spfvE&list=PLJ0vO2F_f6OBAY6hjRHM_mIQ9yh32mWr0&index=8)
 
 **Name:** Isaac Virshup\
 **Affiliation:** University of Melbourne. Open source projects Scanpy and AnnData
@@ -80,7 +82,7 @@ Since we rely heavily on sparse arrays, a key step towards this will be getting 
 **Something I would like to try with dask:** fusing large mosaics of individual images or image volumes for which affine transformation into a joint coordinate system are available.
 
 **Name:** Marvin Albert\
-**Affiliation:**  University of Zurich\
+**Affiliation:** University of Zurich\
 **Timezone:** UTC/GMT +2\
 **What kind of science do you work on?** Life sciences / image analysis\
 **Something you've tried (or would like to try) with Dask? What do you want to do next with Dask?** Parallelise / reduce the memory footprint of image processing tasks and define workflows that can run on different compute environments.\
@@ -115,6 +117,7 @@ What do you want to do next with Dask? Improve pre-fetching for typical usage pa
 **What kind of science do you work on?** Scientific software development (with a background doing research in magnetic resonance imaging).\
 **Something you've tried (or would like to try) with Dask?**\
 In past research work, I used Dask primarily in two scenarios, both on a single workstation:
+
 1. To achieve multi-threading by processing image blocks in parallel on the CPU (e.g. like in dask-image)
 2. Serial blockwise processing of large volumetric data on the GPU (i.e. CuPy arrays of 10-100 GB in size) to reduce peak memory requirements.
 

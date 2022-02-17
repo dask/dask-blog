@@ -5,6 +5,7 @@ author: Genevieve Buckley
 tags: [imaging]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 ## Executive Summary
@@ -12,22 +13,23 @@ theme: twitter
 We look at how to create a basic image segmentation pipeline, using the [dask-image](http://image.dask.org/en/latest/) library.
 
 ## Contents
-* [Just show me the code](#just-show-me-the-code)
-* [Image segmentation pipeline](#image-segmentation-pipeline)
-    * [Set up your python environment](#set-up-your-python-environment)
-    * [Download the example data](#download-the-example-data)
-    * [Step 1: Reading in data](#step-1-reading-in-data)
-    * [Step 2: Filtering images](#step-2-siltering-images)
-    * [Step 3: Segmenting objects](#step-3-segmenting-objects)
-    * [Step 4: Morphological operations](#step-4-morphological-operations)
-    * [Step 5: Measuring objects](#step-5-measuring-objects)
-* [Custom functions](#custom-functions)
-    * [Dask map_overlap and map_blocks](#dask-map_overlap-and-map_blocks)
-    * [Dask delayed decorator](#dask-delayed)
-    * [scikit-image apply_parallel](#scikit-image-apply_parallel-function)
-* [Scaling up computation](#scaling-up-computation)
-* [Bonus content: using arrays on GPU](#bonus-content-using-arrays-on-gpu)
-* [How you can get involved](#how-you-can-get-involved)
+
+- [Just show me the code](#just-show-me-the-code)
+- [Image segmentation pipeline](#image-segmentation-pipeline)
+  - [Set up your python environment](#set-up-your-python-environment)
+  - [Download the example data](#download-the-example-data)
+  - [Step 1: Reading in data](#step-1-reading-in-data)
+  - [Step 2: Filtering images](#step-2-siltering-images)
+  - [Step 3: Segmenting objects](#step-3-segmenting-objects)
+  - [Step 4: Morphological operations](#step-4-morphological-operations)
+  - [Step 5: Measuring objects](#step-5-measuring-objects)
+- [Custom functions](#custom-functions)
+  - [Dask map_overlap and map_blocks](#dask-map_overlap-and-map_blocks)
+  - [Dask delayed decorator](#dask-delayed)
+  - [scikit-image apply_parallel](#scikit-image-apply_parallel-function)
+- [Scaling up computation](#scaling-up-computation)
+- [Bonus content: using arrays on GPU](#bonus-content-using-arrays-on-gpu)
+- [How you can get involved](#how-you-can-get-involved)
 
 The content of this blog post originally appeared as [a conference talk in 2020](https://github.com/genevieveBuckley/dask-image-talk-2020).
 
@@ -35,8 +37,8 @@ The content of this blog post originally appeared as [a conference talk in 2020]
 
 If you want to run this yourself, you'll need to download the example data from the Broad Bioimage Benchmark Collection: https://bbbc.broadinstitute.org/BBBC039
 
-
 And install these requirements:
+
 ```
 pip install dask-image>=0.4.0 tifffile
 ```
@@ -77,17 +79,18 @@ Our basic image segmentation pipeline has five steps:
 Before we begin, we'll need to set up our python virtual environment.
 
 At a minimum, you'll need:
+
 ```
 pip install dask-image>=0.4.0 tifffile matplotlib
 ```
 
 Optionally, you can also install the [napari](https://napari.org/) image viewer to visualize the image segmentation.
+
 ```
 pip install "napari[all]"
 ```
 
 To use napari from IPython or jupyter, run the `%gui qt` magic in a cell before calling napari. See the [napari documentation](https://napari.org/) for more details.
-
 
 ### Download the example data
 
@@ -117,7 +120,6 @@ By default, each individual `.tif` file on disk has become one chunk in our Dask
 ### Step 2: Filtering images
 
 Denoising images with a small amount of blur can improve segmentation later on. This is a common first step in a lot of image segmentation pipelines. We can do this with the dask-image [`gaussian_filter`](http://image.dask.org/en/latest/dask_image.ndfilters.html#dask_image.ndfilters.gaussian_filter) function.
-
 
 ```python
 from dask_image import ndfilters
@@ -170,7 +172,6 @@ If we calculate a threshold value independently for each image frame then we can
 thresh = ndfilters.threshold_local(smoothed, images.chunksize)
 threshold_images = smoothed > thresh
 ```
-
 
 ```python
 # Let's take a look at the images with napari
@@ -261,9 +262,9 @@ Number of nuclei: 271
 #### Measure objects in images
 
 The dask-image [ndmeasure subpackage](http://image.dask.org/en/latest/dask_image.ndmeasure.html) includes a number of different measurement functions. In this example, we'll choose to measure:
+
 1. The area in pixels of each object, and
 2. The average intensity of each object.
-
 
 ```python
 area = ndmeasure.area(images[:3], label_images, index)
@@ -271,7 +272,6 @@ mean_intensity = ndmeasure.mean(images[:3], label_images, index)
 ```
 
 #### Run computation and plot results
-
 
 ```python
 import matplotlib.pyplot as plt
@@ -282,16 +282,15 @@ plt.show()
 
 ```
 
-
 ![Matplotlib graph of dask-image measurement results: ](/images/2021-image-segmentation/dask-image-matplotlib-output.png)
 
 ## Custom functions
 
 What if you want to do something that isn't included in the dask-image API? There are several options we can use to write custom functions.
 
-* dask [map_overlap](https://docs.dask.org/en/latest/array-overlap.html?highlight=map_overlap#dask.array.map_overlap) / [map_blocks](https://docs.dask.org/en/latest/array-api.html?highlight=map_blocks#dask.array.map_blocks)
-* dask [delayed](https://docs.dask.org/en/latest/delayed.html)
-* scikit-image [apply_parallel()](https://scikit-image.org/docs/dev/api/skimage.util.html#skimage.util.apply_parallel)
+- dask [map_overlap](https://docs.dask.org/en/latest/array-overlap.html?highlight=map_overlap#dask.array.map_overlap) / [map_blocks](https://docs.dask.org/en/latest/array-api.html?highlight=map_blocks#dask.array.map_blocks)
+- dask [delayed](https://docs.dask.org/en/latest/delayed.html)
+- scikit-image [apply_parallel()](https://scikit-image.org/docs/dev/api/skimage.util.html#skimage.util.apply_parallel)
 
 ### Dask map_overlap and map_blocks
 
@@ -308,7 +307,6 @@ result = da.map_overlap(my_custom_function, my_dask_array, args)
 
 You can read more about [overlapping computations here](https://docs.dask.org/en/latest/array-overlap.html).
 
-
 ### Dask delayed
 
 If you want more flexibility and fine-grained control over your computation, then you can use [Dask delayed](https://docs.dask.org/en/latest/delayed.html). You can get started [with the Dask delayed tutorial here](https://tutorial.dask.org/01_dask.delayed.html).
@@ -318,7 +316,6 @@ If you want more flexibility and fine-grained control over your computation, the
 If you're a person who does a lot of image processing in python, one tool you're likely to already be using is [scikit-image](https://scikit-image.org/). I'd like to draw your attention to the [`apply_parallel`](https://scikit-image.org/docs/dev/api/skimage.util.html?highlight=apply_parallel#skimage.util.apply_parallel) function available in scikit-image. It uses `map-overlap`, and can be very helpful.
 
 It's useful not only when when you have big data, but also in cases where your data fits into memory but the computation you want to apply to the data is memory intensive. This might cause you to exceed the available RAM, and [`apply_parallel`](https://scikit-image.org/docs/dev/api/skimage.util.html?highlight=apply_parallel#skimage.util.apply_parallel) is great for these situations too.
-
 
 ## Scaling up computation
 
@@ -345,20 +342,23 @@ We're able to add GPU support using a library called [CuPy](https://cupy.dev/). 
 ### GPU support available in dask-image
 
 From `dask-image` version 0.6.0, there is GPU array support for four of the six subpackages:
-* imread
-* ndfilters
-* ndinterp
-* ndmorph
 
-Subpackages of `dask-image` that do *not* yet have GPU support are.
-* ndfourier
-* ndmeasure
+- imread
+- ndfilters
+- ndinterp
+- ndmorph
+
+Subpackages of `dask-image` that do _not_ yet have GPU support are.
+
+- ndfourier
+- ndmeasure
 
 We hope to add GPU support to these in the future.
 
 ### An example
 
 Here's an example of an image convolution with Dask on the CPU:
+
 ```python
 # CPU example
 import numpy as np
@@ -406,6 +406,5 @@ images_on_gpu = imread('data/BBBC039/images/*.tif', arraytype="cupy")
 ## How you can get involved
 
 Create and share your own segmentation or image processing workflows with Dask ([join the current discussion on segmentation](https://github.com/dask/dask-blog/issues/47) or [propose a new blogpost topic here](https://github.com/dask/dask-blog/issues/new?assignees=&labels=%5B%22type%2Ffeature%22%2C+%22needs-triage%22%5D&template=feature-request.md))
-
 
 Contribute to adding GPU support to dask-image: https://github.com/dask/dask-image/issues/133

@@ -2,52 +2,50 @@
 layout: post
 title: Introducing Dask distributed
 
-tags : [Programming, scipy, Python, dask]
+tags: [Programming, scipy, Python, dask]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-*This work is supported by [Continuum Analytics](http://continuum.io)
+_This work is supported by [Continuum Analytics](http://continuum.io)
 and the [XDATA Program](http://www.darpa.mil/program/XDATA)
-as part of the [Blaze Project](http://blaze.pydata.org)*
+as part of the [Blaze Project](http://blaze.pydata.org)_
 
 **tl;dr**: We analyze JSON data on a cluster using pure Python projects.
 
-Dask, a Python library for parallel computing, now works on clusters.  During
+Dask, a Python library for parallel computing, now works on clusters. During
 the past few months I and others have extended dask with a new distributed
-memory scheduler.  This enables dask's existing parallel algorithms to scale
+memory scheduler. This enables dask's existing parallel algorithms to scale
 across 10s to 100s of nodes, and extends a subset of PyData to distributed
-computing.  Over the next few weeks I and others will write about this system.
+computing. Over the next few weeks I and others will write about this system.
 Please note that dask+distributed is developing quickly and so the API is
 likely to shift around a bit.
 
 Today we start simple with the typical cluster computing problem, parsing JSON
 records, filtering, and counting events using dask.bag and the new distributed
-scheduler.  We'll dive into more advanced problems in future posts.
+scheduler. We'll dive into more advanced problems in future posts.
 
-*A video version of this blogpost is available
-[here](https://www.youtube.com/watch?v=W0Q0uwmYD6o).*
+_A video version of this blogpost is available
+[here](https://www.youtube.com/watch?v=W0Q0uwmYD6o)._
 
-
-GitHub Archive Data on S3
--------------------------
+## GitHub Archive Data on S3
 
 GitHub releases data dumps of their public event stream as gzipped compressed,
-line-delimited, JSON.  This data is too large to fit comfortably into memory,
-even on a sizable workstation.  We could stream it from disk but, due to the
+line-delimited, JSON. This data is too large to fit comfortably into memory,
+even on a sizable workstation. We could stream it from disk but, due to the
 compression and JSON encoding this takes a while and so slogs down interactive
-use.  For an interactive experience with data like this we need a distributed
+use. For an interactive experience with data like this we need a distributed
 cluster.
-
 
 ### Setup and Data
 
-We provision nine `m3.2xlarge` nodes on EC2.  These have eight cores and 30GB
-of RAM each.  On this cluster we provision one scheduler and nine workers (see
-[setup docs](http://distributed.readthedocs.org/en/latest/setup.html)).  (More
-on launching in later posts.)  We have five months of data, from 2015-01-01 to
-2015-05-31 on the `githubarchive-data` bucket in S3.  This data is publicly
-avaialble if you want to play with it on EC2.  You can download the full
+We provision nine `m3.2xlarge` nodes on EC2. These have eight cores and 30GB
+of RAM each. On this cluster we provision one scheduler and nine workers (see
+[setup docs](http://distributed.readthedocs.org/en/latest/setup.html)). (More
+on launching in later posts.) We have five months of data, from 2015-01-01 to
+2015-05-31 on the `githubarchive-data` bucket in S3. This data is publicly
+avaialble if you want to play with it on EC2. You can download the full
 dataset at https://www.githubarchive.org/ .
 
 The first record looks like the following:
@@ -80,13 +78,12 @@ The first record looks like the following:
 ```
 
 So we have a large dataset on S3 and a moderate sized play cluster on EC2,
-which has access to S3 data at about  100MB/s per node.  We're ready to play.
+which has access to S3 data at about 100MB/s per node. We're ready to play.
 
-Play
-----
+## Play
 
 We start an `ipython` interpreter on our local laptop and connect to the
-dask scheduler running on the cluster.  For the purposes of timing, the cluster
+dask scheduler running on the cluster. For the purposes of timing, the cluster
 is on the East Coast while the local machine is in California on commercial
 broadband internet.
 
@@ -98,8 +95,8 @@ broadband internet.
 ```
 
 Our seventy-two worker processes come from nine workers with eight processes
-each.  We chose processes rather than threads for this task because
-computations will be bound by the GIL.  We will change this to threads in later
+each. We chose processes rather than threads for this task because
+computations will be bound by the GIL. We will change this to threads in later
 examples.
 
 We start by loading a single month of data into distributed memory.
@@ -114,18 +111,18 @@ records = e.persist(records)
 The data lives in S3 in hourly files as gzipped encoded, line delimited JSON.
 The `s3.read_text` and `text.map` functions produce
 [dask.bag](http://dask.pydata.org/en/latest/bag.html) objects which track our
-operations in a lazily built task graph.  When we ask the executor to `persist`
+operations in a lazily built task graph. When we ask the executor to `persist`
 this collection we ship those tasks off to the scheduler to run on all of the
-workers in parallel.  The `persist` function gives us back another `dask.bag`
-pointing to these remotely running results.  This persist function returns
+workers in parallel. The `persist` function gives us back another `dask.bag`
+pointing to these remotely running results. This persist function returns
 immediately, and the computation happens on the cluster in the background
-asynchronously.  We gain control of our interpreter immediately while the
+asynchronously. We gain control of our interpreter immediately while the
 cluster hums along.
 
 The cluster takes around 40 seconds to download, decompress, and parse this
-data.  If you watch the video embedded above you'll see fancy progress-bars.
+data. If you watch the video embedded above you'll see fancy progress-bars.
 
-We ask for a single record.  This returns in around 200ms, which is fast enough
+We ask for a single record. This returns in around 200ms, which is fast enough
 that it feels instantaneous to a human.
 
 ```python
@@ -156,8 +153,8 @@ that it feels instantaneous to a human.
   'type': 'PushEvent'},)
 ```
 
-This particular event is a `'PushEvent'`.  Let's quickly see all the kinds of
-events.  For fun, we'll also time the interaction:
+This particular event is a `'PushEvent'`. Let's quickly see all the kinds of
+events. For fun, we'll also time the interaction:
 
 ```python
 >>> %time records.pluck('type').frequencies().compute()
@@ -191,18 +188,16 @@ Wall time: 1.49 s
 ```
 
 We see that it takes a few seconds to walk through the data (and perform all
-scheduling overhead.)  The scheduler adds about a millisecond overhead per
+scheduling overhead.) The scheduler adds about a millisecond overhead per
 task, and there are about 1000 partitions/files here (the GitHub data is split
 by hour and there are 730 hours in a month) so most of the cost here is
 overhead.
 
+## Investigate Jupyter
 
-Investigate Jupyter
--------------------
-
-We investigate the activities of [Project Jupyter](http://jupyter.org/).  We
+We investigate the activities of [Project Jupyter](http://jupyter.org/). We
 chose this project because it's sizable and because we understand the players
-involved and so can check our accuracy.  This will require us to filter our
+involved and so can check our accuracy. This will require us to filter our
 data to a much smaller subset, then find popular repositories and members.
 
 ```python
@@ -212,13 +207,13 @@ data to a much smaller subset, then find popular repositories and members.
 ```
 
 All records, regardless of event type, have a repository which has a name like
-`'organization/repository'` in typical GitHub fashion.  We filter all records
-that start with `'jupyter/'`.  Additionally, because this dataset is likely
-much smaller, we push all of these records into just ten partitions.  This
-dramatically reduces scheduling overhead.  The `persist` call hands this
+`'organization/repository'` in typical GitHub fashion. We filter all records
+that start with `'jupyter/'`. Additionally, because this dataset is likely
+much smaller, we push all of these records into just ten partitions. This
+dramatically reduces scheduling overhead. The `persist` call hands this
 computation off to the scheduler and then gives us back our collection that
-points to that computing result.  Filtering this month for Jupyter events takes
-about 7.5 seconds.  Afterwards computations on this subset feel snappy.
+points to that computing result. Filtering this month for Jupyter events takes
+about 7.5 seconds. Afterwards computations on this subset feel snappy.
 
 ```python
 >>> %time jupyter.count().compute()
@@ -254,9 +249,9 @@ Wall time: 182 ms
 So the first event of the year was by `'marksteve'` who decided to watch the
 `'nbviewer'` repository on new year's day.
 
-Notice that these computations take around 200ms.  I can't get below this from
+Notice that these computations take around 200ms. I can't get below this from
 my local machine, so we're likely bound by communicating to such a remote
-location.  A 200ms latency is not great if you're playing a video game, but
+location. A 200ms latency is not great if you're playing a video game, but
 it's decent for interactive computing.
 
 Here are all of the Jupyter repositories touched in the month of January,
@@ -314,19 +309,17 @@ Wall time: 226 ms
 
 Nothing too surprising here if you know these folks.
 
-
-Full Dataset
-------------
+## Full Dataset
 
 The full five months of data is too large to fit in memory, even for this
-cluster.  When we represent semi-structured data like this with dynamic data
+cluster. When we represent semi-structured data like this with dynamic data
 structures like lists and dictionaries there is quite a bit of memory bloat.
 Some careful attention to efficient semi-structured storage here could save us
 from having to switch to such a large cluster, but that will have to be
 the topic of another post.
 
 Instead, we operate efficiently on this dataset by flowing it through
-memory, persisting only the records we care about.  The distributed dask
+memory, persisting only the records we care about. The distributed dask
 scheduler descends from the single-machine dask scheduler, which was quite good
 at flowing through a computation and intelligently removing intermediate
 results.
@@ -390,10 +383,9 @@ Wall time: 219 ms
 We see that projects like `jupyterhub` were quite active during that time
 while, surprisingly, `nbconvert` saw relatively little action.
 
-Local Data
-----------
+## Local Data
 
-The Jupyter data is quite small and easily fits in a single machine.  Let's
+The Jupyter data is quite small and easily fits in a single machine. Let's
 bring the data to our local machine so that we can compare times:
 
 ```python
@@ -438,70 +430,64 @@ The difference here is 20x, which is a good reminder that, once you no longer
 have a large problem you should probably eschew distributed systems and act
 locally.
 
-
-Conclusion
-----------
+## Conclusion
 
 Downloading, decompressing, parsing, filtering, and counting JSON records
-is the new wordcount.  It's the first problem anyone sees.  Fortunately it's
-both easy to solve and the common case.  Woo hoo!
+is the new wordcount. It's the first problem anyone sees. Fortunately it's
+both easy to solve and the common case. Woo hoo!
 
 Here we saw that dask+distributed handle the common case decently well and with
-a Pure Python stack.  Typically Python users rely on a JVM technology like
-Hadoop/Spark/Storm to distribute their computations.  Here we have Python
+a Pure Python stack. Typically Python users rely on a JVM technology like
+Hadoop/Spark/Storm to distribute their computations. Here we have Python
 distributing Python; there are some usability gains to be had here like nice
 stack traces, a bit less serialization overhead, and attention to other
 Pythonic style choices.
 
-Over the next few posts I intend to deviate from this common case.  Most "Big
+Over the next few posts I intend to deviate from this common case. Most "Big
 Data" technologies were designed to solve typical data munging problems found
-in web companies or with simple database operations in mind.  Python users care
+in web companies or with simple database operations in mind. Python users care
 about these things too, but they also reach out to a wide variety of fields.
 In dask+distributed development we care about the common case, but also support
 less traditional workflows that are commonly found in the life, physical, and
 algorithmic sciences.
 
 By designing to support these more extreme cases we've nailed some common pain
-points in current distributed systems.  Today we've seen low latency and remote
+points in current distributed systems. Today we've seen low latency and remote
 control; in the future we'll see others.
 
-
-What doesn't work
------------------
+## What doesn't work
 
 I'll have an honest section like this at the end of each upcoming post
 describing what doesn't work, what still feels broken, or what I would have
 done differently with more time.
 
-*  The imports for dask and distributed are still strange.  They're two
-   separate codebases that play very nicely together.  Unfortunately the
-   functionality you need is sometimes in one or in the other and it's not
-   immediately clear to the novice user where to go.  For example dask.bag, the
-   collection we're using for `records`, `jupyter`, etc. is in `dask` but the
-   `s3` module is within the `distributed` library.  We'll have to merge things
-   at some point in the near-to-moderate future.  Ditto for the API: there are
-   compute methods both on the dask collections (`records.compute()`) and on
-   the distributed executor (`e.compute(records)`) that behave slightly
-   differently.
+- The imports for dask and distributed are still strange. They're two
+  separate codebases that play very nicely together. Unfortunately the
+  functionality you need is sometimes in one or in the other and it's not
+  immediately clear to the novice user where to go. For example dask.bag, the
+  collection we're using for `records`, `jupyter`, etc. is in `dask` but the
+  `s3` module is within the `distributed` library. We'll have to merge things
+  at some point in the near-to-moderate future. Ditto for the API: there are
+  compute methods both on the dask collections (`records.compute()`) and on
+  the distributed executor (`e.compute(records)`) that behave slightly
+  differently.
 
-*  We lack an efficient distributed shuffle algorithm.  This is very important
-   if you want to use operations like `.groupby` (which you should avoid
-   anyway).  The user API here doesn't even cleanly warn users that this is
-   missing in the distributed case which is kind of a mess. (It works fine on a
-   single machine.)  Efficient alternatives like `foldby` *are* available.
+- We lack an efficient distributed shuffle algorithm. This is very important
+  if you want to use operations like `.groupby` (which you should avoid
+  anyway). The user API here doesn't even cleanly warn users that this is
+  missing in the distributed case which is kind of a mess. (It works fine on a
+  single machine.) Efficient alternatives like `foldby` _are_ available.
 
-*  I would have liked to run this experiment directly on the cluster to see
-   how low we could have gone below the 200ms barrier we ran into here.
+- I would have liked to run this experiment directly on the cluster to see
+  how low we could have gone below the 200ms barrier we ran into here.
 
+## Links
 
-Links
------
-
-*   [dask](https://dask.pydata.org/en/latest/), the original project
-*   [dask.distributed](https://distributed.readthedocs.org/en/latest/), the
-    distributed memory scheduler powering the cluster computing
-*   [dask.bag](http://dask.pydata.org/en/latest/bag.html), the user API we've
-    used in this post.
-*   This post largely repeats work by [Blake Griffith](https://github.com/cowlicks) in a
-    [similar post](https://www.continuum.io/content/dask-distributed-and-anaconda-cluster)
-    last year with an older iteration of the dask distributed scheduler
+- [dask](https://dask.pydata.org/en/latest/), the original project
+- [dask.distributed](https://distributed.readthedocs.org/en/latest/), the
+  distributed memory scheduler powering the cluster computing
+- [dask.bag](http://dask.pydata.org/en/latest/bag.html), the user API we've
+  used in this post.
+- This post largely repeats work by [Blake Griffith](https://github.com/cowlicks) in a
+  [similar post](https://www.continuum.io/content/dask-distributed-and-anaconda-cluster)
+  last year with an older iteration of the dask distributed scheduler

@@ -5,22 +5,22 @@ title: Two Easy Ways to Use Scikit Learn and Dask
 tags: [Programming, Python, scipy]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-*This work is supported by [Continuum Analytics](http://continuum.io)
+_This work is supported by [Continuum Analytics](http://continuum.io)
 the [XDATA Program](http://www.darpa.mil/program/XDATA)
 and the Data Driven Discovery Initiative from the [Moore
-Foundation](https://www.moore.org/)*
+Foundation](https://www.moore.org/)_
 
-Summary
--------
+## Summary
 
 This post describes two simple ways to use Dask to parallelize Scikit-Learn
 operations either on a single computer or across a cluster.
 
 1.  Use the Dask Joblib backend
 2.  Use the `dklearn` projects drop-in replacements for `Pipeline`,
-`GridSearchCV`, and `RandomSearchCV`
+    `GridSearchCV`, and `RandomSearchCV`
 
 For the impatient, these look like the following:
 
@@ -40,17 +40,15 @@ with parallel_backend('dask.distributed', scheduler_host='scheduler-address:8786
   from dklearn.pipeline import Pipeline
 ```
 
-However, neither of these techniques are perfect.  These are the easiest things
-to try, but not always the best solutions.  This blogpost focuses on
+However, neither of these techniques are perfect. These are the easiest things
+to try, but not always the best solutions. This blogpost focuses on
 low-hanging fruit.
 
-
-Joblib
-------
+## Joblib
 
 Scikit-Learn already parallelizes across a multi-core CPU using
 [Joblib](https://pythonhosted.org/joblib/), a simple but powerful and mature
-library that provides an extensible map operation.  Here is a simple example of
+library that provides an extensible map operation. Here is a simple example of
 using Joblib on its own without sklearn:
 
 ```python
@@ -69,18 +67,17 @@ from joblib import Parallel, delayed
 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
 
-Dask users will recognize the `delayed` function modifier.  Dask stole
+Dask users will recognize the `delayed` function modifier. Dask stole
 the `delayed` decorator from Joblib.
 
-Many of Scikit-learn's parallel algorithms use Joblib internally.  If we can
+Many of Scikit-learn's parallel algorithms use Joblib internally. If we can
 extend Joblib to clusters then we get some added parallelism from
 joblib-enabled Scikit-learn functions immediately.
-
 
 ### Distributed Joblib
 
 Fortunately Joblib provides an interface for other parallel systems to step in
-and act as an execution engine.  We can do this with the `parallel_backend`
+and act as an execution engine. We can do this with the `parallel_backend`
 context manager to run with hundreds or thousands of cores in a nearby cluster:
 
 ```python
@@ -101,7 +98,7 @@ So we can use Joblib to parallelize normally on our multi-core processor:
 estimator = GridSearchCV(n_jobs=4, ...)  # use joblib on local multi-core processor
 ```
 
-*or* we can use Joblib together with Dask.distributed to parallelize across a
+_or_ we can use Joblib together with Dask.distributed to parallelize across a
 multi-node cluster:
 
 ```python
@@ -117,9 +114,9 @@ Joblib is used throughout many algorithms in Scikit-learn, but not all.
 Generally any operation that accepts an `n_jobs=` parameter is a possible
 choice.
 
-From Dask's perspective Joblib's interface isn't ideal.  For example it will
+From Dask's perspective Joblib's interface isn't ideal. For example it will
 always collect intermediate results back to the main process, rather than
-leaving them on the cluster until necessary.  For computationally intense
+leaving them on the cluster until necessary. For computationally intense
 operations this is fine but does add some unnecessary communication overhead.
 Also Joblib doesn't allow for operations more complex than a parallel map, so
 the range of algorithms that this can parallelize is somewhat limited.
@@ -128,22 +125,20 @@ Still though, given the wide use of Joblib-accelerated workflows (particularly
 within Scikit-learn) this is a simple thing to try if you have a cluster nearby
 with a possible large payoff.
 
-
-Dask-learn Pipeline and Gridsearch
-----------------------------------
+## Dask-learn Pipeline and Gridsearch
 
 In July 2016, Jim Crist built and [wrote
 about](http://jcrist.github.io/blog.html) a small project,
-[dask-learn](https://github.com/dask/dask-learn).  This project was a
+[dask-learn](https://github.com/dask/dask-learn). This project was a
 collaboration with SKLearn developers and an attempt to see which parts of
-Scikit-learn were trivially and usefully parallelizable.  By far the most
+Scikit-learn were trivially and usefully parallelizable. By far the most
 productive thing to come out of this work were Dask variants of Scikit-learn's
 Pipeline, GridsearchCV, and RandomSearchCV objects that better handle nested
-parallelism.  Jim observed significant speedups over SKLearn code by using
+parallelism. Jim observed significant speedups over SKLearn code by using
 these drop-in replacements.
 
 So if you replace the following imports you may get both better single-threaded
-performance *and* the ability to scale out to a cluster:
+performance _and_ the ability to scale out to a cluster:
 
 ```python
 # from sklearn.grid_search import GridSearchCV
@@ -187,7 +182,7 @@ estimator.fit(X, y)
 ```
 
 SKLearn performs this computation in around 40 seconds while the dask-learn
-drop-in replacements take around 10 seconds.  Also, if you add the following
+drop-in replacements take around 10 seconds. Also, if you add the following
 lines to connect to a [running
 cluster](http://distributed.readthedocs.io/en/latest/quickstart.html) the whole
 thing scales out:
@@ -198,38 +193,35 @@ c = Client('scheduler-address:8786')
 ```
 
 Here is a live [Bokeh](http://bokeh.pydata.org/en/latest/) plot of the
-computation on a tiny eight process "cluster" running on my own laptop.  I'm
+computation on a tiny eight process "cluster" running on my own laptop. I'm
 using processes here to highlight the costs of communication between processes
-(red).  It's actually about 30% faster to run this computation within the same
+(red). It's actually about 30% faster to run this computation within the same
 single process.
 
 <iframe src="https://cdn.rawgit.com/mrocklin/a2a42d71d0dd085753277821e24925a4/raw/e29b24bc656ea619eedfaba9ef176d5f3c19a040/dask-learn-task-stream.html"
         width="800" height="400"></iframe>
 
-Conclusion
-----------
+## Conclusion
 
 This post showed a couple of simple mechanisms for scikit-learn users to
-accelerate their existing workflows with Dask.  These aren't particularly
+accelerate their existing workflows with Dask. These aren't particularly
 sophisticated, nor are they performance-optimal, but they are easy to
-understand and easy to try out.  In a future blogpost I plan to cover more
+understand and easy to try out. In a future blogpost I plan to cover more
 complex ways in which Dask can accelerate sophisticated machine learning
 workflows.
 
-
-What we could have done better
-------------------------------
+## What we could have done better
 
 As always, I include a brief section on what went wrong or what we could have
 done better with more time.
 
--   See the bottom of [Jim's post](http://jcrist.github.io/dask-sklearn-part-1.html)
-    for a more thorough explanation of "what we could have done better" for
-    dask-learn's pipeline and gridsearch
--   Joblib + Dask.distributed interaction is convenient, but leaves some
-    performance on the table.  It's not clear how Dask can help the sklearn
-    codebase without being too invasive.
--   It would have been nice to spin up an actual cluster on parallel hardware
-    for this post.  I wrote this quickly (in a few hours) so decided to skip
-    this.  If anyone wants to write a follow-on experiment I would be happy
-    to publish it.
+- See the bottom of [Jim's post](http://jcrist.github.io/dask-sklearn-part-1.html)
+  for a more thorough explanation of "what we could have done better" for
+  dask-learn's pipeline and gridsearch
+- Joblib + Dask.distributed interaction is convenient, but leaves some
+  performance on the table. It's not clear how Dask can help the sklearn
+  codebase without being too invasive.
+- It would have been nice to spin up an actual cluster on parallel hardware
+  for this post. I wrote this quickly (in a few hours) so decided to skip
+  this. If anyone wants to write a follow-on experiment I would be happy
+  to publish it.

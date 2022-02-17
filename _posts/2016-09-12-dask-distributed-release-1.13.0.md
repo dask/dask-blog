@@ -5,6 +5,7 @@ title: Dask Distributed Release 1.13.0
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 I'm pleased to announce a release of
@@ -18,39 +19,39 @@ I'm pleased to announce a release of
 
 The last few months have seen a number of important user-facing features:
 
-*   Executor is renamed to Client
-*   Workers can spill excess data to disk when they run out of memory
-*   The Client.compute and Client.persist methods for dealing with dask
-    collections (like dask.dataframe or dask.delayed) gain the ability to
-    restrict sub-components of the computation to different parts of the
-    cluster with a `workers=` keyword argument.
-*   IPython kernels can be deployed on the worker and schedulers for
-    interactive debugging.
-*   The Bokeh web interface has gained new plots and improve the visual styling
-    of old ones.
+- Executor is renamed to Client
+- Workers can spill excess data to disk when they run out of memory
+- The Client.compute and Client.persist methods for dealing with dask
+  collections (like dask.dataframe or dask.delayed) gain the ability to
+  restrict sub-components of the computation to different parts of the
+  cluster with a `workers=` keyword argument.
+- IPython kernels can be deployed on the worker and schedulers for
+  interactive debugging.
+- The Bokeh web interface has gained new plots and improve the visual styling
+  of old ones.
 
-Additionally there are beta features in current development.  These features
+Additionally there are beta features in current development. These features
 are available now, but may change without warning in future versions.
 Experimentation and feedback by users comfortable with living on the bleeding
 edge is most welcome:
 
-*   Clients can publish named datasets on the scheduler to share between them
-*   Tasks can launch other tasks
-*   Workers can restart themselves in new software environments provided by the
-    user
+- Clients can publish named datasets on the scheduler to share between them
+- Tasks can launch other tasks
+- Workers can restart themselves in new software environments provided by the
+  user
 
-There have also been significant internal changes.  Other than increased
+There have also been significant internal changes. Other than increased
 performance these changes should not be directly apparent.
 
-*   The scheduler was refactored to a more state-machine like architecture.
-    [Doc page](http://distributed.readthedocs.io/en/latest/scheduling-state.html)
-*   Short-lived connections are now managed by a connection pool
-*   Work stealing has changed and grown more responsive:
-    [Doc page](http://distributed.readthedocs.io/en/latest/work-stealing.html)
-*   General resilience improvements
+- The scheduler was refactored to a more state-machine like architecture.
+  [Doc page](http://distributed.readthedocs.io/en/latest/scheduling-state.html)
+- Short-lived connections are now managed by a connection pool
+- Work stealing has changed and grown more responsive:
+  [Doc page](http://distributed.readthedocs.io/en/latest/work-stealing.html)
+- General resilience improvements
 
 The rest of this post will contain very brief explanations of the topics above.
-Some of these topics may become blogposts of their own at some point.  Until
+Some of these topics may become blogposts of their own at some point. Until
 then I encourage people to look at the [distributed scheduler's
 documentation](http://distributed.readthedocs.io/en/latest) which is separate
 from [dask's normal documentation](http://dask.readthedocs.io/en/latest/) and
@@ -59,15 +60,13 @@ so may contain new information for some readers (Google Analytics reports about
 [http://dask.readthedocs.org](http://dask.readthedocs.org) than on
 [http://distributed.readthedocs.org](http://distributed.readthedocs.org).
 
-
-Major Changes and Features
---------------------------
+## Major Changes and Features
 
 ### Rename Executor to Client
 
 [http://distributed.readthedocs.io/en/latest/api.html](http://distributed.readthedocs.io/en/latest/api.html)
 
-The term *Executor* was originally chosen to coincide with the
+The term _Executor_ was originally chosen to coincide with the
 [concurrent.futures](https://docs.python.org/3/library/concurrent.futures.html)
 Executor interface, which is what defines the behavior for the `.submit`,
 `.map`, `.result` methods and `Future` object used as the primary interface.
@@ -77,9 +76,9 @@ Unfortunately, this is the same term used by projects like Spark and Mesos for
 significant confusion when communicating with other communities or for
 transitioning users.
 
-In response we rename *Executor* to a somewhat more generic term, *Client* to
-designate its role as *the thing users interact with to control their
-computations*.
+In response we rename _Executor_ to a somewhat more generic term, _Client_ to
+designate its role as _the thing users interact with to control their
+computations_.
 
 ```python
 >>> from distributed import Executor  # Old
@@ -91,16 +90,15 @@ computations*.
 
 Executor remains an alias for Client and will continue to be valid for some
 time, but there may be some backwards incompatible changes for internal use of
-`executor=` keywords within methods.  Newer examples and materials will all use
+`executor=` keywords within methods. Newer examples and materials will all use
 the term `Client`.
-
 
 ### Workers Spill Excess Data to Disk
 
 [http://distributed.readthedocs.io/en/latest/worker.html#spill-excess-data-to-disk](http://distributed.readthedocs.io/en/latest/worker.html#spill-excess-data-to-disk)
 
 When workers get close to running out of memory they can send excess data to
-disk.  This is not on by default and instead requires adding the
+disk. This is not on by default and instead requires adding the
 `--memory-limit=auto` option to `dask-worker`.
 
 ```
@@ -113,33 +111,31 @@ This will eventually become the default (and is now when using
 but we'd like to see how things progress and phase it in slowly.
 
 Generally this feature should improve robustness and allow the solution of
-larger problems on smaller clusters, although with a performance cost.  Dask's
+larger problems on smaller clusters, although with a performance cost. Dask's
 policies to reduce memory use through clever scheduling remain in place, so in
 the common case you should never need this feature, but it's nice to have as a
 failsafe.
-
 
 ### Enable restriction of valid workers for compute and persist methods
 
 [http://distributed.readthedocs.io/en/latest/locality.html#user-control](http://distributed.readthedocs.io/en/latest/locality.html#user-control)
 
 Expert users of the distributed scheduler will be aware of the ability to
-restrict certain tasks to run only on certain computers.  This tends to be
-useful when dealing with GPUs or  with special databases or instruments only
+restrict certain tasks to run only on certain computers. This tends to be
+useful when dealing with GPUs or with special databases or instruments only
 available on some machines.
 
 Previously this option was available only on the `submit`, `map`, and `scatter`
-methods, forcing people to use the more immedate interface.  Now the dask
+methods, forcing people to use the more immedate interface. Now the dask
 collection interface functions `compute` and `persist` support this keyword as
 well.
-
 
 ### IPython Integration
 
 [http://distributed.readthedocs.io/en/latest/ipython.html](http://distributed.readthedocs.io/en/latest/ipython.html)
 
 You can start IPython kernels on the workers or scheduler and then access them
-directly using either IPython magics or the QTConsole.  This tends to be
+directly using either IPython magics or the QTConsole. This tends to be
 valuable when things go wrong and you want to interactively debug on the worker
 nodes themselves.
 
@@ -162,7 +158,6 @@ nodes themselves.
 {'inc-1', 'inc-2'}
 ```
 
-
 ### Bokeh Interface
 
 [http://distributed.readthedocs.io/en/latest/web.html](http://distributed.readthedocs.io/en/latest/web.html)
@@ -181,13 +176,10 @@ dynamically to respond to addiional bars.
 And we've added in extra tables and plots to monitor workers, such as their
 memory use and current backlog of tasks.
 
-
-Experimental Features
----------------------
+## Experimental Features
 
 The features described below are experimental and may change without warning.
 Please do not depend on them in stable code.
-
 
 ### Publish Datasets
 
@@ -195,7 +187,7 @@ Please do not depend on them in stable code.
 
 You can now save collections on the scheduler, allowing you to come back to the
 same computations later or allow collaborators to see and work off of your
-results.  This can be useful in the following cases:
+results. This can be useful in the following cases:
 
 1.  There is a dataset from which you frequently base all computations, and you
     want that dataset always in memory and easy to access without having to
@@ -245,7 +237,6 @@ client.publish_dataset(accounts=df2)
 4    Edith     -500
 ```
 
-
 ### Launch Tasks from tasks
 
 [http://distributed.readthedocs.io/en/latest/task-launch.html](http://distributed.readthedocs.io/en/latest/task-launch.html)
@@ -272,11 +263,10 @@ There are a few straightforward use cases for this, like iterative algorithms
 with stoping criteria, but also many novel use cases including streaming
 and monitoring systems.
 
-
 ### Restart Workers in Redeployable Python Environments
 
 You can now zip up and distribute full Conda environments, and ask
-dask-workers to restart themselves, live, in that environment.  This involves
+dask-workers to restart themselves, live, in that environment. This involves
 the following:
 
 1.  Create a conda environment locally (or any redeployable directory including
@@ -288,23 +278,21 @@ the following:
 This helps users to experiment with different software environments with a much
 faster turnaround time (typically tens of seconds) than asking IT to install
 libraries or building and deploying Docker containers (which is also a fine
-solution).  Note that they typical solution of uploading individual python
+solution). Note that they typical solution of uploading individual python
 scripts or egg files has been around for a while, [see API docs for
 upload_file](http://distributed.readthedocs.io/en/latest/api.html#distributed.client.Client.upload_file)
 
-
-Acknowledgements
-----------------
+## Acknowledgements
 
 Since version 1.12.0 on August 18th the following people have contributed
 commits to the [dask/distributed repository](https://github.com/dask/distributed)
 
-*   Dave Hirschfeld
-*   dsidi
-*   Jim Crist
-*   Joseph Crail
-*   Loïc Estève
-*   Martin Durant
-*   Matthew Rocklin
-*   Min RK
-*   Scott Sievert
+- Dave Hirschfeld
+- dsidi
+- Jim Crist
+- Joseph Crail
+- Loïc Estève
+- Martin Durant
+- Matthew Rocklin
+- Min RK
+- Scott Sievert

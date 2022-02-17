@@ -5,7 +5,11 @@ repos:
     rev: "v2.5.1" # Use the sha or tag you want to point at
     hooks:
       - id: prettier
-  - repo: https://github.com/jumanjihouse/pre-commit-hooks
-    rev: 2.1.5 # or specific git tag
+  # - repo: https://github.com/markdownlint/markdownlint
+  #   rev: "v0.11.0" # or specific git tag
+  #   hooks:
+  #     - id: markdownlint # Configure in .mdlrc
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.31.1
     hooks:
-      - id: markdownlint # Configure in .mdlrc
+      - id: markdownlint

@@ -2,24 +2,25 @@
 layout: post
 title: Distributed Dask Arrays
 
-tags : [Programming, scipy, Python, dask]
+tags: [Programming, scipy, Python, dask]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-*This work is supported by [Continuum Analytics](http://continuum.io)
+_This work is supported by [Continuum Analytics](http://continuum.io)
 and the [XDATA Program](http://www.darpa.mil/program/XDATA)
-as part of the [Blaze Project](http://blaze.pydata.org)*
+as part of the [Blaze Project](http://blaze.pydata.org)_
 
 In this post we analyze weather data across a cluster using NumPy in
-parallel with dask.array.  We focus on the following:
+parallel with dask.array. We focus on the following:
 
-1.  How to set up the distributed scheduler with a job scheduler like Sun
-GridEngine.
-2.  How to load NetCDF data from a network file system (NFS) into distributed
-RAM
-3.  How to manipulate data with dask.arrays
-4.  How to interact with distributed data using IPython widgets
+1. How to set up the distributed scheduler with a job scheduler like Sun
+   GridEngine.
+2. How to load NetCDF data from a network file system (NFS) into distributed
+   RAM
+3. How to manipulate data with dask.arrays
+4. How to interact with distributed data using IPython widgets
 
 This blogpost has an accompanying
 [screencast](https://www.youtube.com/watch?v=ZpMXEVp-iaY) which might be a bit
@@ -27,12 +28,11 @@ more fun than this text version.
 
 This is the third in a sequence of blogposts about dask.distributed:
 
-1.  [Dask Bags on GitHub Data](/2016/02/17/dask-distributed-part1)
-2.  [Dask DataFrames on HDFS](/2016/02/22/dask-distributed-part-2)
-3.  Dask Arrays on NetCDF data
+1. [Dask Bags on GitHub Data](/2016/02/17/dask-distributed-part1)
+2. [Dask DataFrames on HDFS](/2016/02/22/dask-distributed-part-2)
+3. Dask Arrays on NetCDF data
 
-Setup
------
+## Setup
 
 We wanted to emulate the typical academic cluster setup using a job scheduler
 like SunGridEngine (similar to SLURM, Torque, PBS scripts and other
@@ -65,8 +65,7 @@ scheduler address:
 After a few seconds these workers start on various nodes in the cluster and
 connect to the scheduler.
 
-Load sample data on a single machine
-------------------------------------
+## Load sample data on a single machine
 
 On the shared NFS drive we've downloaded several NetCDF3 files, each holding
 the global temperature every six hours for a single day:
@@ -86,7 +85,7 @@ We use conda to install the netCDF4 library and make a small function to
 read the `t2m` variable for "temperature at two meters elevation" from a single
 filename:
 
-    $ conda install netcdf4
+    conda install netcdf4
 
 ```python
 import netCDF4
@@ -95,7 +94,7 @@ def load_temperature(fn):
         return f.variables['t2m'][:]
 ```
 
-This converts a single file into a single numpy array in memory.  We could call
+This converts a single file into a single numpy array in memory. We could call
 this on an individual file locally as follows:
 
 ```python
@@ -109,18 +108,16 @@ array([[[ 253.96238624,  253.96238624,  253.96238624, ...,  253.96238624,
 (4, 721, 1440)
 ```
 
-Our dataset has dimensions of `(time, latitude, longitude)`.  Note above that
+Our dataset has dimensions of `(time, latitude, longitude)`. Note above that
 each day has four time entries (measurements every six hours).
 
-The NFS set up by Starcluster is unfortunately quite small.  We were only able
+The NFS set up by Starcluster is unfortunately quite small. We were only able
 to fit around five months of data (136 days) in shared disk.
 
-
-Load data across cluster
-------------------------
+## Load data across cluster
 
 We want to call the `load_temperature` function on our list `filenames` on each
-of our four workers.  We connect a dask Executor to our scheduler address and
+of our four workers. We connect a dask Executor to our scheduler address and
 then map our function on our filenames:
 
 ```python
@@ -138,9 +135,7 @@ then map our function on our filenames:
 After this completes we have several numpy arrays scattered about the memory of
 each of our four workers.
 
-
-Coordinate with dask.array
---------------------------
+## Coordinate with dask.array
 
 We coordinate these many numpy arrays into a single logical dask array as
 follows:
@@ -156,15 +151,13 @@ dask.array<concate..., shape=(544, 721, 1440), dtype=float64, chunksize=(4, 721,
 ```
 
 This single logical dask array is comprised of 136 numpy arrays spread across
-our cluster.  Operations on the single dask array will trigger many operations
+our cluster. Operations on the single dask array will trigger many operations
 on each of our numpy arrays.
 
-
-Interact with Distributed Data
-------------------------------
+## Interact with Distributed Data
 
 We can now interact with our dataset using standard NumPy syntax and other
-PyData libraries.  Below we pull out a single time slice and render it to the
+PyData libraries. Below we pull out a single time slice and render it to the
 screen with matplotlib.
 
 ```python
@@ -179,9 +172,7 @@ In the [screencast version of this
 post](https://www.youtube.com/watch?v=ZpMXEVp-iaY) we hook this up to an
 IPython slider widget and scroll around time, which is fun.
 
-
-Speed
------
+## Speed
 
 We benchmark a few representative operations to look at the strengths and
 weaknesses of the distributed system.
@@ -189,7 +180,7 @@ weaknesses of the distributed system.
 ### Single element
 
 This single element computation accesses a single number from a single NumPy
-array of our dataset.  It is bound by a network roundtrip from client to
+array of our dataset. It is bound by a network roundtrip from client to
 scheduler, to worker, and back.
 
 ```python
@@ -201,7 +192,7 @@ Wall time: 9.72 ms
 ### Single time slice
 
 This time slice computation pulls around 8 MB from a single NumPy array on a
-single worker.  It is likely bound by network bandwidth.
+single worker. It is likely bound by network bandwidth.
 
 ```python
 >>> %time x[0].compute()
@@ -212,7 +203,7 @@ Wall time: 274 ms
 ### Mean computation
 
 This mean computation touches every number in every NumPy array across all of
-our workers.  Computing means is quite fast, so this is likely bound by
+our workers. Computing means is quite fast, so this is likely bound by
 scheduler overhead.
 
 ```python
@@ -221,15 +212,13 @@ CPU times: user 88 ms, sys: 0 ns, total: 88 ms
 Wall time: 422 ms
 ```
 
-
-Interactive Widgets
---------------------
+## Interactive Widgets
 
 To make these times feel more visceral we hook up these computations to IPython
 Widgets.
 
-This first example looks fairly fluid.  This only touches a single worker and
-returns a small result.  It is cheap because it indexes in a way that is well
+This first example looks fairly fluid. This only touches a single worker and
+returns a small result. It is cheap because it indexes in a way that is well
 aligned with how our NumPy arrays are split up by time.
 
 ```python
@@ -241,7 +230,7 @@ def f(time):
 <img src="/images/mean-time.gif">
 
 This second example is less fluid because we index across our NumPy chunks.
-Each computation touches all of our data.  It's still not bad though and quite
+Each computation touches all of our data. It's still not bad though and quite
 acceptable by today's standards of interactive distributed data
 science.
 
@@ -253,17 +242,15 @@ def f(lat):
 
 <img src="/images/mean-latitude.gif">
 
-
-Normalize Data
---------------
+## Normalize Data
 
 Until now we've only performed simple calculations on our data, usually grabbing
-out means.  The image of the temperature above looks unsurprising.  The image
+out means. The image of the temperature above looks unsurprising. The image
 is dominated by the facts that land is warmer than oceans and that the equator
-is warmer than the poles.  No surprises there.
+is warmer than the poles. No surprises there.
 
 To make things more interesting we subtract off the mean and divide by the
-standard deviation over time.  This will tell us how unexpectedly hot or cold a
+standard deviation over time. This will tell us how unexpectedly hot or cold a
 particular point was, relative to all measurements of that point over time.
 This gives us something like a geo-located Z-Score.
 
@@ -282,7 +269,7 @@ plt.colorbar()
 
 <img src="/images/temperature-denormalized.png">
 
-We can now see much more fine structure of the currents of the day.  In the
+We can now see much more fine structure of the currents of the day. In the
 [screencast version](https://www.youtube.com/watch?v=ZpMXEVp-iaY) we hook this
 dataset up to a slider as well and inspect various times.
 
@@ -304,50 +291,44 @@ def f(time):
 
 <img src="/images/latitude-plot.gif">
 
-
-Conclusion
-----------
+## Conclusion
 
 We showed how to use distributed dask.arrays on a typical academic cluster.
 I've had several conversations with different groups about this topic; it seems
-to be a common case.  I hope that the instructions at the beginning of this
+to be a common case. I hope that the instructions at the beginning of this
 post prove to be helpful to others.
 
 It is really satisfying to me to couple interactive widgets with data on a
-cluster in an intuitive way.  This sort of fluid interaction on larger datasets
+cluster in an intuitive way. This sort of fluid interaction on larger datasets
 is a core problem in modern data science.
 
-
-What didn't work
-----------------
+## What didn't work
 
 As always I'll include a section like this on what didn't work well or what I
 would have done with more time:
 
-*   No high-level `read_netcdf` function:  We had to use the mid-level API of
-    `executor.map` to construct our dask array.  This is a bit of a pain for
-    novice users.  We should probably adapt existing high-level functions in
-    dask.array to robustly handle the distributed data case.
-*   Need a larger problem:  Our dataset could have fit into a Macbook Pro.
-    A larger dataset that could not have been efficiently investigated from a
-    single machine would have really cemented the need for this technology.
-*   Easier deployment:  The solution above with `qsub` was straightforward but
-    not always accessible to novice users.  Additionally while SGE is common
-    there are several other systems that are just as common.  We need to think
-    of nice ways to automate this for the user.
-*   XArray integration:  Many people use dask.array on single machines through
-    [XArray](http://xarray.pydata.org/en/stable/), an excellent library for the
-    analysis of labeled nd-arrays especially common in climate science.  It
-    would be good to integrate this new distributed work into the XArray
-    project.  I suspect that doing this mostly involves handling the data
-    ingest problem described above.
-*   Reduction speed: The computation of normalized temperature, `z`, took a
-    surprisingly long time.  I'd like to look into what is holding up that
-    computation.
+- No high-level `read_netcdf` function: We had to use the mid-level API of
+  `executor.map` to construct our dask array. This is a bit of a pain for
+  novice users. We should probably adapt existing high-level functions in
+  dask.array to robustly handle the distributed data case.
+- Need a larger problem: Our dataset could have fit into a Macbook Pro.
+  A larger dataset that could not have been efficiently investigated from a
+  single machine would have really cemented the need for this technology.
+- Easier deployment: The solution above with `qsub` was straightforward but
+  not always accessible to novice users. Additionally while SGE is common
+  there are several other systems that are just as common. We need to think
+  of nice ways to automate this for the user.
+- XArray integration: Many people use dask.array on single machines through
+  [XArray](http://xarray.pydata.org/en/stable/), an excellent library for the
+  analysis of labeled nd-arrays especially common in climate science. It
+  would be good to integrate this new distributed work into the XArray
+  project. I suspect that doing this mostly involves handling the data
+  ingest problem described above.
+- Reduction speed: The computation of normalized temperature, `z`, took a
+  surprisingly long time. I'd like to look into what is holding up that
+  computation.
 
+## Links
 
-Links
------
-
-*   [dask.array](https://dask.pydata.org/en/latest/array.html)
-*   [dask.distributed](https://distributed.readthedocs.org/en/latest/)
+- [dask.array](https://dask.pydata.org/en/latest/array.html)
+- [dask.distributed](https://distributed.readthedocs.org/en/latest/)

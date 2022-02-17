@@ -6,11 +6,10 @@ author: Matthew Rocklin
 tags: [MPI]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-
-Executive Summary
------------------
+## Executive Summary
 
 We present an experiment on how to pass data from a loosely coupled parallel
 computing system like Dask to a tightly coupled parallel computing system like
@@ -20,37 +19,32 @@ We give motivation and a complete digestible example.
 
 [Here is a gist of the code and results](https://gist.github.com/mrocklin/193a9671f1536b9d13524214798da4a8).
 
-Motivation
-----------
+## Motivation
 
-*Disclaimer: Nothing in this post is polished or production ready.  This is an
-experiment designed to start conversation.  No long-term support is offered.*
+_Disclaimer: Nothing in this post is polished or production ready. This is an
+experiment designed to start conversation. No long-term support is offered._
 
 We often get the following question:
 
->  How do I use Dask to pre-process my data,
->  but then pass those results to a traditional MPI application?
+> How do I use Dask to pre-process my data,
+> but then pass those results to a traditional MPI application?
 
 You might want to do this because you're supporting legacy code written
 in MPI, or because your computation requires tightly coupled parallelism of the
 sort that only MPI can deliver.
 
-
-First solution: Write to disk
------------------------------
+## First solution: Write to disk
 
 The simplest thing to do of course is to write your Dask results to disk and
-then load them back from disk with MPI.  Given the relative cost of your
+then load them back from disk with MPI. Given the relative cost of your
 computation to data loading, this might be a great choice.
 
 For the rest of this blogpost we're going to assume that it's not.
 
-
-Second solution
----------------
+## Second solution
 
 We have a trivial MPI library written in [MPI4Py](https://mpi4py.readthedocs.io/en/stable/)
-where each rank just prints out all the data that it was given.  In principle
+where each rank just prints out all the data that it was given. In principle
 though it could call into C++ code, and do arbitrary MPI things.
 
 ```python
@@ -131,23 +125,22 @@ Then we can call this mix of Dask and an MPI program using normal `mpirun` or
 mpirun -np 5 python my_dask_script.py
 ```
 
-What just happened
-------------------
+## What just happened
 
 So MPI started up and ran our script.
 The [dask-mpi](https://dask-mpi.readthedocs.io/en/latest/) project set a Dask
 scheduler on rank 0, runs our client code on rank 1, and then runs a bunch of workers on ranks 2+.
 
--  Rank 0: Runs a Dask scheduler
--  Rank 1: Runs our script
--  Ranks 2+: Run Dask workers
+- Rank 0: Runs a Dask scheduler
+- Rank 1: Runs our script
+- Ranks 2+: Run Dask workers
 
 Our script then created a Dask array, though presumably here it would read in
 data from some source, do more complex Dask manipulations before continuing on.
 
 We then wait until all of the Dask work has finished and is in a quiet state.
 We then query the state in the scheduler to find out where all of that data
-lives.  That's this code here:
+lives. That's this code here:
 
 ```python
 # Find out where data is on each worker
@@ -174,9 +167,7 @@ That function gets the data directly from local memory (the Dask workers and
 MPI ranks are in the same process), and does whatever the MPI application
 wants.
 
-
-Future work
------------
+## Future work
 
 This could be improved in a few ways:
 
@@ -187,11 +178,11 @@ This could be improved in a few ways:
     by MPI, but could maybe start up MPI on its own.
 
     You could imagine Dask running on something like Kubernetes doing highly
-    dynamic work, scaling up and down as necessary.  Then it would get to a
+    dynamic work, scaling up and down as necessary. Then it would get to a
     point where it needed to run some MPI code so it would, itself, start up
     MPI on its worker processes and run the MPI application on its data.
 
-3.  We haven't really said anything about resilience here.  My guess is that
+3.  We haven't really said anything about resilience here. My guess is that
     this isn't hard to do (Dask has plenty of mechanisms to build complex
     inter-task relationships) but I didn't solve it above.
 

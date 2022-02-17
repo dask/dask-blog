@@ -4,9 +4,10 @@ title: Stability of the Dask library
 author: Matthew Rocklin
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-Dask is moving fast these days.  Sometimes we break things as a result.
+Dask is moving fast these days. Sometimes we break things as a result.
 
 Historically this hasn't been a problem, according to our survey last year
 most users were fairly happy with Dask's stability.
@@ -19,14 +20,12 @@ This can cause friction for downstream users today,
 but also means more-than-incremental changes for the future.
 We've optimized a little bit for long-term growth over short-term stability.
 
-
 ### Motivation for change
 
 There are two structural things driving some of these changes:
 
 1.  An increase in computational scale
 2.  An increase in organizational scale
-
 
 ### Computational Scale
 
@@ -49,7 +48,6 @@ myriad of downstream user communities (Xarray, Prefect, RAPIDS, XGBoost, ...).
 This is largely due to those downstream developer communities,
 who help to identify, isolate, and work through the subtle tremors that occur
 on the surface when we make these subsurface shifts.
-
 
 ### Organizational scale
 
@@ -74,11 +72,10 @@ This results in more maintainable designs,
 but it also means that we're taking apart the clock and putting it back together.
 It takes a little while to find all of the missing parts :)
 
-
 ### How this affects you today
 
 This all started around when we switched to Calendar Versioning at the end of last year
-(Dask version `2.30.1` rolled over into `2020.12.0` last December).  You may
+(Dask version `2.30.1` rolled over into `2020.12.0` last December). You may
 have noticed
 
 1.  an increased sensitivity to version mismatches (as we change the Dask
@@ -86,21 +83,20 @@ have noticed
 2.  releases with stability issues (2020.12 was particularly rough)
 3.  [tighter pinning](https://github.com/dask/community/issues/155) between dask and distributed versions during releases
 
-
 ### How this will affect you
 
 We've merged in a [PR](https://github.com/dask/dask/pull/7620)
 to change the default behavior when moving [high level graphs](https://docs.dask.org/en/latest/high-level-graphs.html)
-to the scheduler for Dask Dataframes.  This should result in much
+to the scheduler for Dask Dataframes. This should result in much
 less delay when submitting large computations and almost no delay in
-optimization.  It also opens up a conduit for us to send *a lot* more semantic
+optimization. It also opens up a conduit for us to send _a lot_ more semantic
 information to the scheduler about your computation, which can result in new
 visualizations and smarter scheduling in the future.
 
 It will also probably break some things.
 
 To be clear, all tests pass among Dask, distributed, xarray, prefect, rapids,
-and other downstream projects.  We've done our homework here, but almost certainly we've missed something.
+and other downstream projects. We've done our homework here, but almost certainly we've missed something.
 
 This is only one of several larger changes happening in the coming months.
 We appreciate your patience and your engagement as we make some of these larger shifts.

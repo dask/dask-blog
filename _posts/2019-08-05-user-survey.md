@@ -6,6 +6,7 @@ author: Tom Augspurger
 tags: [User Survey]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 <style type="text/css">
@@ -18,13 +19,12 @@ table tr.even td {
 }
 
 table {
-	text-shadow: none;
+    text-shadow: none;
 }
 
 </style>
 
-
-# 2019 Dask User Survey Results
+## 2019 Dask User Survey Results
 
 This notebook presents the results of the 2019 Dask User Survey,
 which ran earlier this summer. Thanks to everyone who took the time to fill out the survey!
@@ -42,29 +42,19 @@ We had 259 responses to the survey. Overall, we found that the survey respondent
 
 Now we'll go through some individual items questions, highlighting particularly interesting results.
 
-
 ## How do you use Dask?
 
 For learning resources, almost every respondent uses the documentation.
 
-
-
 ![svg](/images/analyze_files/analyze_4_0.svg)
-
 
 Most respondents use Dask at least occasionally. Fortunately we had a decent number of respondents who are just looking into Dask, yet still spent the time to take the survey.
 
-
-
 ![svg](/images/analyze_files/analyze_6_0.svg)
-
 
 I'm curiuos about how learning resource usage changes as users become more experienced. We might expect those just looking into Dask to start with `examples.dask.org`, where they can try out Dask without installing anything.
 
-
-
 ![svg](/images/analyze_files/analyze_8_0.svg)
-
 
 Overall, documentation is still the leader across user user groups.
 
@@ -73,37 +63,22 @@ The usage of the [Dask tutorial](https://github.com/dask/dask-tutorial) and the 
 From StackOverflow questions and GitHub issues, we have a vague idea about which parts of the library are used.
 The survey shows that (for our respondents at least) DataFrame and Delayed are the most commonly used APIs.
 
-
-
 ![svg](/images/analyze_files/analyze_10_0.svg)
-
-
 
     About 65.49% of our respondests are using Dask on a Cluster.
 
-
-But the majority of respondents *also* use Dask on their laptop.
+But the majority of respondents _also_ use Dask on their laptop.
 This highlights the importance of Dask scaling down, either for
 prototyping with a `LocalCluster`, or for out-of-core analysis
 using `LocalCluster` or one of the single-machine schedulers.
 
-
-
 ![svg](/images/analyze_files/analyze_13_0.svg)
-
 
 Most respondents use Dask interactively, at least some of the time.
 
-
-
 ![svg](/images/analyze_files/analyze_15_0.svg)
 
-
 Most repondents thought that more documentation and examples would be the most valuable improvements to the project. This is especially pronounced among new users. But even among those using Dask everyday more people thought that "More examples" is more valuable than "New features" or "Performance improvements".
-
-
-
-
 
 <style  type="text/css" >
     #T_820ef326_b488_11e9_ad41_186590cd1c87row0_col0 {
@@ -152,6 +127,7 @@ Most repondents thought that more documentation and examples would be the most v
             background-color:  #589ec8;
             color:  #000000;
         }</style><table id="T_820ef326_b488_11e9_ad41_186590cd1c87" ><caption>Normalized by row. Darker means that a higher proporiton of users with that usage frequency prefer that priority.</caption><thead>    <tr>        <th class="index_name level0" >Which would help you most right now?</th>        <th class="col_heading level0 col0" >Bug fixes</th>        <th class="col_heading level0 col1" >More documentation</th>        <th class="col_heading level0 col2" >More examples in my field</th>        <th class="col_heading level0 col3" >New features</th>        <th class="col_heading level0 col4" >Performance improvements</th>    </tr>    <tr>        <th class="index_name level0" >How often do you use Dask?</th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>    </tr></thead><tbody>
+
                 <tr>
                         <th id="T_820ef326_b488_11e9_ad41_186590cd1c87level0_row0" class="row_heading level0 row0" >Every day</th>
                         <td id="T_820ef326_b488_11e9_ad41_186590cd1c87row0_col0" class="data row0 col0" >9</td>
@@ -178,13 +154,7 @@ Most repondents thought that more documentation and examples would be the most v
             </tr>
     </tbody></table>
 
-
-
 Perhaps users of certain dask APIs feel differenlty from the group as a whole? We perform a similar analysis grouped by API use, rather than frequency of use.
-
-
-
-
 
 <style  type="text/css" >
     #T_821479f4_b488_11e9_ad41_186590cd1c87row0_col0 {
@@ -293,6 +263,7 @@ Perhaps users of certain dask APIs feel differenlty from the group as a whole? W
             background-color:  #f4eef6;
             color:  #000000;
         }</style><table id="T_821479f4_b488_11e9_ad41_186590cd1c87" ><caption>Normalized by row. Darker means that a higher proporiton of users of that API prefer that priority.</caption><thead>    <tr>        <th class="index_name level0" >Which would help you most right now?</th>        <th class="col_heading level0 col0" >Bug fixes</th>        <th class="col_heading level0 col1" >More documentation</th>        <th class="col_heading level0 col2" >More examples in my field</th>        <th class="col_heading level0 col3" >New features</th>        <th class="col_heading level0 col4" >Performance improvements</th>    </tr>    <tr>        <th class="index_name level0" >Dask APIs</th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>    </tr></thead><tbody>
+
                 <tr>
                         <th id="T_821479f4_b488_11e9_ad41_186590cd1c87level0_row0" class="row_heading level0 row0" >Array</th>
                         <td id="T_821479f4_b488_11e9_ad41_186590cd1c87row0_col0" class="data row0 col0" >10</td>
@@ -351,18 +322,13 @@ Perhaps users of certain dask APIs feel differenlty from the group as a whole? W
             </tr>
     </tbody></table>
 
-
-
 Nothing really stands out. The "futures" users (who we expect to be relatively advanced) may prioritize features and performance over documentation. But everyone agrees that more examples are the highest priority.
 
 ## Common Feature Requests
 
 For specific features, we made a list of things that we (as developers) thought might be important.
 
-
-
 ![svg](/images/analyze_files/analyze_22_0.svg)
-
 
 The clearest standout is how many people thought "Better NumPy/Pandas support" was "most critical". In hindsight, it'd be good to have a followup fill-in field to undertand what each respondent meant by that. The parsimonious interpretion is "cover more of the NumPy / pandas API".
 
@@ -376,21 +342,11 @@ And of course, we have people pushing Dask to its limits for whom "Improving sca
 
 A relatively high proportion of respondents use Python 3 (97% compared to 84% in the most recent [Python Developers Survey](https://www.jetbrains.com/research/python-developers-survey-2018/)).
 
-
-
-
-
     3    97.29%
     2     2.71%
     Name: Python 2 or 3?, dtype: object
 
-
-
 We were a bit surprised to see that SSH is the most popular "cluster resource manager".
-
-
-
-
 
     SSH                                                       98
     Kubernetes                                                73
@@ -400,13 +356,7 @@ We were a bit surprised to see that SSH is the most popular "cluster resource ma
     Hadoop / Yarn / EMR                                       14
     Name: If you use a cluster, how do you launch Dask? , dtype: int64
 
-
-
 How does cluster-resource manager compare with API usage?
-
-
-
-
 
 <style  type="text/css" >
     #T_8326d0f8_b488_11e9_ad41_186590cd1c87row0_col0 {
@@ -515,6 +465,7 @@ How does cluster-resource manager compare with API usage?
             background-color:  #f9f2f8;
             color:  #000000;
         }</style><table id="T_8326d0f8_b488_11e9_ad41_186590cd1c87" ><thead>    <tr>        <th class="index_name level0" >Dask APIs</th>        <th class="col_heading level0 col0" >Array</th>        <th class="col_heading level0 col1" >Bag</th>        <th class="col_heading level0 col2" >DataFrame</th>        <th class="col_heading level0 col3" >Delayed</th>        <th class="col_heading level0 col4" >Futures</th>        <th class="col_heading level0 col5" >ML</th>        <th class="col_heading level0 col6" >Xarray</th>    </tr>    <tr>        <th class="index_name level0" >If you use a cluster, how do you launch Dask? </th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>        <th class="blank" ></th>    </tr></thead><tbody>
+
                 <tr>
                         <th id="T_8326d0f8_b488_11e9_ad41_186590cd1c87level0_row0" class="row_heading level0 row0" >Custom</th>
                         <td id="T_8326d0f8_b488_11e9_ad41_186590cd1c87row0_col0" class="data row0 col0" >15</td>
@@ -567,22 +518,17 @@ How does cluster-resource manager compare with API usage?
             </tr>
     </tbody></table>
 
-
-
 HPC users are relatively heavy users of `dask.array` and xarray.
 
 Somewhat surprisingly, Dask's heaviest users find dask stable enough. Perhaps they've pushed past the bugs and found workarounds (percentages are normalized by row).
 
-
-
 ![svg](/images/analyze_files/analyze_32_0.svg)
-
 
 ## Takeaways
 
 1. We should prioritize improving and expanding our documentation and examples. This may be
    accomplished by Dask maintainers seeking examples from the community. Many of the examples
-   on https://examples.dask.org were developed by domain specialist who use Dask.
+   on <https://examples.dask.org> were developed by domain specialist who use Dask.
 2. Improved scaling to larger problems is important, but we shouldn't
    sacrifice the single-machine usecase to get there.
 3. Both interactive and batch workflows are important.

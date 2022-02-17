@@ -5,6 +5,7 @@ author: Genevieve Buckley
 tags: [imaging, life science, skan, skeleton analysis]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 ## Executive Summary
@@ -13,32 +14,34 @@ In this blogpost, we show how to modify a skeleton network analysis with Dask to
 
 ## Contents
 
-* [Skeleton structures are everywhere](#skeleton-structures-are-everywhere)
-* [The scientific problem](#the-scientific-problem)
-* [The compute problem](#the-compute-problem)
-* [Our approach](#our-approach)
-* [Results](#results)
-* [Limitations](#limitations)
-* [Problems encountered](#problems-encountered)
-* [How we solved them](#how-we-solved-them)
-    * [Problem 1: The skeletonize function from scikit-image crashes due to lack of RAM](#problem-1-the-skeletonize-function-from-scikit-image-crashes-due-to-lack-of-ram)
-    * [Problem 2: Ragged or non-uniform output from Dask array chunks](#problem-2-ragged-or-non-uniform-output-from-dask-array-chunks)
-    * [Problem 3: Grabbing the image chunks with an overlap](#problem-3-grabbing-the-image-chunks-with-an-overlap)
-    * [Problem 4: Summary statistics with skan](#problem-4-summary-statistics-with-skan)
-* [What's next](#what's-next)
-* [How you can help](#how-you-can-help)
+- [Skeleton structures are everywhere](#skeleton-structures-are-everywhere)
+- [The scientific problem](#the-scientific-problem)
+- [The compute problem](#the-compute-problem)
+- [Our approach](#our-approach)
+- [Results](#results)
+- [Limitations](#limitations)
+- [Problems encountered](#problems-encountered)
+- [How we solved them](#how-we-solved-them)
+  - [Problem 1: The skeletonize function from scikit-image crashes due to lack of RAM](#problem-1-the-skeletonize-function-from-scikit-image-crashes-due-to-lack-of-ram)
+  - [Problem 2: Ragged or non-uniform output from Dask array chunks](#problem-2-ragged-or-non-uniform-output-from-dask-array-chunks)
+  - [Problem 3: Grabbing the image chunks with an overlap](#problem-3-grabbing-the-image-chunks-with-an-overlap)
+  - [Problem 4: Summary statistics with skan](#problem-4-summary-statistics-with-skan)
+- [What's next](#what's-next)
+- [How you can help](#how-you-can-help)
 
 ## Skeleton structures are everywhere
 
 Lots of biological structures have a skeleton or network-like shape. We see these in all kinds of places, including:
-* blood vessel branching
-* the branching of airways
-* neuron networks in the brain
-* the root structure of plants
-* the capillaries in leaves
-* ... and many more
+
+- blood vessel branching
+- the branching of airways
+- neuron networks in the brain
+- the root structure of plants
+- the capillaries in leaves
+- ... and many more
 
 Analysing the structure of these skeletons can give us important information about the biology of that system.
+
 ## The scientific problem
 
 For this bogpost, we will look at the blood vessels inside of a lung. This data was shared with us by [Marcus Kitchen](https://research.monash.edu/en/persons/marcus-kitchen), [Andrew Stainsby](https://hudson.org.au/researcher-profile/andrew-stainsby/), and their team of collaborators.
@@ -93,9 +96,9 @@ This project was originally intended to be a quick & easy one. Famous last words
 
 What I wanted to do was to put the image data in a Dask array, and then use the [`map_overlap`](https://docs.dask.org/en/latest/array-overlap.html) function to do the image filtering, thresholding, skeletonizing, and skeleton analysis. What I soon found was that although the image filtering, thresholding, and skeletonization worked well, the skeleton analysis step had some problems:
 
-* Dask's map_overlap function doesn't handle ragged or non-uniformly shaped results from different image chunks very well, and...
+- Dask's map_overlap function doesn't handle ragged or non-uniformly shaped results from different image chunks very well, and...
 
-* Internal function in the skan library were written in a way that was incompatible with distributed computation.
+- Internal function in the skan library were written in a way that was incompatible with distributed computation.
 
 ## How we solved them
 
@@ -104,9 +107,10 @@ What I wanted to do was to put the image data in a Dask array, and then use the 
 The [`skeletonize`](https://scikit-image.org/docs/dev/auto_examples/edges/plot_skeleton.html) function of [scikit-image](https://scikit-image.org/) is very memory intensive, and was crashing on a laptop with 16GB RAM.
 
 We solved this by:
-* Putting our image data into a Dask array with [dask-image `imread`](http://image.dask.org/en/latest/dask_image.imread.html),
-* [Rechunking](https://docs.dask.org/en/latest/array-chunks.html?highlight=rechunk#rechunking) the Dask array. We need to change the chunk shapes from 2D slices to small cuboid volumes, so the next step in the computation is efficient. We can choose the overall size of the chunks so that we can stay under the memory threshold needed for skeletonize.
-* Finally, we run the [`skeletonize` function](https://scikit-image.org/docs/dev/auto_examples/edges/plot_skeleton.html) on the Dask array chunks using the [`map_overlap` function](https://docs.dask.org/en/latest/array-overlap.html). By limiting the size of the array chunks, we stay under our memory threshold!
+
+- Putting our image data into a Dask array with [dask-image `imread`](http://image.dask.org/en/latest/dask_image.imread.html),
+- [Rechunking](https://docs.dask.org/en/latest/array-chunks.html?highlight=rechunk#rechunking) the Dask array. We need to change the chunk shapes from 2D slices to small cuboid volumes, so the next step in the computation is efficient. We can choose the overall size of the chunks so that we can stay under the memory threshold needed for skeletonize.
+- Finally, we run the [`skeletonize` function](https://scikit-image.org/docs/dev/auto_examples/edges/plot_skeleton.html) on the Dask array chunks using the [`map_overlap` function](https://docs.dask.org/en/latest/array-overlap.html). By limiting the size of the array chunks, we stay under our memory threshold!
 
 ### Problem 2: Ragged or non-uniform output from Dask array chunks
 
@@ -126,6 +130,7 @@ def foo(a):  # our dummy analysis function
 ```
 
 With `map_blocks`, everything works well:
+
 ```python
 result = da.map_blocks(foo, x, drop_axis=1)
 result.compute()  # this works well
@@ -231,6 +236,7 @@ Skeleton branch statistics can be calculate with the [skan `summarize`](https://
 We'll solve this problem by first initializing a [`Skeleton`](https://jni.github.io/skan/api/skan.csr.html#skan.csr.Skeleton) object instance with a tiny dummy dataset, then overwriting the attributes of the skeleton object with our real results. This is a hack, but it lets us achieve our goal: summary branch statistics for our large dataset.
 
 First we make a Skeleton object instance with dummy data:
+
 ```python
 from skan._testdata import skeleton0
 
@@ -238,6 +244,7 @@ skeleton_object = Skeleton(skeleton0)  # initialize with dummy data
 ```
 
 Then we overwrite the attributes with the previously calculated results:
+
 ```
 skeleton_object.skeleton_image = ...
 skeleton_object.graph = ...
@@ -248,6 +255,7 @@ skeleton_object.distances = ...
 ```
 
 Then finally we can calculate the summary branch statistics:
+
 ```python
 from skan import summarize
 
@@ -255,29 +263,28 @@ statistics = summarize(skel_obj)
 statistics.head()
 ```
 
-|    |   skeleton-id |   node-id-src |   node-id-dst |   branch-distance |   branch-type |   mean-pixel-value |   stdev-pixel-value |   image-coord-src-0 |   image-coord-src-1 |   image-coord-src-2 |   image-coord-dst-0 |   image-coord-dst-1 |   image-coord-dst-2 |   coord-src-0 |   coord-src-1 |   coord-src-2 |   coord-dst-0 |   coord-dst-1 |   coord-dst-2 |   euclidean-distance |
-|---:|--------------:|--------------:|--------------:|------------------:|--------------:|-------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|---------------------:|
-|  0 |             1 |             1 |             2 |           1       |             2 |           0.474584 |          0.00262514 |                  22 |                 400 |                 595 |                  22 |                 400 |                 596 |            22 |           400 |           595 |            22 |           400 |           596 |              1       |
-|  1 |             2 |             3 |             9 |           8.19615 |             2 |           0.464662 |          0.00299629 |                  37 |                 400 |                 622 |                  43 |                 392 |                 590 |            37 |           400 |           622 |            43 |           392 |           590 |             33.5261  |
-|  2 |             3 |            10 |            11 |           1       |             2 |           0.483393 |          0.00771038 |                  49 |                 391 |                 589 |                  50 |                 391 |                 589 |            49 |           391 |           589 |            50 |           391 |           589 |              1       |
-|  3 |             5 |            13 |            19 |           6.82843 |             2 |           0.464325 |          0.0139064  |                  52 |                 389 |                 588 |                  55 |                 385 |                 588 |            52 |           389 |           588 |            55 |           385 |           588 |              5       |
-|  4 |             7 |            21 |            23 |           2       |             2 |           0.45862  |          0.0104024  |                  57 |                 382 |                 587 |                  58 |                 380 |                 586 |            57 |           382 |           587 |            58 |           380 |           586 |              2.44949 |
-
+|     | skeleton-id | node-id-src | node-id-dst | branch-distance | branch-type | mean-pixel-value | stdev-pixel-value | image-coord-src-0 | image-coord-src-1 | image-coord-src-2 | image-coord-dst-0 | image-coord-dst-1 | image-coord-dst-2 | coord-src-0 | coord-src-1 | coord-src-2 | coord-dst-0 | coord-dst-1 | coord-dst-2 | euclidean-distance |
+| --: | ----------: | ----------: | ----------: | --------------: | ----------: | ---------------: | ----------------: | ----------------: | ----------------: | ----------------: | ----------------: | ----------------: | ----------------: | ----------: | ----------: | ----------: | ----------: | ----------: | ----------: | -----------------: |
+|   0 |           1 |           1 |           2 |               1 |           2 |         0.474584 |        0.00262514 |                22 |               400 |               595 |                22 |               400 |               596 |          22 |         400 |         595 |          22 |         400 |         596 |                  1 |
+|   1 |           2 |           3 |           9 |         8.19615 |           2 |         0.464662 |        0.00299629 |                37 |               400 |               622 |                43 |               392 |               590 |          37 |         400 |         622 |          43 |         392 |         590 |            33.5261 |
+|   2 |           3 |          10 |          11 |               1 |           2 |         0.483393 |        0.00771038 |                49 |               391 |               589 |                50 |               391 |               589 |          49 |         391 |         589 |          50 |         391 |         589 |                  1 |
+|   3 |           5 |          13 |          19 |         6.82843 |           2 |         0.464325 |         0.0139064 |                52 |               389 |               588 |                55 |               385 |               588 |          52 |         389 |         588 |          55 |         385 |         588 |                  5 |
+|   4 |           7 |          21 |          23 |               2 |           2 |          0.45862 |         0.0104024 |                57 |               382 |               587 |                58 |               380 |               586 |          57 |         382 |         587 |          58 |         380 |         586 |            2.44949 |
 
 ```python
 statistics.describe()
 ```
 
-|       |   skeleton-id |   node-id-src |   node-id-dst |   branch-distance |   branch-type |   mean-pixel-value |   stdev-pixel-value |   image-coord-src-0 |   image-coord-src-1 |   image-coord-src-2 |   image-coord-dst-0 |   image-coord-dst-1 |   image-coord-dst-2 |   coord-src-0 |   coord-src-1 |   coord-src-2 |   coord-dst-0 |   coord-dst-1 |   coord-dst-2 |   euclidean-distance |
-|:------|--------------:|--------------:|--------------:|------------------:|--------------:|-------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------------:|--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|---------------------:|
-| count |      1095     |       1095    |       1095    |        1095       |  1095         |        1095        |      1095           |            1095     |            1095     |           1095      |            1095     |            1095     |           1095      |      1095     |      1095     |     1095      |      1095     |      1095     |     1095      |            1095      |
-| mean  |      2089.38  |      11520.1  |      11608.6  |          22.9079  |     2.00091   |           0.663422 |         0.0418607   |             591.939 |             430.303 |            377.409  |             594.325 |             436.596 |            373.419  |       591.939 |       430.303 |      377.409  |       594.325 |       436.596 |      373.419  |             190.13   |
-| std   |       636.377 |       6057.61 |       6061.18 |          24.2646  |     0.0302199 |           0.242828 |         0.0559064   |             174.04  |             194.499 |             97.0219 |             173.353 |             188.708 |             96.8276 |       174.04  |       194.499 |       97.0219 |       173.353 |       188.708 |       96.8276 |             151.171  |
-| min   |         1     |          1    |          2    |           1       |     2         |           0.414659 |         6.79493e-06 |              22     |              39     |            116      |              22     |              39     |            114      |        22     |        39     |      116      |        22     |        39     |      114      |               0      |
-| 25%   |      1586     |       6215.5  |       6429.5  |           1.73205 |     2         |           0.482    |         0.00710439  |             468.5   |             278.5   |            313      |             475     |             299.5   |            307      |       468.5   |       278.5   |      313      |       475     |       299.5   |      307      |              72.6946 |
-| 50%   |      2431     |      11977    |      12010    |          16.6814  |     2         |           0.552626 |         0.0189069   |             626     |             405     |            388      |             627     |             410     |            381      |       626     |       405     |      388      |       627     |       410     |      381      |             161.059  |
-| 75%   |      2542.5   |      16526.5  |      16583    |          35.0433  |     2         |           0.768359 |         0.0528814   |             732     |             579     |            434      |             734     |             590     |            432      |       732     |       579     |      434      |       734     |       590     |      432      |             265.948  |
-| max   |      8034     |      26820    |      26822    |         197.147   |     3         |           1.29687  |         0.357193    |             976     |             833     |            622      |             976     |             841     |            606      |       976     |       833     |      622      |       976     |       841     |      606      |             737.835  |
+|       | skeleton-id | node-id-src | node-id-dst | branch-distance | branch-type | mean-pixel-value | stdev-pixel-value | image-coord-src-0 | image-coord-src-1 | image-coord-src-2 | image-coord-dst-0 | image-coord-dst-1 | image-coord-dst-2 | coord-src-0 | coord-src-1 | coord-src-2 | coord-dst-0 | coord-dst-1 | coord-dst-2 | euclidean-distance |
+| :---- | ----------: | ----------: | ----------: | --------------: | ----------: | ---------------: | ----------------: | ----------------: | ----------------: | ----------------: | ----------------: | ----------------: | ----------------: | ----------: | ----------: | ----------: | ----------: | ----------: | ----------: | -----------------: |
+| count |        1095 |        1095 |        1095 |            1095 |        1095 |             1095 |              1095 |              1095 |              1095 |              1095 |              1095 |              1095 |              1095 |        1095 |        1095 |        1095 |        1095 |        1095 |        1095 |               1095 |
+| mean  |     2089.38 |     11520.1 |     11608.6 |         22.9079 |     2.00091 |         0.663422 |         0.0418607 |           591.939 |           430.303 |           377.409 |           594.325 |           436.596 |           373.419 |     591.939 |     430.303 |     377.409 |     594.325 |     436.596 |     373.419 |             190.13 |
+| std   |     636.377 |     6057.61 |     6061.18 |         24.2646 |   0.0302199 |         0.242828 |         0.0559064 |            174.04 |           194.499 |           97.0219 |           173.353 |           188.708 |           96.8276 |      174.04 |     194.499 |     97.0219 |     173.353 |     188.708 |     96.8276 |            151.171 |
+| min   |           1 |           1 |           2 |               1 |           2 |         0.414659 |       6.79493e-06 |                22 |                39 |               116 |                22 |                39 |               114 |          22 |          39 |         116 |          22 |          39 |         114 |                  0 |
+| 25%   |        1586 |      6215.5 |      6429.5 |         1.73205 |           2 |            0.482 |        0.00710439 |             468.5 |             278.5 |               313 |               475 |             299.5 |               307 |       468.5 |       278.5 |         313 |         475 |       299.5 |         307 |            72.6946 |
+| 50%   |        2431 |       11977 |       12010 |         16.6814 |           2 |         0.552626 |         0.0189069 |               626 |               405 |               388 |               627 |               410 |               381 |         626 |         405 |         388 |         627 |         410 |         381 |            161.059 |
+| 75%   |      2542.5 |     16526.5 |       16583 |         35.0433 |           2 |         0.768359 |         0.0528814 |               732 |               579 |               434 |               734 |               590 |               432 |         732 |         579 |         434 |         734 |         590 |         432 |            265.948 |
+| max   |        8034 |       26820 |       26822 |         197.147 |           3 |          1.29687 |          0.357193 |               976 |               833 |               622 |               976 |               841 |               606 |         976 |         833 |         622 |         976 |         841 |         606 |            737.835 |
 
 Success!
 

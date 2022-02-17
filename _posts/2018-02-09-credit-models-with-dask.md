@@ -7,6 +7,7 @@ tags: [Programming, Python]
 theme: twitter
 author: Richard Postelnik
 ---
+
 {% include JB/setup %}
 
 This post explores a real-world use case calculating complex credit models in Python using Dask.
@@ -30,10 +31,9 @@ Thanks Rich!
        alt="zoomed model section"
        width="100%"></a>
 
-*This is cross-posted at [Anaconda's Developer Blog](https://www.anaconda.com/blog/developer-blog/credit-modeling-with-dask/).*
+_This is cross-posted at [Anaconda's Developer Blog](https://www.anaconda.com/blog/developer-blog/credit-modeling-with-dask/)._
 
 P.S. If others have similar solutions and would like to share them I'd love to host those on this blog as well.
-
 
 ## The Problem
 
@@ -51,7 +51,6 @@ def final_equation(inputs):
 
 This boils down to a dependency and ordering problem known as task scheduling.
 
-
 ## DAGs to the rescue
 
 <img style="margin: 0 auto; display: block;" src="/images/credit_models/snatch.jpg" alt="snatch joke">
@@ -65,6 +64,7 @@ def add(x, y):
 >>> add(2, 2)
 4
 ```
+
 So here we have a function to add two numbers together. Let's see what happens when we wrap it with `dask.delayed`:
 
 ```python
@@ -88,7 +88,6 @@ Delayed('add-f6204fac-b067-40aa-9d6a-639fc719c3ce')
 Below we can see how the DAG starts to come together.
 
 <img style="margin: 0 auto; display: block;" src="/images/credit_models/four.png" alt="four graph">
-
 
 ## Mock credit example
 
@@ -131,6 +130,7 @@ inc_hist = [increment(n) for n in hist_yrs]
 halved_income = [halve(n) for n in income]
 estimated_default = [default(hist, income) for hist, income in zip(inc_hist, halved_income)]
 ```
+
 If you look at these variables, you will see that nothing has actually been calculated yet. They are all lists of `Delayed` objects.
 
 Now, to get the average, I could just take the sum of `estimated_default` but I want this to scale (and make a more interesting graph) so let's do a merge-style reduction.
@@ -173,7 +173,6 @@ avg_default.visualize()
 
 And that is how Dask can be used to construct a complex system of equations with reusable intermediary calculations.
 
-
 ## How we used Dask in practice
 
 For our credit modeling problem, we used Dask to make a custom data structure to represent the individual equations. Using the default example above, this looked something like the following:
@@ -210,11 +209,9 @@ The output of the model is about 100 times the size of the input so we do some a
        alt="zoomed agg section"
        width="100%"></a>
 
-
 ## Final Thoughts
 
-With our Dask-based data structure, we spend more of our time writing model code rather than maintenance of the engine itself. This allows a clean separation between our analysts that design and write our models, and our computational system that runs them.  Dask also offers a number of advantages not covered above. For example, with Dask you also get access to [diagnostics](https://distributed.readthedocs.io/en/latest/web.html) such as time spent running each task and resources used. Also, you can easily distribute your computation with [dask distributed](https://distributed.readthedocs.io/en/latest/) with relative ease. Now if I want to run our model across larger-than-memory data or on a distributed cluster, we don't have to worry about rewriting our code to incorporate something like Spark. Finally, Dask allows you to give pandas-capable business analysts or less technical folks access to large datasets with the [dask dataframe](http://dask.pydata.org/en/latest/dataframe.html).
-
+With our Dask-based data structure, we spend more of our time writing model code rather than maintenance of the engine itself. This allows a clean separation between our analysts that design and write our models, and our computational system that runs them. Dask also offers a number of advantages not covered above. For example, with Dask you also get access to [diagnostics](https://distributed.readthedocs.io/en/latest/web.html) such as time spent running each task and resources used. Also, you can easily distribute your computation with [dask distributed](https://distributed.readthedocs.io/en/latest/) with relative ease. Now if I want to run our model across larger-than-memory data or on a distributed cluster, we don't have to worry about rewriting our code to incorporate something like Spark. Finally, Dask allows you to give pandas-capable business analysts or less technical folks access to large datasets with the [dask dataframe](http://dask.pydata.org/en/latest/dataframe.html).
 
 ## Full Example
 

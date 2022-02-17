@@ -4,14 +4,15 @@ title: Dask and Scikit-Learn -- Model Parallelism
 tagline: Parallelizing Grid Search with Dask
 author: Jim Crist
 
-tags : [Programming, dask]
+tags: [Programming, dask]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-*This post was written by Jim Crist.  The original post lives at
+_This post was written by Jim Crist. The original post lives at
 [http://jcrist.github.io/dask-sklearn-part-1.html](http://jcrist.github.io/dask-sklearn-part-1.html)
-(with better styling)*
+(with better styling)_
 
 This is the first of a series of posts discussing some recent experiments
 combining [dask](http://dask.pydata.org/en/latest/) and
@@ -35,7 +36,7 @@ across different models), and dive into a daskified implementation of
 
 ## What is grid search?
 
-Many machine learning algorithms have *hyperparameters* which can be tuned to
+Many machine learning algorithms have _hyperparameters_ which can be tuned to
 improve the performance of the resulting estimator. A [grid
 search](https://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search)
 is one way of optimizing these parameters &mdash; it works by doing a parameter
@@ -101,12 +102,12 @@ Wall time: 21.6 s
 What happened here was:
 
 - An estimator was created for each parameter combination and test-train set
-(scikit-learn's grid search also does cross validation across 3-folds by
-default).
+  (scikit-learn's grid search also does cross validation across 3-folds by
+  default).
 - Each estimator was fit on its corresponding set of training data
 - Each estimator was then scored on its corresponding set of testing data
 - The best set of parameters was chosen based on these scores
-- A new estimator was then fit on *all* of the data, using the best parameters
+- A new estimator was then fit on _all_ of the data, using the best parameters
 
 The corresponding best score, parameters, and estimator can all be found as
 attributes on the resulting object:
@@ -163,7 +164,6 @@ Pipeline(steps=[('pca', PCA(copy=True, n_components=50, whiten=False)), ('logist
     {'logistic__C': 0.0001, 'logistic__penalty': 'l2', 'pca__n_components': 50}
 ```
 
-
 ## Why is the dask version faster?
 
 If you look at the times above, you'll note that the dask version was `~4X`
@@ -175,7 +175,6 @@ is simply that the dask version is doing less work.
 
 This maybe best explained in pseudocode. The scikit-learn version of the above
 (in serial) looks something like (pseudocode):
-
 
 ```python
 for X_train, X_test, y_train, y_test in cv:
@@ -249,7 +248,6 @@ task. Each is categorized by color:
 
 <img src="/images/grid_search_schedule.gif" alt="Dask Graph Execution" style="width:100%">
 
-
 Looking at the trace, a few things stand out:
 
 - We do a good job sharing intermediates. Each step in a pipeline is only fit
@@ -299,7 +297,7 @@ make sense for this workload, but for others it might.
 
 - The [code for doing
   this](https://github.com/jcrist/dask-learn/blob/master/dklearn/grid_search.py)
-  is quite short.  There's also an implementation of
+  is quite short. There's also an implementation of
   [`RandomizedSearchCV`](http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.RandomizedSearchCV.html),
   which is only a few extra lines (hooray for good class hierarchies!).
   Instead of working with dask graphs directly, both implementations use
@@ -330,8 +328,8 @@ make sense for this workload, but for others it might.
   the library, which I don't like. On the other hand, it does mean that this
   version of `GridSearchCV` could be a drop-in for the sckit-learn one.
 
-- The approach presented here is nice, but is really *only beneficial when
-  there's duplicate work to be avoided, and that duplicate work is expensive*.
+- The approach presented here is nice, but is really _only beneficial when
+  there's duplicate work to be avoided, and that duplicate work is expensive_.
   Repeating the above with only a single estimator (instead of a pipeline)
   results in identical (or slightly worse) performance than joblib. Similarly,
   if the repeated steps are cheap the difference in performance is much smaller
@@ -351,6 +349,6 @@ suggestions for improvements (or better yet PRs for improvements :))? Please
 feel free to reach out in the comments below, or [on
 github](https://github.com/jcrist/dask-learn).
 
-*This work is supported by [Continuum Analytics](http://continuum.io/) and the
+_This work is supported by [Continuum Analytics](http://continuum.io/) and the
 [XDATA](http://www.darpa.mil/program/XDATA) program as part of the [Blaze
-Project](http://blaze.pydata.org/).*
+Project](http://blaze.pydata.org/)._

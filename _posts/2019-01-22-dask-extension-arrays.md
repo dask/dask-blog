@@ -8,10 +8,9 @@ theme: twitter
 
 {% include JB/setup %}
 
-*This work is supported by [Anaconda Inc](http://anaconda.com)*
+_This work is supported by [Anaconda Inc](http://anaconda.com)_
 
-Summary
--------
+## Summary
 
 Dask DataFrame works well with pandas' new Extension Array interface, including
 third-party extension arrays. This lets Dask
@@ -21,14 +20,12 @@ third-party extension arrays. This lets Dask
 2. support third-party extension array arrays, like [cyberpandas's][cyberpandas]
    `IPArray`
 
-Background
-----------
+## Background
 
-Pandas 0.23 introduced the [`ExtensionArray`][EA], a way to store things other
+Pandas 0.23 introduced the [`ExtensionArray`][ea], a way to store things other
 than a simple NumPy array in a DataFrame or Series. Internally pandas uses this
 for data types that aren't handled natively by NumPy like datetimes with
 timezones, Categorical, or (the new!) nullable integer arrays.
-
 
 ```python
 >>> s = pd.Series(pd.date_range('2000', periods=4, tz="US/Central"))
@@ -54,8 +51,7 @@ dtype: datetime64[ns, US/Central]
 Dask Name: from_pandas, 2 tasks
 ```
 
-The Challenge
--------------
+## The Challenge
 
 Newer versions of pandas allow third-party libraries to write custom extension
 arrays. These arrays can be placed inside a DataFrame or Series, and work
@@ -73,9 +69,8 @@ then how do things like the following work?
 Index(['B'], dtype='object')
 ```
 
-
 `ddf[['B']]` (lazily) selects the column `'B'` from the dataframe. But accessing
-`.columns` *immediately* returns a pandas Index object with just the selected
+`.columns` _immediately_ returns a pandas Index object with just the selected
 columns.
 
 No real computation has happened (you could just as easily swap out the
@@ -108,8 +103,7 @@ dtype and each of pandas' own extension dtypes. But any third-party library
 could create an ExtensionArray for any type, and Dask would have no way of
 knowing what's a valid value for it.
 
-The Solution
----------------
+## The Solution
 
 Rather than Dask guessing what values to use for the `_meta_nonempty`, extension
 array authors (or users) can register their extension dtype with Dask. Once
@@ -133,7 +127,6 @@ def _(dtype):
 
 Now users of that extension type can place those arrays inside a Dask DataFrame
 or Series.
-
 
 ```python
 >>> df = pd.DataFrame({"A": DecimalArray([Decimal('1.0'), Decimal('2.0'),
@@ -171,8 +164,7 @@ Name: B, dtype: float64
 
 ```
 
-The Real Lesson
----------------
+## The Real Lesson
 
 It's neat that Dask now supports extension arrays. But to me, the exciting thing
 is just how little work this took. The
@@ -219,7 +211,7 @@ and
 
 > Built with the broader community
 
-At the start of Dask, the developers *could* have gone off and re-written pandas
+At the start of Dask, the developers _could_ have gone off and re-written pandas
 or NumPy from scratch to be parallel friendly (though we'd probably still be
 working on that part today, since that's such a massive undertaking). Instead,
 the Dask developers worked with the community, occasionally nudging it in
@@ -239,6 +231,6 @@ If you're writing an ExtensionArray, make sure to add it to the [pandas
 ecosystem][ecosystem] page, and register it with Dask!
 
 [cyberpandas]: https://cyberpandas.readthedocs.io
-[EA]: http://pandas.pydata.org/pandas-docs/version/0.24/extending.html#extension-types
+[ea]: http://pandas.pydata.org/pandas-docs/version/0.24/extending.html#extension-types
 [ecosystem]: http://pandas.pydata.org/pandas-docs/version/0.24/ecosystem.html#extension-data-types
 [intna]: http://pandas.pydata.org/pandas-docs/version/0.24/whatsnew/v0.24.0.html#optional-integer-na-support

@@ -4,20 +4,20 @@ title: Dask EC2 Startup Script
 tagline: The hardest step is standing up
 
 draft: true
-tags : [Programming, scipy, Python, dask]
+tags: [Programming, scipy, Python, dask]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-*This work is supported by [Continuum Analytics](http://continuum.io)
+_This work is supported by [Continuum Analytics](http://continuum.io)
 and the [XDATA Program](http://www.darpa.mil/program/XDATA)
-as part of the [Blaze Project](http://blaze.pydata.org)*
+as part of the [Blaze Project](http://blaze.pydata.org)_
 
-*A screencast version of this post is available here:
-[https://youtu.be/KGlhU9kSfVk](https://youtu.be/KGlhU9kSfVk)*
+_A screencast version of this post is available here:
+[https://youtu.be/KGlhU9kSfVk](https://youtu.be/KGlhU9kSfVk)_
 
-Summary
--------
+## Summary
 
 Copy-pasting the following commands gives you a Dask cluster on EC2.
 
@@ -43,24 +43,22 @@ df.head()
 You will have to use your own AWS credentials, but you'll get fast distributed
 Pandas access on the NYCTaxi data across a cluster, loaded from S3.
 
+## Motivation
 
-Motivation
-----------
+_Reducing barriers to entry enables curious play._
 
-*Reducing barriers to entry enables curious play.*
-
-Curiosity drives us to play with new tools.  We love the idea that previously
+Curiosity drives us to play with new tools. We love the idea that previously
 difficult tasks will suddenly become easy, expanding our abilities and opening
 up a range of newly solvable problems.
 
 However, as our problems grow more complex our tools grow more cumbersome and
-setup costs increase.  This cost stops us from playing around, which is a
+setup costs increase. This cost stops us from playing around, which is a
 shame, because playing is good both for the education of the user and for the
-development of the tool.  Tool makers who want feedback are strongly
+development of the tool. Tool makers who want feedback are strongly
 incentivized to decrease setup costs, especially for the play case.
 
 In February we introduced dask.distributed, a lightweight distributed computing
-framework for Python.  We focused on processing data with high level
+framework for Python. We focused on processing data with high level
 abstractions like dataframes and arrays in the following blogposts:
 
 1.  [Analyze GitHub JSON record data in S3](/2016/02/17/dask-distributed-part1)
@@ -70,11 +68,9 @@ abstractions like dataframes and arrays in the following blogposts:
 Today we present a simple setup script to launch dask.distributed on EC2,
 enabling any user with AWS credentials to repeat these experiments easily.
 
+## dec2
 
-dec2
-----
-
-*Devops tooling and EC2 to the rescue*
+_Devops tooling and EC2 to the rescue_
 
 [DEC2](https://github.com/dask/dec2/) does the following:
 
@@ -108,12 +104,11 @@ Options:
   -h, --help                    Show this message and exit.
 ```
 
-*Note: dec2 was largely built by [Daniel Rodriguez](https://github.com/danielfrg)*
+_Note: dec2 was largely built by [Daniel Rodriguez](https://github.com/danielfrg)_
 
-Run
----
+## Run
 
-As an example we use `dec2` to create a new cluster of nine nodes.  Each worker
+As an example we use `dec2` to create a new cluster of nine nodes. Each worker
 will run with eight processes, rather than using threads.
 
     dec2 up --keyname my-key-name
@@ -135,7 +130,6 @@ In [3]: e
 Out[3]: <Executor: scheduler=127.0.0.1:8786 workers=64 threads=64>
 ```
 
-
 ### Notebooks
 
 Alternatively we set up a globally visible Jupyter notebook server:
@@ -146,11 +140,10 @@ Alternatively we set up a globally visible Jupyter notebook server:
     localmachine:~$ dec2 ssh                          # SSH into head node
     ec2-machine:~$ jupyter notebook --ip="*"          # Start Jupyter Server
 
-Then navigate to `http://XXX:XXX:XXX:XXX:8888` from your local browser.  Note,
+Then navigate to `http://XXX:XXX:XXX:XXX:8888` from your local browser. Note,
 this method is not secure, see [Jupyter
 docs](http://jupyter-notebook.readthedocs.org/en/latest/public_server.html) for
 a better solution.
-
 
 ### Public datasets
 
@@ -163,6 +156,7 @@ df = s3.read_csv('dask-data/nyc-taxi/2015', lazy=False)
 progress(df)
 df.head()
 ```
+
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -302,42 +296,37 @@ df.head()
   </tbody>
 </table>
 
+## Acknowledgments
 
-Acknowledgments
----------------
-
-The `dec2` startup script is largely the work of Daniel Rodriguez.  Daniel
+The `dec2` startup script is largely the work of Daniel Rodriguez. Daniel
 usually works on [Anaconda for cluster
 management](https://docs.continuum.io/anaconda-cluster/index) which is normally
 part of an Anaconda subscription but is also free for moderate use (4 nodes.)
 This does things similar to `dec2`, but much more maturely.
 
 DEC2 was inspired by the excellent `spark-ec2` setup script, which is how most
-Spark users, myself included, were first able to try out the library.  The
+Spark users, myself included, were first able to try out the library. The
 `spark-ec2` script empowered many new users to try out a distributed system for
 the first time.
 
 The S3 work was largely done by Hussain Sultan (Capital One) and Martin Durant
 (Continuum).
 
+## What didn't work
 
-What didn't work
-----------------
+- Originally we automatically started an IPython console on the local machine
+  and connected it to the remote scheduler. This felt slick, but was error
+  prone due to mismatches between the user's environment and the remote
+  cluster's environment.
+- It's tricky to replicate functionality that's part of a proprietary
+  product (Anaconda for cluster management.) Fortunately, Continuum
+  management has been quite supportive.
+- There aren't many people in the data science community who know Salt, the
+  system that backs `dec2`. I expect maintenance to be a bit tricky moving
+  forward, especially during periods when Daniel and other developers are
+  occupied.
 
-*  Originally we automatically started an IPython console on the local machine
-   and connected it to the remote scheduler.  This felt slick, but was error
-   prone due to mismatches between the user's environment and the remote
-   cluster's environment.
-*  It's tricky to replicate functionality that's part of a proprietary
-   product (Anaconda for cluster management.)  Fortunately, Continuum
-   management has been quite supportive.
-*  There aren't many people in the data science community who know Salt, the
-   system that backs `dec2`.  I expect maintenance to be a bit tricky moving
-   forward, especially during periods when Daniel and other developers are
-   occupied.
+## Links
 
-Links
------
-
-*   [dec2](https://github.com/dask/dec2)
-*   [dask.distributed](https://distributed.readthedocs.org/en/latest/)
+- [dec2](https://github.com/dask/dec2)
+- [dask.distributed](https://distributed.readthedocs.org/en/latest/)

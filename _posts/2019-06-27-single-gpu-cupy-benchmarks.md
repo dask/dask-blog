@@ -6,11 +6,10 @@ tags: [GPU, RAPIDS]
 draft: true
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-
-Summary
--------
+## Summary
 
 Array operations with GPUs can provide considerable speedups over CPU computing,
 but the amount of speedup varies greatly depending on the operation. The intent
@@ -20,26 +19,22 @@ as discussed
 [in this post from March](https://blog.dask.org/2019/03/18/dask-nep18), but here
 we will only look at individual performance for single-GPU CuPy.
 
-
-Hardware and Software Setup
----------------------------
+## Hardware and Software Setup
 
 Before going any further, assume the following hardware and software is
 utilized for all performance results described in this post:
 
-* System: NVIDIA DGX-1
-* CPU: 2x Intel Xeon E5-2698 v4 @ 2.20GHz
-* Main memory: 1 TB
-* GPU: NVIDIA Tesla V100 32 GB
-* Python 3.7.3
-* NumPy 1.16.4
-* Intel MKL 2019.4.243
-* CuPy 6.1.0
-* CUDA Toolkit 9.2 (10.1 for SVD, see Increasing Performance section)
+- System: NVIDIA DGX-1
+- CPU: 2x Intel Xeon E5-2698 v4 @ 2.20GHz
+- Main memory: 1 TB
+- GPU: NVIDIA Tesla V100 32 GB
+- Python 3.7.3
+- NumPy 1.16.4
+- Intel MKL 2019.4.243
+- CuPy 6.1.0
+- CUDA Toolkit 9.2 (10.1 for SVD, see Increasing Performance section)
 
-
-General Performance
--------------------
+## General Performance
 
 We have generated a graph comprising various operations. Most of them perform
 well on a GPU using CuPy out of the box. See the graph below:
@@ -81,64 +76,61 @@ continue that on a future post.
 
 Let me briefly describe each of the operations from the graph above:
 
-* Elementwise: scalar operation on all elements of the array
-* Sum: Compute sum of entire array, reducing it to a single scalar, using
-    [CUB](https://nvlabs.github.io/cub/), still
-    [under development](https://github.com/cupy/cupy/pull/2090)
-* Standard deviation: Compute standard deviation of entire array, reducing
-    it to a single scalar
-* Array Slicing: select every third element of first dimension
-* Matrix Multiplication: Multiplication of two square matrices
-* FFT: Fast Fourier Transform of matrix
-* SVD: Singular Value Decomposition of matrix (tall-and-skinny for larger
-    array)
-* Stencil (*Not a CuPy operation!*):
-    [uniform filtering with Numba](https://blog.dask.org/2019/04/09/numba-stencil)
+- Elementwise: scalar operation on all elements of the array
+- Sum: Compute sum of entire array, reducing it to a single scalar, using
+  [CUB](https://nvlabs.github.io/cub/), still
+  [under development](https://github.com/cupy/cupy/pull/2090)
+- Standard deviation: Compute standard deviation of entire array, reducing
+  it to a single scalar
+- Array Slicing: select every third element of first dimension
+- Matrix Multiplication: Multiplication of two square matrices
+- FFT: Fast Fourier Transform of matrix
+- SVD: Singular Value Decomposition of matrix (tall-and-skinny for larger
+  array)
+- Stencil (_Not a CuPy operation!_):
+  [uniform filtering with Numba](https://blog.dask.org/2019/04/09/numba-stencil)
 
 It's important to note that there are two array sizes, 800 MB and 8 MB, the
 first means 10000x10000 arrays and the latter 1000x1000, double-precision
 floating-point (8 bytes) in both cases. SVD array size is an exception, where
 the large size is actually a tall-and-skinny of size 10000x1000, or 80MB.
 
-Increasing Performance
-----------------------
+## Increasing Performance
 
-When we first ran these benchmarks we actually saw a performance *decrease* in
+When we first ran these benchmarks we actually saw a performance _decrease_ in
 a couple of cases.
 
 <div id="vis2"></div>
 
-While it's true that GPUs are not *always* faster,
+While it's true that GPUs are not _always_ faster,
 we did expect these operations in particular to be faster than their CPU counterparts.
 This had us puzzled.
 
 Upon further investigation we found that both of these issues were either
 already fixed, or were actively being fixed by others within the ecosystem.
 
--  **SVD**: CuPy's SVD links to the official cuSolver library, which got a
-   major speed boost to these kinds of solvers in CUDA 10.1 (thanks to Joe
-   Eaton for pointing us to this!)  Originally we had CUDA 9.2 installed, when
-   things were still quite a bit slower.
+- **SVD**: CuPy's SVD links to the official cuSolver library, which got a
+  major speed boost to these kinds of solvers in CUDA 10.1 (thanks to Joe
+  Eaton for pointing us to this!) Originally we had CUDA 9.2 installed, when
+  things were still quite a bit slower.
 
-   *Note: Most of the results above still use CUDA 9.2.*
-   *Only the SVD result uses CUDA 10.1.*
+  _Note: Most of the results above still use CUDA 9.2._
+  _Only the SVD result uses CUDA 10.1._
 
--  **Sum**: CuPy's sum code was genuinely quite slow.
-    However, [Akira Naruse](https://github.com/anaruse) already had an
-    [active pull request](https://github.com/cupy/cupy/pull/2090)
-    to speed this up using
-    [CUB](http://nvlabs.github.io/cub/),
-    a library of collection primitives for CUDA.
+- **Sum**: CuPy's sum code was genuinely quite slow.
+  However, [Akira Naruse](https://github.com/anaruse) already had an
+  [active pull request](https://github.com/cupy/cupy/pull/2090)
+  to speed this up using
+  [CUB](http://nvlabs.github.io/cub/),
+  a library of collection primitives for CUDA.
 
-We learned a lot from doing this benchmarking.  In particular it was gratifying
+We learned a lot from doing this benchmarking. In particular it was gratifying
 to see that the performance issues we saw had already been identified and
-corrected by other groups.  This highlights one of the many benefits of working
+corrected by other groups. This highlights one of the many benefits of working
 in an open source community: things get faster without you having to do all of
 the work.
 
-
-Future Work
------------
+## Future Work
 
 For better understanding of the scalability, it's interesting to generate
 benchmarks for various other sizes. In case this passed unnoticed, there was
