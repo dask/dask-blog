@@ -27,7 +27,7 @@ in `_site/`.
 
 ## Installing Jekyll
 
-As noted aboove, Jekyll can be installed as a [gem](https://jekyllrb.com/docs/):
+As noted above, Jekyll can be installed as a [gem](https://jekyllrb.com/docs/):
 
 > gem install jekyll bundle
 
@@ -89,6 +89,18 @@ have a few expectations on them.
     ```html
     <img src="/images/my-image.svg" />
     ```
+
+## Formatting
+
+This project uses [prettier](https://prettier.io/) and [markdownlint](https://github.com/DavidAnson/markdownlint) to auto-format and lint files.
+
+You can use [pre-commit](https://pre-commit.com/) to run this automatically:
+
+```console
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
 
 ## Publish on Github Pages
 
