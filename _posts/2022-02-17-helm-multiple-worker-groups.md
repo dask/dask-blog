@@ -135,7 +135,7 @@ cluster
 
 ## Example: Finding the average New York City taxi trip distance in April 2020
 
-This example will find the average distance traveled by a yellow taxi in New York City in April 2020 using the [NY Tax Dataset](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page). We'll compute this distance in two different ways. The first way will employ our default dask workers, and the second way will utilize our GPU worker group. We'll load the NY Taxi dataset as a data frame in both examples and compute the `mean` of the `trip_distance` column. The main difference is that we need to run our GPU-specific computations using our GPU worker group. We can do this by utilizing Dask annotations.
+This example will find the average distance traveled by a yellow taxi in New York City in April 2020 using the [NY Taxi Dataset](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page). We'll compute this distance in two different ways. The first way will employ our default dask workers, and the second way will utilize our GPU worker group. We'll load the NY Taxi dataset as a data frame in both examples and compute the `mean` of the `trip_distance` column. The main difference is that we need to run our GPU-specific computations using our GPU worker group. We can do this by utilizing Dask annotations.
 
 ```python
 import dask.dataframe as dd
