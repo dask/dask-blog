@@ -98,7 +98,8 @@ analysis library, Dask doesn't. Dask supports multi-dimensional arrays, Spark
 doesn't. Spark is generally higher level and all-in-one while Dask is
 lower-level and focuses on integrating into other tools.
 
-For more information, see [Dask's "Comparison to Spark documentation"](http://dask.pydata.org/en/latest/spark.html).
+For more information, see [Dask's "Comparison to Spark documentation"](http://dask.pydata.org/en/latest/spark.html)
+or [this interview with Steppingblocks](https://youtu.be/jR0Y7NqKJs8?t=413), a data analytics company, on why they switched from Spark to Dask.
 
 ### Apache Arrow
 
