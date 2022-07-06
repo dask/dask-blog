@@ -99,7 +99,7 @@ doesn't. Spark is generally higher level and all-in-one while Dask is
 lower-level and focuses on integrating into other tools.
 
 For more information, see [Dask's "Comparison to Spark documentation"](http://dask.pydata.org/en/latest/spark.html)
-or [this interview with Steppingblocks](https://youtu.be/jR0Y7NqKJs8?t=413), a data analytics company, on why they switched from Spark to Dask.
+or [this interview with Steppingblocks](https://www.youtube.com/watch?v=jR0Y7NqKJs8&list=PLJ0vO2F_f6OAE1xiEUE7DwMFWbdLCbN3P&index=11&t=413s), a data analytics company, on why they switched from Spark to Dask.
 
 ### Apache Arrow
 
