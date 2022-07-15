@@ -78,14 +78,14 @@ It is hard to understand whether those pages are the most visible, or if they ac
 
 - User Guide (**Explanation**)
 
-  * DataFrame - explains what a dataframe is - links out aggressively to reference docs.
-  * Array
-  * Bag
-  * Delayed
-  * Futures
-  * Task Graphs
-  * Scheduling
-  * Diagnostic Dashboard
+  - DataFrame - explains what a dataframe is - links out aggressively to reference docs.
+  - Array
+  - Bag
+  - Delayed
+  - Futures
+  - Task Graphs
+  - Scheduling
+  - Diagnostic Dashboard
 
 - Configuration (**Reference**)
 - Deploy Dask Clusters (**Reference**)
