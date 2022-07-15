@@ -1,16 +1,16 @@
 ---
 layout: post
 title: Documentation Framework
-author: Julia Signell
+author: Julia Signell and Jacob Tomlinson
 theme: twitter
 ---
 {% include JB/setup %}
 
 ## Executive Summary
 
-Yesterday at the Dask BOF at SciPy we were talking about the recent docs work and how we can fill holes in our documentation. We want to come up with a strategy to improve things. 
+Yesterday at the Dask BOF at [SciPy](https://www.scipy2022.scipy.org/) we were talking about the recent docs work and how we can fill holes in our documentation. We want to come up with a strategy to improve things. 
 
-Lots of projects have been converging on the [Diátaxis Framework](https://diataxis.fr/). This post lays out how we will take the existing docs and apply the framework to make content clearer and easier to find. NOTE: This blog post sketches out where we are going, but the change will happen incrementally.
+For a while, we've been exploring moving our documentation to the [Diátaxis Framework](https://diataxis.fr/), and after catching up with other maintainers at SciPy it is clear that many projects are converging on this framework and we are confident about continuing on this journey. This post lays out how we will take the existing docs and apply the framework to make content clearer and easier to find. NOTE: This blog post sketches out where we are going, but the change will happen incrementally.
 
 We want the docs to quickly answer questions like:
 
@@ -48,7 +48,7 @@ There are several different sites that comprise different aspects of dask docume
 
 The bulk of the documentation that we currently have on [Docs](https://docs.dask.org) falls under "Explanation" and "Reference" but they are pretty intermingled. There are also some small "How-Tos" sprinkled in, particularly in the API docs.
 
-The material on [Tutorials](https://tutorial.dask.org) is a mixture of "Tutorial" and "Explanation". They answer questions like: "What can I do with Dask Dataframes?" *and* questions like "What is a Dask Dataframe?". These are styled like lectures in that there is often no motivating example and the assumption is that the audience wants to learn both about how to do specific operations in dask and how those operations work.This type of material can be consumed as standalone content and runs on binder.
+The material on [Tutorials](https://tutorial.dask.org) is a mixture of "Tutorial" and "Explanation". They answer questions like: "What can I do with Dask Dataframes?" *and* questions like "What is a Dask Dataframe?". These are styled like lectures in that there is often no motivating example and the assumption is that the audience wants to learn both about how to do specific operations in dask and how those operations work. This type of material can be consumed as standalone content and runs on binder.
 
 [Examples](https://examples.dask.org) pretty much falls under "How-To" but there is a fair amount of setup and each example isn't split into small enough bits. They answer questions like: "How do I use dask dataframes?" and they have some more longer workflows.
 
@@ -64,7 +64,7 @@ It is hard to understand whether those pages are the most visible, or if they ac
 
 [Tutorial](https://tutorial.dask.org) will be left as is and treated as a long-form overview.
 
-[Examples](https://examples.dask.org) will be presented more as **How-Tos** with little explanation and more code. Historically one of the current roles of examples is to demonstrate what Dask looks like, that role is now subsumed by "10 Minutes to Dask". 
+[Examples](https://examples.dask.org) will be presented more as **How-Tos** with little explanation and more code. This will be similar to gallery or cookbook style documentation that you may see in other projects. Historically one of the current roles of examples is to demonstrate what Dask looks like, that role is now subsumed by "10 Minutes to Dask". 
 
 [Docs](https://docs.dask.org) will be reorganized and the left-nav will be slimmed down dramatically to provide direction. One idea for the left-nav is:
 
@@ -95,4 +95,6 @@ Many docstrings (aka **Reference**) already contain their own short-form **How-T
 
 ## How you can help
 
-Please raise issues on the dask issue tracker when you find holes in the docs! If you know how your needs fit into the diataxis framework even better :)
+Please raise issues on the dask issue tracker when you find holes in the docs! The largest gaps we see now are in "how to" which commonly are found via Google. So if you search for how to do something in Dask, and you're looking for copy-paste examples but can't find any then let us know.
+
+If you see other gaps please let us know about those too. And if you know how your needs fit into the diataxis framework even better :)
