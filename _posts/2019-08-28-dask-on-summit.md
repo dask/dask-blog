@@ -5,6 +5,7 @@ author: Matthew Rocklin
 tags: [HPC]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 Dask is deployed on traditional HPC machines with increasing frequency.
@@ -17,35 +18,33 @@ different policies on a machine-by-machine basis, which is where things get tric
 
 Typically we can solve these problems in about 30 minutes if we have both:
 
--  Someone familiar with the machine, like a power-user or an IT administrator
--  Someone familiar with setting up Dask
+- Someone familiar with the machine, like a power-user or an IT administrator
+- Someone familiar with setting up Dask
 
-These systems span a large range of scale.  At different ends of this scale
+These systems span a large range of scale. At different ends of this scale
 this week I've seen both:
 
--  A small in-house 24-node SLURM cluster for research work inside of a
-   bio-imaging lab
--  Summit, the world's most powerful supercomputer
+- A small in-house 24-node SLURM cluster for research work inside of a
+  bio-imaging lab
+- Summit, the world's most powerful supercomputer
 
 In this post I'm going to share a few notes of what I went through in dealing
-with Summit, which was particularly troublesome.  Hopefully this gives a sense
-for the kinds of situations that arise.  These tips likely don't apply to your
+with Summit, which was particularly troublesome. Hopefully this gives a sense
+for the kinds of situations that arise. These tips likely don't apply to your
 particular system, but hopefully they give a flavor of what can go wrong,
 and the processes by which we track things down.
-
 
 ### Power Architecture
 
 First, Summit is an IBM PowerPC machine, meaning that packages compiled on
-normal Intel chips won't work.  Fortunately, Anaconda maintains a download of
+normal Intel chips won't work. Fortunately, Anaconda maintains a download of
 their distribution that works well with the Power architecture, so that gave me
 a good starting point.
 
-https://www.anaconda.com/distribution/#linux
+<https://www.anaconda.com/distribution/#linux>
 
 Packages do seem to be a few months older than for the normal distribution, but
 I can live with that.
-
 
 ### Install Dask-Jobqueue and configure basic information
 
@@ -61,14 +60,13 @@ ValueError: You must specify how many cores to use per job like ``cores=8``
 ```
 
 I'm going to skip this section for now because, generally, novice users are
-able to handle this.  For more information, consider watching this YouTube
+able to handle this. For more information, consider watching this YouTube
 video (30m).
 
 <iframe width="560" height="315"
         src="https://www.youtube.com/embed/FXsgmwpRExM?rel=0"
         frameborder="0" allow="autoplay; encrypted-media"
         allowfullscreen></iframe>
-
 
 ### Invalid operations in the job script
 
@@ -85,16 +83,17 @@ cluster = LSFCluster(
 )
 cluster.scale(3)  # ask for three nodes
 ```
+
 ```
 Command:
 bsub /tmp/tmp4874eufw.sh
 stdout:
 
 Typical usage:
-	bsub [LSF arguments] jobscript
-	bsub [LSF arguments] -Is $SHELL
-	bsub -h[elp] [options]
-	bsub -V
+  bsub [LSF arguments] jobscript
+  bsub [LSF arguments] -Is $SHELL
+  bsub -h[elp] [options]
+  bsub -V
 
 NOTES:
  * All jobs must specify a walltime (-W) and project id (-P)
@@ -109,7 +108,7 @@ ERROR: No nodes requested. Please request nodes with -nnodes.
 
 Dask-Jobqueue tried to generate a sensible job script from the inputs that you
 provided, but the resource manager that you're using may have additional
-policies that are unique to that cluster.  We debug this by looking at the
+policies that are unique to that cluster. We debug this by looking at the
 generated script, and comparing against scripts that are known to work on the
 HPC machine.
 
@@ -134,7 +133,6 @@ JOB_ID=${LSB_JOBID%.*}
 After comparing notes with existing scripts that we know to work on Summit,
 we modify keywords to add and remove certain lines in the header.
 
-
 ```python
 cluster = LSFCluster(
     cores=128,
@@ -146,14 +144,13 @@ cluster = LSFCluster(
 )
 ```
 
-And when we call scale this seems to make LSF happy.  It no longer dumps out
+And when we call scale this seems to make LSF happy. It no longer dumps out
 large error messages.
 
 ```python
 >>> cluster.scale(3)  # things seem to pass
 >>>
 ```
-
 
 ### Workers don't connect to the Scheduler
 
@@ -169,7 +166,7 @@ our cluster we don't see anything arriving.
 
 Two things to check, have the jobs actually made it through the queue?
 Typically we use a resource manager operation, like `qstat`, `squeue`, or
-`bjobs` for this.  Maybe our jobs are trapped in the queue?
+`bjobs` for this. Maybe our jobs are trapped in the queue?
 
 ```
 $ bash
@@ -179,9 +176,9 @@ JOBID   USER       STAT   SLOTS    QUEUE       START_TIME    FINISH_TIME   JOB_N
 600784  mrocklin   RUN    43       batch       Aug 26 13:11  Aug 26 13:41  dask-worker
 ```
 
-Nope, it looks like they're in a running state.  Now we go and look at their
-logs.  It can sometimes be tricky to track down the log files from your jobs,
-but your IT administrator should know where they are.  Often they're where you
+Nope, it looks like they're in a running state. Now we go and look at their
+logs. It can sometimes be tricky to track down the log files from your jobs,
+but your IT administrator should know where they are. Often they're where you
 ran your job from, and have the Job ID in the filename.
 
 ```
@@ -205,7 +202,7 @@ distributed.worker - INFO - Waiting to connect to: tcp://128.219.134.74:34153
 ```
 
 So the worker processes have started, but they're having difficulty connecting
-to the scheduler.  When we ask at IT administrator they identify the address
+to the scheduler. When we ask at IT administrator they identify the address
 here as on the wrong network interface:
 
 ```
@@ -229,13 +226,12 @@ cluster = LSFCluster(
 
 We try this out and still, no luck :(
 
-
 ### Interactive nodes
 
 The expert user then says "Oh, our login nodes are pretty locked-down, lets try
-this from an interactive compute node.  Things tend to work better there".  We
+this from an interactive compute node. Things tend to work better there". We
 run some arcane bash command (I've never seen two of these that look alike so
-I'm going to omit it here), and things magically start working.  Hooray!
+I'm going to omit it here), and things magically start working. Hooray!
 
 We run a tiny Dask computation just to prove that we can do some work.
 
@@ -248,24 +244,22 @@ We run a tiny Dask computation just to prove that we can do some work.
 Actually, it turns out that we were eventually able to get things running from
 the login nodes on Summit using a slightly different `bsub` command in LSF, but
 I'm going to omit details here because we're fixing this in Dask and it's
-unlikely to affect future users (I hope?).  Locked down login nodes remain a
-common cause of no connections across a variety of systems.  I'll say something
+unlikely to affect future users (I hope?). Locked down login nodes remain a
+common cause of no connections across a variety of systems. I'll say something
 like 30% of the systems that I interact with.
-
 
 ### SSH Tunneling
 
 It's important to get the dashboard up and running so that you can see what's
-going on.  Typically we do this with SSH tunnelling.  Most HPC people know how
+going on. Typically we do this with SSH tunnelling. Most HPC people know how
 to do this and it's covered in the Youtube screencast above, so I'm going to
 skip it here.
-
 
 ### Jupyter Lab
 
 Many interactive Dask users on HPC today are moving towards using JupyterLab.
 This choice gives them a notebook, terminals, file browser, and Dask's
-dashboard all in a single web tab.  This greatly reduces the number of times
+dashboard all in a single web tab. This greatly reduces the number of times
 they have to SSH in, and, with the magic of web proxies, means that they only
 need to tunnel once.
 
@@ -317,14 +311,13 @@ mrocklin@my-laptop $ ssh -L 8888:login2:8888 summit.olcf.ornl.gov
 ```
 
 I can now connect to Jupyter from my laptop by navigating to
-http://localhost:8888 , run the cluster commands above in a notebook, and
-things work great.  Additionally, thanks to `jupyter-server-proxy`, Dask's
-dashboard is also available at http://localhost:8888/proxy/####/status , where
-`####` is the port currently hosting Dask's dashboard.  You can probably find
-this by looking at `cluster.dashboard_link`.  It defaults to 8787, but if
+<http://localhost:8888> , run the cluster commands above in a notebook, and
+things work great. Additionally, thanks to `jupyter-server-proxy`, Dask's
+dashboard is also available at <http://localhost:8888/proxy/####/status> , where
+`####` is the port currently hosting Dask's dashboard. You can probably find
+this by looking at `cluster.dashboard_link`. It defaults to 8787, but if
 you've started a bunch of Dask schedulers on your system recently it's possible
 that that port is taken up and so Dask had to resort to using random ports.
-
 
 ### Configuration files
 
@@ -342,26 +335,25 @@ jobqueue:
       - "-nnodes 1"
     interface: ib0
     header-skip:
-    - "-R"
-    - "-n "
-    - "-M"
+      - "-R"
+      - "-n "
+      - "-M"
 
 labextension:
   factory:
-     module: 'dask_jobqueue'
-     class: 'LSFCluster'
-     args: []
-     kwargs:
-       project: your-project-id
+    module: "dask_jobqueue"
+    class: "LSFCluster"
+    args: []
+    kwargs:
+      project: your-project-id
 ```
-
 
 ### Slow worker startup
 
 Now that things are easier to use I find myself using the system more, and some
 other problems arise.
 
-I notice that it takes a long time to start up a worker.  It seems to hang
+I notice that it takes a long time to start up a worker. It seems to hang
 intermittently during startup, so I add a few lines to
 `distributed/__init__.py` to print out the state of the main Python thread
 every second, to see where this is happening:
@@ -400,7 +392,7 @@ if is_locking_enabled():
 
 It looks like Dask is trying to use a file-based lock.
 Unfortunately some NFS systems don't like file-based locks, or handle them very
-slowly.  In the case of Summit, the home directory is actually mounted
+slowly. In the case of Summit, the home directory is actually mounted
 read-only from the compute nodes, so a file-based lock will simply fail.
 Looking up the `is_locking_enabled` function we see that it checks a
 configuration value.
@@ -410,10 +402,9 @@ def is_locking_enabled():
     return dask.config.get("distributed.worker.use-file-locking")
 ```
 
-So we add that to our config file.  At the same time I switch from the
+So we add that to our config file. At the same time I switch from the
 forkserver to spawn multiprocessing method (I thought that this might help, but
 it didn't), which is relatively harmless.
-
 
 ```
 distributed:
@@ -446,40 +437,38 @@ labextension:
 ### Conclusion
 
 This post outlines many issues that I ran into when getting Dask to run on
-one specific HPC system.  These problems aren't universal, so you may not run
-into them, but they're also not super-rare.  Mostly my objective in writing
+one specific HPC system. These problems aren't universal, so you may not run
+into them, but they're also not super-rare. Mostly my objective in writing
 this up is to give people a sense of the sorts of problems that arise when
 Dask and an HPC system interact.
 
-None of the problems above are that serious.  They've all happened before and
+None of the problems above are that serious. They've all happened before and
 they all have solutions that can be written down in a configuration file.
 Finding what the problem is though can be challenging, and often requires the
 combined expertise of individuals that are experienced with Dask and with that
 particular HPC system.
 
 There are a few configuration files posted here
-[jobqueue.dask.org/en/latest/configurations.html](https://jobqueue.dask.org/en/latest/configurations.html), which may be informative.  The [Dask Jobqueue issue tracker](https://github.com/dask/dask-jobqueue/issues) is also a fairly friendly place, full of both IT professionals and Dask experts.
+[jobqueue.dask.org/en/latest/configurations.html](https://jobqueue.dask.org/en/latest/configurations.html), which may be informative. The [Dask Jobqueue issue tracker](https://github.com/dask/dask-jobqueue/issues) is also a fairly friendly place, full of both IT professionals and Dask experts.
 
 Also, as a reminder, you don't need to have an HPC machine in order to use
-Dask.  Dask is conveniently deployable from other Cloud, Hadoop, and local
-systems.  See the [Dask setup
+Dask. Dask is conveniently deployable from other Cloud, Hadoop, and local
+systems. See the [Dask setup
 documentation](https://docs.dask.org/en/latest/setup.html) for more
 information.
-
 
 ### Future work: GPUs
 
 Summit is fast because it has a ton of GPUs. I'm going to work on that next,
 but that will probably cover enough content to fill up a whole other blogpost :)
 
-
 ### Branches
 
-For anyone playing along at home (or on Summit).  I'm operating from the
+For anyone playing along at home (or on Summit). I'm operating from the
 following development branches:
 
--  https://github.com/dask/distributed@master
--  https://github.com/mrocklin/dask-jobqueue@spec-rewrite
+- <https://github.com/dask/distributed@master>
+- <https://github.com/mrocklin/dask-jobqueue@spec-rewrite>
 
 Although hopefully within a month of writing this article, everything should be
 in a nicely released state.

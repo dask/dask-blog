@@ -20,7 +20,7 @@ Tutorials are great for open source projects as they appeal to multiple types of
 - The tutorial material provides a great foundation for _written and visual learners_.
 - Using an interactive tool like Jupyter Notebooks allows _kinesthetic learners_ to follow along and take their own paths.
 - Having an instructor run through the material in real time provides a spoken source for _auditory learners_.
-- It's also just fun to have a bunch of people from around the world participate in a live event.  There is a greater sense of community.
+- It's also just fun to have a bunch of people from around the world participate in a live event. There is a greater sense of community.
 
 Many open source projects provide documentation, some also make instructional videos on YouTube, but you really can't beat a tutorial for producing a single set of content that is valuable to many users.
 
@@ -140,13 +140,13 @@ You'll need to ensure you have links to the materials and meeting location ready
 
 > Hi Everyone!
 >
-> We look forward to seeing you \<tomorrow|soon>.  We wanted to share some important links with you to help you connect to the meeting.
+> We look forward to seeing you \<tomorrow|soon>. We wanted to share some important links with you to help you connect to the meeting.
 >
 > The materials for the course are available on GitHub here at the link below:
 >
 > \<Link to materials>
 >
-> This repository contains Jupyter notebooks that we'll go through together as a group.  You do not need to install anything before the tutorial.  We will run the notebooks on the online service, mybinder.org .  All you need is a web connection.
+> This repository contains Jupyter notebooks that we'll go through together as a group. You do not need to install anything before the tutorial. We will run the notebooks on the online service, mybinder.org . All you need is a web connection.
 >
 > The meeting itself will be held by video call at the following Zoom link:
 >
@@ -186,7 +186,6 @@ You'll need to ensure you have links to the materials and meeting location ready
 >
 > \<Organisers names>
 
-
 ### Getting the word out
 
 Now that we have an Eventbrite page we need to tell people about it.
@@ -221,7 +220,7 @@ _I'm awful at pronouncing names correctly so I tend to list the places they said
 
 Once you're ready to start introduce yourself and a general overview of the tutorial content. Then make use of any interaction tools you may have in your chat application. In zoom there are buttons that participants can click with labels like "go faster", "go slower", "yes" and "no". These are great for getting feedback from the audience when running the tutorial, but it's good to make sure everyone knows where they are and has a go at using them. I tend to explain where the buttons are and then ask questions like "have you managed to launch the binder?", "have you used Dask before?" or "are you a Pandas user?". You learn a little about your audience and they get familiar with the controls.
 
-Being interactive means you can also respond to user questions. In Dask tutorials we mute everyone by default and encourage folks to type in the text chat. We also have an additional instructor who is not delivering the material who is able to watch the chat and answer questions in real time. If they feel like a question/answer would be beneficial to the whole group they can unmute and interrupt the presenter in order to bubble it up.  Be prepared for a wide range of questions from the chat, including topics that are not being actively covered in the tutorial.  This is often the only time that attendees have real-time access to core maintainers.
+Being interactive means you can also respond to user questions. In Dask tutorials we mute everyone by default and encourage folks to type in the text chat. We also have an additional instructor who is not delivering the material who is able to watch the chat and answer questions in real time. If they feel like a question/answer would be beneficial to the whole group they can unmute and interrupt the presenter in order to bubble it up. Be prepared for a wide range of questions from the chat, including topics that are not being actively covered in the tutorial. This is often the only time that attendees have real-time access to core maintainers.
 
 You may not have the resources to have two instructors for every tutorial, Dask is fortunate to have a strong maintainer team, so instead you may want to allocate breaks at the end of each section to answer questions. During the labs can be a good time to go back and review any questions.
 
@@ -241,7 +240,6 @@ I find it very helpful to have a list of the sections with timings written down 
 > - Bags and Futures (10 mins)
 > - Distributed (10 mins)
 > - Wrapup and close (5 mins)
-
 
 As we have another instructor answering questions I tend to ignore the chat and run through each section as slowly as I can without going over time. Personally my default is to go too fast, so forcing myself to be slow but having some timings to keep me on track seems to work well. But you should do whatever works for you.
 

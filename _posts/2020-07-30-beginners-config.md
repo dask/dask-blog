@@ -6,11 +6,10 @@ author: Laura Lorenz (Prefect), Julia Signell (Saturn Cloud)
 tags: [distributed, config]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-
 _Configuring a Dask cluster can seem daunting at first, but the good news is that the Dask project has a lot of built in heuristics that try its best to anticipate and adapt to your workload based on the machine it is deployed on and the work it receives. Possibly for a long time you can get away with not configuring anything special at all. That being said, if you are looking for some tips to move on from using Dask locally, or have a Dask cluster that you are ready to optimize with some more in-depth configuration, these tips and tricks will help guide you and link you to the best Dask docs on the topic!_
-
 
 ## How to host a distributed Dask cluster
 
@@ -21,23 +20,22 @@ The biggest jump for me was from running a local version of Dask for just an hou
 
 Though those are the two broad main categories, there are tons of choices of how to actually achieve that. It depends on a number of factors including what cloud provider products you want to use and if those resources are pre-provisioned for you and whether you want to use a python API or a different deployment tool to actually start the Dask processes. A very exhaustive list of all the different ways you could provision a dask cluster is in the dask docs under [Setup](https://docs.dask.org/en/latest/setup.html). As just a taste of what is described in those docs, you could:
 
-*   Install and start up the dask processes [manually from the CLI](https://docs.dask.org/en/latest/setup/cli.html) on cloud instances you provision, such as AWS EC2 or GCP GCE
-*   Use popular deployment interfaces such as [helm for kubernetes](https://docs.dask.org/en/latest/setup/kubernetes-helm.html) to deploy dask in cloud container clusters you provision, such as AWS Fargate or GCP GKE
-*   Use ‘native’ deployment python APIs, provided by the dask developers, to create (and interactively configure) dask on deployment infrastructure they support, either through the general-purpose [Dask Gateway](https://gateway.dask.org/) which supports multiple backends, or directly against cluster managers such as kubernetes with [dask-kubernetes](https://kubernetes.dask.org/en/latest/) or YARN with [dask-yarn](https://yarn.dask.org/en/latest/), as long as you’ve already provisioned the kubernetes cluster or hadoop cluster already
-*   Use a nearly full-service deployment python API called [Dask Cloud Provider](https://cloudprovider.dask.org/en/latest/), that will go one step farther and provision the cluster for you too, as long as you give it AWS credentials (and as of time of writing, it only supports AWS)
+- Install and start up the dask processes [manually from the CLI](https://docs.dask.org/en/latest/setup/cli.html) on cloud instances you provision, such as AWS EC2 or GCP GCE
+- Use popular deployment interfaces such as [helm for kubernetes](https://docs.dask.org/en/latest/setup/kubernetes-helm.html) to deploy dask in cloud container clusters you provision, such as AWS Fargate or GCP GKE
+- Use ‘native’ deployment python APIs, provided by the dask developers, to create (and interactively configure) dask on deployment infrastructure they support, either through the general-purpose [Dask Gateway](https://gateway.dask.org/) which supports multiple backends, or directly against cluster managers such as kubernetes with [dask-kubernetes](https://kubernetes.dask.org/en/latest/) or YARN with [dask-yarn](https://yarn.dask.org/en/latest/), as long as you’ve already provisioned the kubernetes cluster or hadoop cluster already
+- Use a nearly full-service deployment python API called [Dask Cloud Provider](https://cloudprovider.dask.org/en/latest/), that will go one step farther and provision the cluster for you too, as long as you give it AWS credentials (and as of time of writing, it only supports AWS)
 
-As you can see, there are a ton of options. On top of all of those, you might contract a managed service provider to provision and configure your dask cluster for you according to your specs, such as [Saturn Cloud](https://www.saturncloud.io) (*Disclaimer: one of the authors (Julia Signell) works for Saturn Cloud*).
+As you can see, there are a ton of options. On top of all of those, you might contract a managed service provider to provision and configure your dask cluster for you according to your specs, such as [Saturn Cloud](https://www.saturncloud.io) (_Disclaimer: one of the authors (Julia Signell) works for Saturn Cloud_).
 
 Whatever you choose, the whole point is to unlock the power of parallelism in Python that Dask provides, in as scalable a manner as possible which is what getting it running on distributed infrastructure is all about. Once you know where and with what API you are going to deploy your dask cluster, the real configuration process for your Dask cluster and its workload begins.
 
-
 ## How to choose instance type for your cluster
 
-When you are ready to set up your dask cluster for production, you will need to make some decisions about the infrastructure your scheduler and your workers will be running on, especially if you are using one of the options from [How to host  a distributed dask cluster](#how-to-host-a-distributed-dask-cluster) that requires pre-provisioned infrastructure. Whether your infrastructure is on-prem or in the cloud, the classic decision points need to be made:
+When you are ready to set up your dask cluster for production, you will need to make some decisions about the infrastructure your scheduler and your workers will be running on, especially if you are using one of the options from [How to host a distributed dask cluster](#how-to-host-a-distributed-dask-cluster) that requires pre-provisioned infrastructure. Whether your infrastructure is on-prem or in the cloud, the classic decision points need to be made:
 
-*   Memory requirements
-*   CPU requirements
-*   Storage requirements
+- Memory requirements
+- CPU requirements
+- Storage requirements
 
 If you have tested your workload locally, a simple heuristic is to multiply the CPU, storage, and memory usage of your work by some multiplier that is related to how scaled down your local experiments are from your expected production usage. For example, if you test your workload locally with a 10% sample of data, multiplying any observed resource usage by at least 10 may get you close to your minimum instance size. Though in reality Dask's many underlying optimizations means that it shouldn't regularly require linear growth of resources to work on more data, this simple heuristic may give you a starting point as a good first pass technique.
 
@@ -54,7 +52,6 @@ For the scheduler, a serialized version of each task is submitted to it is held 
 For the workers, the specific resource needs of your task code may overtake any generalizations we can make. If nothing else, they need enough memory and CPU to deserialize each task payload, and serialize it up again to return as a Future to the Dask scheduler. Dask workers may persist the results of computations in memory, including distributed across the memory of the cluster, which you can read more about [here](https://distributed.dask.org/en/latest/memory.html). Regarding storage needs, fundamentally tasks submitted to Dask workers should not write to local storage - the scheduler does not guarantee work will be run on a given worker - so the storage costs should be directly related to the installation footprint of your worker’s dependencies and any ephemeral storage of the dask workers. Temporary files the workers create may include spilling in-memory data to local disk if they run out of memory as long as [that behavior isn't disabled](https://docs.dask.org/en/latest/configuration-reference.html#distributed.worker.memory.spill), which means that reducing memory can have an effect on your ephemeral storage needs.
 
 Generally we would recommend simplifying your life and keeping your scheduler and worker nodes the same node size, but if you wanted to optimize them, use the above CPU, memory and storage patterns to give you a starting point for configuring them separately.
-
 
 ## How to choose number of workers
 
@@ -84,20 +81,18 @@ Once you have started up your cluster with some workers, you can monitor their p
 
 The tricky bit about choosing the number of workers to use is that in practice the size and shape of your machine, data, and task graph can change. Figuring out how many workers to use can end up feeling like an endless fiddling of knobs. If this is starting to drive you crazy then remember that you can always change the number or workers, even while the cluster is running.
 
-
 ## How to choose nthreads to utilize multithreading
 
 When starting dask workers themselves, there are two very important configuration options to play against each other: how many workers and how many threads per worker. You can actually manipulate both on the same worker process with flags, such as in the form `dask-worker --nprocs 2 --nthreads 2`, though `--nprocs` simply spins up another worker in the background so it is cleaner configuration to avoid setting `--nprocs` and instead manipulate that configuration with whatever you use to specify total number of workers. We already talked about [how to choose number of workers](#how-to-host-a-distributed-dask-cluster), but you may modify your decision about that if you change a workers’ `--nthreads` to increase the amount of work an individual worker can do.
 
 When deciding the best number of `nthreads` for your workers, it all boils down to the type of work you expect those workers to do. The fundamental principle is that multiple threads are best to share data between tasks, but worse if running code that doesn’t release Python’s GIL (“Global Interpreter Lock”). Increasing the `nthreads` for work that does not release the Python’s GIL has no effect; the worker cannot use threading to optimize the speed of computation if the GIL is locked. This is a possible point of confusion for new Dask users who want to increase their parallelism, but don’t see any gains from increasing the threading limit of their workers.
 
-As discussed in [the Dask docs on workers]([https://distributed.dask.org/en/latest/worker.html](https://distributed.dask.org/en/latest/worker.html)), there are some rules of thumb when to worry about GIL lockages, and thus prefer more workers over heavier individual workers with high `nthreads`:
+As discussed in [the Dask docs on workers](<[https://distributed.dask.org/en/latest/worker.html](https://distributed.dask.org/en/latest/worker.html)>), there are some rules of thumb when to worry about GIL lockages, and thus prefer more workers over heavier individual workers with high `nthreads`:
 
-*   If your code is mostly pure Python (in non-optimized Python libraries) on non-numerical data
-*   If your code causes computations external to Python that are long running and don’t release the GIL explicitly
+- If your code is mostly pure Python (in non-optimized Python libraries) on non-numerical data
+- If your code causes computations external to Python that are long running and don’t release the GIL explicitly
 
-Conveniently, a lot of dask users are running exclusively numerical computations using Python libraries optimized for multithreading, namely NumPy, Pandas, SciPy, etc in the PyData stack. If you do mostly numerical computations using those or similarly optimized libraries, you should emphasize a higher thread count. If you truly are doing mostly numerical computations, you can specify as many total threads as you have cores; if you are doing any work that would cause a thread to pause, for example any I/O (to write results to disk, perhaps), you can specify *more* threads than you have cores, since some will be occasionally sitting idle. The ideal number regarding how many more threads than cores to set in that situation is complex to estimate and dependent on your workload, but taking some advice from [concurrent.futures](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor), 5 times the processors on your machine is a historical upper bound to limit your total thread count to for heavily I/O dependent workloads. 
-
+Conveniently, a lot of dask users are running exclusively numerical computations using Python libraries optimized for multithreading, namely NumPy, Pandas, SciPy, etc in the PyData stack. If you do mostly numerical computations using those or similarly optimized libraries, you should emphasize a higher thread count. If you truly are doing mostly numerical computations, you can specify as many total threads as you have cores; if you are doing any work that would cause a thread to pause, for example any I/O (to write results to disk, perhaps), you can specify _more_ threads than you have cores, since some will be occasionally sitting idle. The ideal number regarding how many more threads than cores to set in that situation is complex to estimate and dependent on your workload, but taking some advice from [concurrent.futures](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor), 5 times the processors on your machine is a historical upper bound to limit your total thread count to for heavily I/O dependent workloads.
 
 ## How to chunk arrays and partition DataFrames
 

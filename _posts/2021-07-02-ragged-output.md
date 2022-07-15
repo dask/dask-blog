@@ -4,6 +4,7 @@ title: Ragged output, how to handle awkward shaped results
 author: Genevieve Buckley
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 ## Executive Summary
@@ -21,17 +22,19 @@ For distributed workloads, we need to split up the data, process it, and then re
 
 In this blogpost, we'll look at an example with the following constraints:
 
-* Input array data
-* A processing function requiring overlap between chunks
-* The output returned 
+- Input array data
+- A processing function requiring overlap between chunks
+- The output returned
 
 ## Solution
 
 The simplest strategy is a two step process:
+
 1. Expand the array chunks using the [`overlap` function](https://docs.dask.org/en/latest/array-api.html?#dask.array.overlap.overlap).
 2. Use [`map_blocks`](https://docs.dask.org/en/latest/array-api.html#dask.array.map_blocks) with the [`drop_axis` keyword argument](https://docs.dask.org/en/latest/array-api.html#dask.array.map_blocks)
 
 ## Example code
+
 ```python
 import dask.array as da
 
@@ -44,9 +47,10 @@ result.compute()
 ## Multiple output types supported
 
 This pattern supports multiple types of output from the processing function, including:
-* numpy arrays
-* pandas Series
-* pandas DataFrames
+
+- numpy arrays
+- pandas Series
+- pandas DataFrames
 
 You can try this for yourself using any of the example processing functions below, generating dummy data output. Or, you can try out a function of your own.
 
@@ -81,21 +85,22 @@ Ragged output sizes can cause [broadcasting](https://numpy.org/doc/stable/user/b
 However, if ragged output sizes aren't a constraint for your particular programming problem, then you can continue to use the Dask [`map_overlap`](https://docs.dask.org/en/latest/array-api.html?#dask.array.overlap.map_overlap) and [`reduction`](https://docs.dask.org/en/latest/array-api.html?#dask.array.reduction) functions as much as you like.
 
 ## Alternative solution
+
 ### Dask delayed
 
 As an alternative solution, you can use [Dask delayed](https://docs.dask.org/en/latest/delayed.html) (a tutorial is [available here](https://tutorial.dask.org/01_dask.delayed.html)).
 
 Advantages:
 
-* Your processing function can have any type of output (it not restricted to numpy or pandas objects)
-* There is more flexibility in the ways you can use Dask delayed.
+- Your processing function can have any type of output (it not restricted to numpy or pandas objects)
+- There is more flexibility in the ways you can use Dask delayed.
 
 Disadvantages:
 
-* You will have to handle combining the outputs yourself.
-* You will have to be more careful about performance:
-    * For example, because the code below uses delayed in a list comprehension, it's very important for performance reasons that we pass in the expected metadata. Fortunately, dask has a [`make_meta`](https://docs.dask.org/en/latest/dataframe-api.html#dask.dataframe.utils.make_meta) function available.
-    * You can read more about performance considerations for Dask delayed and [best practices here](https://docs.dask.org/en/latest/delayed-best-practices.html).
+- You will have to handle combining the outputs yourself.
+- You will have to be more careful about performance:
+  - For example, because the code below uses delayed in a list comprehension, it's very important for performance reasons that we pass in the expected metadata. Fortunately, dask has a [`make_meta`](https://docs.dask.org/en/latest/dataframe-api.html#dask.dataframe.utils.make_meta) function available.
+  - You can read more about performance considerations for Dask delayed and [best practices here](https://docs.dask.org/en/latest/delayed-best-practices.html).
 
 Example code:
 

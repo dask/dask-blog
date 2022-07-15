@@ -1,13 +1,10 @@
-Dask Working Notes
-==================
+# Dask Working Notes
 
 A collection of working notes about [Dask](https://dask.org)
 
+## Build Locally
 
-Build Locally
--------------
-
-This blog uses Jekyll, which is built on Ruby.  You will need Ruby to build
+This blog uses Jekyll, which is built on Ruby. You will need Ruby to build
 locally.
 
 Do this once on your machine (assuming you have `ruby` and `gem`, Ruby's
@@ -25,14 +22,12 @@ build-and-host your docs:
 bundle exec jekyll serve
 ```
 
-That should also watch for changes and rebuild automatically.  Built pages live
+That should also watch for changes and rebuild automatically. Built pages live
 in `_site/`.
 
+## Installing Jekyll
 
-Installing Jekyll
------------------
-
-As noted aboove, Jekyll can be installed as a [gem](https://jekyllrb.com/docs/):
+As noted above, Jekyll can be installed as a [gem](https://jekyllrb.com/docs/):
 
 > gem install jekyll bundle
 
@@ -45,10 +40,9 @@ bundle install
 bundle exec jekyll serve
 ```
 
-Add a new page
---------------
+## Add a new page
 
-Content lives in `_posts` as individual markdown files.  These markdown files
+Content lives in `_posts` as individual markdown files. These markdown files
 have a few expectations on them.
 
 1.  They should be named according to the date of publication like the
@@ -93,14 +87,24 @@ have a few expectations on them.
     following:
 
     ```html
-    <img src="/images/my-image.svg">
+    <img src="/images/my-image.svg" />
     ```
 
+## Formatting
 
-Publish on Github Pages
------------------------
+This project uses [prettier](https://prettier.io/) and [markdownlint](https://github.com/DavidAnson/markdownlint) to auto-format and lint files.
 
-Github runs Jekyll by default.  No additional work is needed for deployment,
+You can use [pre-commit](https://pre-commit.com/) to run this automatically:
+
+```console
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
+
+## Publish on Github Pages
+
+Github runs Jekyll by default. No additional work is needed for deployment,
 just push to the `gh-pages` branch and things should be up in a few minutes.
 
 The blog is also rebuilt nightly via a GitHub Actions cron job. This allows

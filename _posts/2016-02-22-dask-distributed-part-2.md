@@ -2,17 +2,18 @@
 layout: post
 title: Pandas on HDFS with Dask Dataframes
 
-tags : [Programming, scipy, Python, dask]
+tags: [Programming, scipy, Python, dask]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-*This work is supported by [Continuum Analytics](http://continuum.io)
+_This work is supported by [Continuum Analytics](http://continuum.io)
 and the [XDATA Program](http://www.darpa.mil/program/XDATA)
-as part of the [Blaze Project](http://blaze.pydata.org)*
+as part of the [Blaze Project](http://blaze.pydata.org)_
 
 In this post we use Pandas in parallel across an HDFS cluster to read CSV data.
-We coordinate these computations with dask.dataframe.  A screencast version of
+We coordinate these computations with dask.dataframe. A screencast version of
 this blogpost is available [here](https://www.youtube.com/watch?v=LioaeHsZDBQ)
 and the previous post in this series is available
 [here](/2016/02/17/dask-distributed-part1).
@@ -42,23 +43,21 @@ To start, we connect to our scheduler, import the `hdfs` module from the
 Our data comes from the New York City Taxi and Limousine Commission which
 publishes [all yellow cab taxi rides in
 NYC](http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml) for various
-years.  This is a nice model dataset for computational tabular data because
+years. This is a nice model dataset for computational tabular data because
 it's large enough to be annoying while also deep enough to be broadly
-appealing.  Each year is about 25GB on disk and about 60GB in memory as a
+appealing. Each year is about 25GB on disk and about 60GB in memory as a
 Pandas DataFrame.
 
 HDFS breaks up our CSV files into 128MB chunks on various hard drives spread
-throughout the cluster.  The dask.distributed workers each read the chunks of
+throughout the cluster. The dask.distributed workers each read the chunks of
 bytes local to them and call the `pandas.read_csv` function on these bytes,
 producing 391 separate Pandas DataFrame objects spread throughout the memory of
-our eight worker nodes.  The returned objects, `nyc2014` and `nyc2015`, are
+our eight worker nodes. The returned objects, `nyc2014` and `nyc2015`, are
 [dask.dataframe](http://dask.pydata.org/en/latest/dataframe.html) objects which
 present a subset of the Pandas API to the user, but farm out all of the work to
 the many Pandas dataframes they control across the network.
 
-
-Play with Distributed Data
---------------------------
+## Play with Distributed Data
 
 If we wait for the data to load fully into memory then we can perform
 pandas-style analysis at interactive speeds.
@@ -215,11 +214,11 @@ pandas-style analysis at interactive speeds.
 ```
 
 Interestingly it appears that the NYC cab industry has contracted a bit in the
-last year.  There are *fewer* cab rides in 2015 than in 2014.
+last year. There are _fewer_ cab rides in 2015 than in 2014.
 
 When we ask for something like the length of the full dask.dataframe we
 actually ask for the length of all of the hundreds of Pandas dataframes and
-then sum them up.  This process of reaching out to all of the workers completes
+then sum them up. This process of reaching out to all of the workers completes
 in around 200-300 ms, which is generally fast enough to feel snappy in an
 interactive session.
 
@@ -238,9 +237,7 @@ Dask.dataframes build a plan to get your result and the distributed scheduler
 coordinates that plan on all of the little Pandas dataframes on the workers
 that make up our dataset.
 
-
-Pandas for Metadata
--------------------
+## Pandas for Metadata
 
 Let's appreciate for a moment all the work we didn't have to do around CSV
 handling because Pandas magically handled it for us.
@@ -269,31 +266,28 @@ total_amount\r                  float64
 dtype: object
 ```
 
-We didn't have to find columns or specify data-types.  We didn't have to parse
-each value with an `int` or `float` function as appropriate.  We didn't have to
+We didn't have to find columns or specify data-types. We didn't have to parse
+each value with an `int` or `float` function as appropriate. We didn't have to
 parse the datetimes, but instead just specified a `parse_datetimes=` keyword.
 The CSV parsing happened about as quickly as can be expected for this format,
 clocking in at a network total of a bit under 1 GB/s.
 
 Pandas is well loved because it removes all of these little hurdles from the
-life of the analyst.  If we tried to reinvent a new
+life of the analyst. If we tried to reinvent a new
 "Big-Data-Frame" we would have to reimplement all of the work already well done
-inside of Pandas.  Instead, dask.dataframe just coordinates and reuses the code
-within the Pandas library.  It is successful largely due to work from core
+inside of Pandas. Instead, dask.dataframe just coordinates and reuses the code
+within the Pandas library. It is successful largely due to work from core
 Pandas developers, notably Masaaki Horikoshi
 ([@sinhrks](https://github.com/sinhrks/)), who have done tremendous work to
 align the API precisely with the Pandas core library.
 
-
-Analyze Tips and Payment Types
-------------------------------
+## Analyze Tips and Payment Types
 
 In an effort to demonstrate the abilities of dask.dataframe we ask a simple
-question of our data, *"how do New Yorkers tip?"*.  The 2015 NYCTaxi data is
+question of our data, _"how do New Yorkers tip?"_. The 2015 NYCTaxi data is
 quite good about breaking down the total cost of each ride into the fare
-amount, tip amount, and various taxes and fees.  In particular this lets us
+amount, tip amount, and various taxes and fees. In particular this lets us
 measure the percentage that each rider decided to pay in tip.
-
 
 ```python
 >>> nyc2015[['fare_amount', 'tip_amount', 'payment_type']].head()
@@ -343,9 +337,9 @@ measure the percentage that each rider decided to pay in tip.
 </table>
 
 In the first two lines we see evidence supporting the 15-20% tip standard
-common in the US.  The following three lines interestingly show zero tip.
+common in the US. The following three lines interestingly show zero tip.
 Judging only by these first five lines (a very small sample) we see a strong
-correlation here with the payment type.  We analyze this a bit more by counting
+correlation here with the payment type. We analyze this a bit more by counting
 occurrences in the `payment_type` column both for the full dataset, and
 filtered by zero tip:
 
@@ -374,23 +368,19 @@ Name: payment_type, dtype: int64
 ```
 
 We find that almost all zero-tip rides correspond to payment type 2, and that
-almost all payment type 2 rides don't tip.  My un-scientific hypothesis here is
+almost all payment type 2 rides don't tip. My un-scientific hypothesis here is
 payment type 2 corresponds to cash fares and that we're observing a tendancy of
-drivers not to record cash tips.  However we would need more domain knowledge
+drivers not to record cash tips. However we would need more domain knowledge
 about our data to actually make this claim with any degree of authority.
 
-
-
-Analyze Tips Fractions
-----------------------
+## Analyze Tips Fractions
 
 Lets make a new column, `tip_fraction`, and then look at the average of this
 column grouped by day of week and grouped by hour of day.
 
 First, we need to filter out bad rows, both rows with this odd payment type,
 and rows with zero fare (there are a surprising number of free cab rides in
-NYC.)  Second we create a new column equal to the ratio of `tip_amount /
-fare_amount`.
+NYC.) Second we create a new column equal to the ratio of `tip_amount / fare_amount`.
 
 ```python
 >>> df = nyc2015[(nyc2015.fare_amount > 0) & (nyc2015.payment_type != 2)]
@@ -398,7 +388,7 @@ fare_amount`.
 ```
 
 Next we choose to groupby the pickup datetime column in order to see how the
-average tip fraction changes by day of week and by hour.  The groupby and
+average tip fraction changes by day of week and by hour. The groupby and
 datetime handling of Pandas makes these operations trivial.
 
 ```python
@@ -411,9 +401,8 @@ datetime handling of Pandas makes these operations trivial.
 
 <img src="/images/distributed-hdfs-groupby-tip-fraction.gif">
 
-
-Grouping by day-of-week doesn't show anything too striking to my eye.  However
-I would like to note at how generous NYC cab riders seem to be.  A 23-25% tip
+Grouping by day-of-week doesn't show anything too striking to my eye. However
+I would like to note at how generous NYC cab riders seem to be. A 23-25% tip
 can be quite nice:
 
 ```python
@@ -468,11 +457,9 @@ surge in the early morning with an astonishing peak of 34% at 4am:
 
 <img src="/images/nyctaxi-2015-hourly-tips.png">
 
+## Performance
 
-Performance
------------
-
-Lets dive into a few operations that run at different time scales.  This gives
+Lets dive into a few operations that run at different time scales. This gives
 a good understanding of the strengths and limits of the scheduler.
 
 ```python
@@ -481,14 +468,14 @@ CPU times: user 4 ms, sys: 0 ns, total: 4 ms
 Wall time: 20.9 ms
 ```
 
-This head computation is about as fast as a film projector.  You could perform
+This head computation is about as fast as a film projector. You could perform
 this roundtrip computation between every consecutive frame of a movie; to a
-human eye this appears fluid.  In the [last post](/2016/02/17/dask-distributed-part1)
-we asked about how low we could bring latency.  In that post we were running
+human eye this appears fluid. In the [last post](/2016/02/17/dask-distributed-part1)
+we asked about how low we could bring latency. In that post we were running
 computations from my laptop in California and so were bound by transcontinental
-latencies of 200ms.  This time, because we're operating from the cluster, we
-can get down to 20ms.  We're only able to be this fast because we touch only a
-single data element, the first partition.  Things change when we need to touch
+latencies of 200ms. This time, because we're operating from the cluster, we
+can get down to 20ms. We're only able to be this fast because we touch only a
+single data element, the first partition. Things change when we need to touch
 the entire dataset.
 
 ```python
@@ -497,86 +484,78 @@ CPU times: user 48 ms, sys: 0 ns, total: 48 ms
 Wall time: 271 ms
 ```
 
-The length computation takes 200-300 ms.  This computation takes longer because we
-touch every individual partition of the data, of which there are 178.  The
+The length computation takes 200-300 ms. This computation takes longer because we
+touch every individual partition of the data, of which there are 178. The
 scheduler incurs about 1ms of overhead per task, add a bit of latency
-and you get the ~200ms total.  This means that the scheduler will likely be the
+and you get the ~200ms total. This means that the scheduler will likely be the
 bottleneck whenever computations are very fast, such as is the case for
-computing `len`.  Really, this is good news; it means that by improving the
+computing `len`. Really, this is good news; it means that by improving the
 scheduler we can reduce these durations even further.
 
 If you look at the groupby computations above you can add the numbers in the
-progress bars to show that we computed around 3000 tasks in around 7s.  It
+progress bars to show that we computed around 3000 tasks in around 7s. It
 looks like this computation is about half scheduler overhead and about half
 bound by actual computation.
 
-
-Conclusion
-----------
+## Conclusion
 
 We used dask+distributed on a cluster to read CSV data from HDFS
-into a dask dataframe.  We then used dask.dataframe, which looks identical to
+into a dask dataframe. We then used dask.dataframe, which looks identical to
 the Pandas dataframe, to manipulate our distributed dataset intuitively and
 efficiently.
 
 We looked a bit at the performance characteristics of simple computations.
 
-
-What doesn't work
------------------
+## What doesn't work
 
 As always I'll have a section like this that honestly says what doesn't work
 well and what I would have done with more time.
 
-*   Dask dataframe implements a commonly used *subset* of Pandas functionality,
-    not all of it.  It's surprisingly hard to communicate the exact bounds of
-    this subset to users.  Notably, in the distributed setting we don't have a
-    shuffle algorithm, so `groupby(...).apply(...)` and some joins are not
-    yet possible.
+- Dask dataframe implements a commonly used _subset_ of Pandas functionality,
+  not all of it. It's surprisingly hard to communicate the exact bounds of
+  this subset to users. Notably, in the distributed setting we don't have a
+  shuffle algorithm, so `groupby(...).apply(...)` and some joins are not
+  yet possible.
 
-*   If you want to use threads, you'll need Pandas 0.18.0 which, at the time of
-    this writing, was still in release candidate stage.  This Pandas release
-    fixes some important GIL related issues.
+- If you want to use threads, you'll need Pandas 0.18.0 which, at the time of
+  this writing, was still in release candidate stage. This Pandas release
+  fixes some important GIL related issues.
 
-*   The 1ms overhead per task limit is significant.  While we can still scale
-    out to clusters far larger than what we have here, we probably won't be
-    able to strongly accelerate very quick operations until we reduce this
-    number.
+- The 1ms overhead per task limit is significant. While we can still scale
+  out to clusters far larger than what we have here, we probably won't be
+  able to strongly accelerate very quick operations until we reduce this
+  number.
 
-*   We use the [hdfs3 library](http://hdfs3.readthedocs.org/en/latest/) to read
-    data from HDFS.  This library seems to work great but is new and could use
-    more active users to flush out bug reports.
+- We use the [hdfs3 library](http://hdfs3.readthedocs.org/en/latest/) to read
+  data from HDFS. This library seems to work great but is new and could use
+  more active users to flush out bug reports.
 
+## Links
 
-Links
------
+- [dask](https://dask.pydata.org/en/latest/), the original project
+- [dask.distributed](https://distributed.readthedocs.org/en/latest/), the
+  distributed memory scheduler powering the cluster computing
+- [dask.dataframe](http://dask.pydata.org/en/latest/dataframe.html), the user
+  API we've used in this post.
+- [NYC Taxi Data Downloads](http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml)
+- [hdfs3](https://hdfs3.readthedocs.org/en/latest): Python library we use for
+  HDFS interations.
+- The [previous post](/2016/02/17/dask-distributed-part1) in this blog series.
 
-*   [dask](https://dask.pydata.org/en/latest/), the original project
-*   [dask.distributed](https://distributed.readthedocs.org/en/latest/), the
-    distributed memory scheduler powering the cluster computing
-*   [dask.dataframe](http://dask.pydata.org/en/latest/dataframe.html), the user
-    API we've used in this post.
-*   [NYC Taxi Data Downloads](http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml)
-*   [hdfs3](https://hdfs3.readthedocs.org/en/latest): Python library we use for
-    HDFS interations.
-*   The [previous post](/2016/02/17/dask-distributed-part1) in this blog series.
-
-
-Setup and Data
---------------
+## Setup and Data
 
 You can obtain public data from the New York City Taxi and Limousine Commission
-[here](http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml).  I
+[here](http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml). I
 downloaded this onto the head node and dumped it into HDFS with commands like
 the following:
 
 ```
-$ wget https://storage.googleapis.com/tlc-trip-data/2015/yellow_tripdata_2015-{01..12}.csv
-$ hdfs dfs -mkdir /nyctaxi
-$ hdfs dfs -mkdir /nyctaxi/2015
-$ hdfs dfs -put yellow*.csv /nyctaxi/2015/
+wget https://storage.googleapis.com/tlc-trip-data/2015/yellow_tripdata_2015-{01..12}.csv
+hdfs dfs -mkdir /nyctaxi
+hdfs dfs -mkdir /nyctaxi/2015
+hdfs dfs -put yellow*.csv /nyctaxi/2015/
 ```
 
 The cluster was hosted on EC2 and was comprised of nine `m3.2xlarges` with 8
-cores and 30GB of RAM each.  Eight of these nodes were used as workers; they
+cores and 30GB of RAM each. Eight of these nodes were used as workers; they
 used processes for parallelism, not threads.

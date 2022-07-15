@@ -5,6 +5,7 @@ author: Matthew Rocklin
 tags: [dask, numba]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 In this post we explore four array computing technologies, and how they
@@ -17,7 +18,7 @@ work together to achieve powerful results.
     together
 
 In the end we'll show how a novice developer can write a small amount of Python
-to efficiently compute localized computation on large amounts of data.  In
+to efficiently compute localized computation on large amounts of data. In
 particular we'll write a simple function to smooth images and apply that in
 parallel across a large stack of images.
 
@@ -57,16 +58,14 @@ Note: the `smooth` function above is more commonly referred to as the 2D mean fi
 
 Now, lets break this down a bit
 
-
-Numba Stencils
---------------
+## Numba Stencils
 
 **Docs:**: https://numba.pydata.org/numba-doc/dev/user/stencil.html
 
 Many array computing functions operate only on a local region of the array.
 This is common in image processing, signals processing, simulation, the
 solution of differential equations, anomaly detection, time series analysis,
-and more.  Typically we write code that looks like the following:
+and more. Typically we write code that looks like the following:
 
 ```python
 def _smooth(x):
@@ -80,8 +79,8 @@ def _smooth(x):
     return out
 ```
 
-Or something similar.  The `numba.stencil` decorator makes this a bit easier to
-write down.  You just write down what happens on every element, and Numba
+Or something similar. The `numba.stencil` decorator makes this a bit easier to
+write down. You just write down what happens on every element, and Numba
 handles the rest.
 
 ```python
@@ -92,9 +91,7 @@ def _smooth(x):
             x[ 1, -1] + x[ 1, 0] + x[ 1, 1]) // 9
 ```
 
-
-Numba JIT
----------
+## Numba JIT
 
 **Docs:** http://numba.pydata.org/
 
@@ -120,16 +117,15 @@ def smooth(x):
 
 For those counting, that's over 1000x faster!
 
-*Note: this function already exists as `scipy.ndimage.uniform_filter`, which
-operates at the same speed.*
+_Note: this function already exists as `scipy.ndimage.uniform_filter`, which
+operates at the same speed._
 
-Dask Array
-----------
+## Dask Array
 
 **Docs:** https://docs.dask.org/en/latest/array.html
 
 In these applications people often have many such arrays and they want to apply
-this function over all of them.  In principle they could do this with a for
+this function over all of them. In principle they could do this with a for
 loop.
 
 ```python
@@ -143,7 +139,7 @@ for fn in glob('/path/to/*.png'):
 ```
 
 If they wanted to then do this in parallel they would maybe use the
-multiprocessing or concurrent.futures modules.  If they wanted to do this
+multiprocessing or concurrent.futures modules. If they wanted to do this
 across a cluster then they could rewrite their code with PySpark or some other
 system.
 
@@ -164,16 +160,14 @@ images, and then save them out.
 This is fine, but lets go a bit further, and discuss generalized universal
 functions from NumPy.
 
-
-Generalized Universal Functions
--------------------------------
+## Generalized Universal Functions
 
 **Numba Docs:** https://numba.pydata.org/numba-doc/dev/user/vectorize.html
 
 **NumPy Docs:** https://docs.scipy.org/doc/numpy-1.16.0/reference/c-api.generalized-ufuncs.html
 
 A generalized universal function (gufunc) is a normal function that has been
-annotated with typing and dimension information.  For example we can redefine
+annotated with typing and dimension information. For example we can redefine
 our `smooth` function as a gufunc as follows:
 
 ```python
@@ -189,7 +183,7 @@ This function knows that it consumes a 2d array of int8's and produces a 2d
 array of int8's of the same dimensions.
 
 This sort of annotation is a small change, but it gives other systems like Dask
-enough information to use it intelligently.  Rather than call functions like
+enough information to use it intelligently. Rather than call functions like
 `map_blocks`, we can just use the function directly, as if our Dask Array was
 just a very large NumPy array.
 
@@ -201,13 +195,11 @@ y = x.map_blocks(smooth, dtype='int8')
 y = smooth(x)
 ```
 
-This is nice.  If you write library code with gufunc semantics then that code
+This is nice. If you write library code with gufunc semantics then that code
 just works with systems like Dask, without you having to build in explicit
-support for parallel computing.  This makes the lives of users much easier.
+support for parallel computing. This makes the lives of users much easier.
 
-
-Finished result
----------------
+## Finished result
 
 Lets see the full example one more time.
 
@@ -233,7 +225,7 @@ x = da.ones((1000000, 1000, 1000), chunks=('auto', -1, -1), dtype='int8')
 smooth(x)
 ```
 
-This code is decently approachable by novice users.  They may not understand
+This code is decently approachable by novice users. They may not understand
 the internal details of gufuncs or Dask arrays or JIT compilation, but they can
 probably copy-paste-and-modify the example above to suit their needs.
 
@@ -243,9 +235,7 @@ computation, and creating an array of their own data.
 This workflow is efficient and scalable, using low-level compiled code and
 potentially clusters of thousands of computers.
 
-
-What could be better
---------------------
+## What could be better
 
 There are a few things that could make this workflow nicer.
 
@@ -299,8 +289,7 @@ There are a few things that could make this workflow nicer.
 
     [dask/dask-image #110](https://github.com/dask/dask-image/issues/110)
 
-Aspirational Result
--------------------
+## Aspirational Result
 
 With all of these, we might then be able to write the code above as follows
 
@@ -326,8 +315,7 @@ y = smooth(x)
 dask_image.io.imsave(y, '/path/to/out/*.png')
 ```
 
-Update: Now with GPUs!
-----------------------
+## Update: Now with GPUs!
 
 After writing this blogpost I did a small update where I used
 [numba.cuda.jit](https://numba.pydata.org/numba-doc/dev/cuda/index.html)

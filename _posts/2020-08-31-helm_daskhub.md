@@ -15,12 +15,12 @@ Kubernetes Cluster. If you're managing deployment for many people that needs
 interactive, scalable computing (say for a class of students, a data science
 team, or a research lab) then `dask/daskhub` might be right for you.
 
-You can install ``dask/daskhub`` on a Kubernetes cluster today with
+You can install `dask/daskhub` on a Kubernetes cluster today with
 
 ```console
-$ helm repo add dask https://helm.dask.org/
-$ helm repo update
-$ helm upgrade --install dhub dask/daskhub
+helm repo add dask https://helm.dask.org/
+helm repo update
+helm upgrade --install dhub dask/daskhub
 ```
 
 ## History

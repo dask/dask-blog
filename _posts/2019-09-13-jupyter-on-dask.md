@@ -5,10 +5,11 @@ author: Matthew Rocklin
 tags: [HPC]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
 If you want, you can have Dask set up a Jupyter notebook server for you,
-co-located with the Dask scheduler.  There are many ways to do this, but this
+co-located with the Dask scheduler. There are many ways to do this, but this
 blog post lists two.
 
 ### First, why would you do this?
@@ -46,10 +47,9 @@ If you have a complex networking setup (maybe you're on the cloud or HPC and
 had to open up a port explicitly) then you might want to install
 [jupyter-server-proxy](https://jupyter-server-proxy.readthedocs.io/en/latest/)
 (which Dask also uses by default if installed), and then go to
-[http://scheduler-address:8787/proxy/8888](https://example.com) .  The Dask dashboard can route your
+[http://scheduler-address:8787/proxy/8888](https://example.com) . The Dask dashboard can route your
 connection to Jupyter (Jupyter is also kind enough to do the same for Dask if
 it is the main service).
-
 
 ### Hack 2: Preload script
 
@@ -70,7 +70,7 @@ def dask_setup(scheduler):
 dask-scheduler --preload jupyter-preload.py
 ```
 
-That script will run at an appropriate time during scheduler startup.  You can
+That script will run at an appropriate time during scheduler startup. You can
 also put this into configuration
 
 ```yaml
@@ -81,11 +81,11 @@ distributed:
 
 ### Really though, you should use something else
 
-This is mostly a hack.  If you're at an institution then you should ask for
+This is mostly a hack. If you're at an institution then you should ask for
 something like [JuptyerHub](https://jupyter.org/hub).
 
 Or, you might also want to run this in a separate subprocess, so that Jupyter
-and the Dask scheduler don't collide with each other.  This shouldn't be so
+and the Dask scheduler don't collide with each other. This shouldn't be so
 much of a problem (they're both pretty light weight), but isolating them
 probably makes sense.
 

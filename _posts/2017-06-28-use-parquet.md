@@ -5,15 +5,16 @@ title: Use Apache Parquet
 tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-*This work is supported by [Continuum Analytics](http://continuum.io)
+_This work is supported by [Continuum Analytics](http://continuum.io)
 and the Data Driven Discovery Initiative from the [Moore
-Foundation](https://www.moore.org/).*
+Foundation](https://www.moore.org/)._
 
 This is a tiny blogpost to encourage you to use
 [Parquet](http://parquet.apache.org/) instead of CSV for your dataframe
-computations.  I'll use Dask.dataframe here but Pandas would work just as well.
+computations. I'll use Dask.dataframe here but Pandas would work just as well.
 I'll also use my local laptop here, but Parquet is an excellent format to use
 on a cluster.
 
@@ -119,20 +120,19 @@ Out[6]: 245566747
 ```
 
 We were able to ask questions about this data (and learn that 250 million
-people rode cabs in 2016) even though it is too large to fit into memory.  This
-is because Dask is able to operate lazily from disk.  It reads in the data on
-an as-needed basis and then forgets it when it no longer needs it.  This takes
+people rode cabs in 2016) even though it is too large to fit into memory. This
+is because Dask is able to operate lazily from disk. It reads in the data on
+an as-needed basis and then forgets it when it no longer needs it. This takes
 a while (4 minutes) but does just work.
 
 However, when we read this data many times from disk we start to become
-frustrated by this four minute cost.  In Pandas we suffered this cost once as
-we moved data from disk to memory.  On larger datasets when we don't have
+frustrated by this four minute cost. In Pandas we suffered this cost once as
+we moved data from disk to memory. On larger datasets when we don't have
 enough RAM we suffer this cost many times.
-
 
 ### Parquet is faster
 
-Lets try this same process with Parquet.  I happen to have the same exact data
+Lets try this same process with Parquet. I happen to have the same exact data
 stored in Parquet format on my hard drive.
 
 ```
@@ -141,15 +141,15 @@ mrocklin@carbon:~/data/nyc$ du -hs nyc-2016.parquet/
 ```
 
 It is stored as a bunch of individual files, but we don't actually care about
-that.  We'll always refer to the directory as the dataset.  These files are
-stored in binary format.  We can't read them as humans
+that. We'll always refer to the directory as the dataset. These files are
+stored in binary format. We can't read them as humans
 
 ```python
 mrocklin@carbon:~/data/nyc$ head nyc-2016.parquet/part.0.parquet
 <a bunch of illegible bytes>
 ```
 
-But computers are much more able to both read and navigate this data.  Lets do
+But computers are much more able to both read and navigate this data. Lets do
 the same experiment from before:
 
 ```python
@@ -205,13 +205,12 @@ Out[6]: 245566747
 ```
 
 Same values, but now our computation happens in three seconds, rather than four
-minutes.  We're cheating a little bit here (pulling out the passenger count
-column is especially easy for Parquet) but generally Parquet will be *much*
-faster than CSV.  This lets us work from disk comfortably without worrying
+minutes. We're cheating a little bit here (pulling out the passenger count
+column is especially easy for Parquet) but generally Parquet will be _much_
+faster than CSV. This lets us work from disk comfortably without worrying
 about how much memory we have.
 
-Convert
--------
+## Convert
 
 So do yourself a favor and convert your data
 
@@ -225,12 +224,10 @@ In [5]: df.to_parquet('yellow_tripdata.parquet')
 ```
 
 If you want to be more clever you can specify dtypes and compression when
-converting.  This can definitely help give you significantly greater speedups,
+converting. This can definitely help give you significantly greater speedups,
 but just using the default settings will still be a large improvement.
 
-
-Advantages
-----------
+## Advantages
 
 Parquet enables the following:
 
@@ -243,8 +240,7 @@ Parquet enables the following:
 4.  Per-chunk statistics so that you can find subsets quickly
 5.  Compression
 
-Parquet Versions
-----------------
+## Parquet Versions
 
 There are two nice Python packages with support for the Parquet format:
 
@@ -253,6 +249,6 @@ There are two nice Python packages with support for the Parquet format:
 2.  [fastparquet](http://fastparquet.readthedocs.io/en/latest/): a direct
     NumPy + Numba implementation of the Parquet format
 
-Both are good.  Both can do most things.  Each has separate strengths.  The
+Both are good. Both can do most things. Each has separate strengths. The
 code above used `fastparquet` by default but you can change this in Dask with
 the `engine='arrow'` keyword if desired.

@@ -2,22 +2,22 @@
 layout: post
 title: Towards Out-of-core ND-Arrays -- Dask + Toolz = Bag
 
-tags : [scipy, Python, Programming, dask]
+tags: [scipy, Python, Programming, dask]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-*This work is supported by [Continuum Analytics](http://continuum.io)
+_This work is supported by [Continuum Analytics](http://continuum.io)
 and the [XDATA Program](http://www.darpa.mil/program/XDATA)
-as part of the [Blaze Project](http://blaze.pydata.org)*
+as part of the [Blaze Project](http://blaze.pydata.org)_
 
 **tl;dr** We use dask to build a parallel Python list.
 
-Introduction
-------------
+## Introduction
 
 This is the seventh in a sequence of posts constructing an out-of-core nd-array
-using NumPy, and dask.  You can view these posts here:
+using NumPy, and dask. You can view these posts here:
 
 1. [Simple task scheduling](/2014/12/27/Towards-OOC/),
 2. [Frontend usability](/2014/12/30/Towards-OOC-Frontend/)
@@ -29,12 +29,10 @@ using NumPy, and dask.  You can view these posts here:
 Today we take a break from ND-Arrays and show how task scheduling can attack
 other collections like the simple `list` of Python objects.
 
-
-Unstructured Data
------------------
+## Unstructured Data
 
 Often before we have an `ndarray` or a `table/DataFrame` we have unstructured
-data like log files.  In this case tuned subsets of the language (e.g.
+data like log files. In this case tuned subsets of the language (e.g.
 `numpy`/`pandas`) aren't sufficient, we need the full Python language.
 
 My usual approach to the inconveniently large dump of log files is to use
@@ -42,31 +40,27 @@ Python [streaming
 iterators](http://toolz.readthedocs.org/en/latest/streaming-analytics.html)
 along with [multiprocessing or IPython
 Parallel](http://toolz.readthedocs.org/en/latest/parallelism.html) on a single
-large machine.  I often write/speak about this workflow when discussing
+large machine. I often write/speak about this workflow when discussing
 [`toolz`](http://toolz.readthedocs.org/).
 
 This workflow grows complex for most users when you introduce many processes.
 To resolve this we build our normal tricks into a new `dask.Bag` collection.
 
-
-Bag
----
+## Bag
 
 In the same way that `dask.array` mimics NumPy operations (e.g. matrix
 multiply, slicing), `dask.bag` mimics functional operations like `map`,
 `filter`, `reduce` found in the standard library as well as many of the
 streaming functions found in `toolz`.
 
-*  Dask array = NumPy + threads
-*  Dask bag = Python/Toolz + processes
+- Dask array = NumPy + threads
+- Dask bag = Python/Toolz + processes
 
-
-Example
--------
+## Example
 
 Here's the obligatory wordcount example
 
-{% highlight Python %}
+```python
 >>> from dask.bag import Bag
 
 >>> b = Bag.from_filenames('data/*.txt')
@@ -77,42 +71,38 @@ Here's the obligatory wordcount example
 
 >>> dict(b.map(str.split).map(concat).map(stem).frequencies())
 {...}
-{% endhighlight %}
+```
 
-We use all of our cores and stream through memory on each core.  We use
+We use all of our cores and stream through memory on each core. We use
 `multiprocessing` but could get fancier with some work.
 
-
-Related Work
-------------
+## Related Work
 
 There are a lot of much larger much more powerful systems that have a similar
 API, notably [Spark](http://spark.apache.org/) and
-[DPark](https://github.com/douban/dpark).  If you have *Big Data* and need to
+[DPark](https://github.com/douban/dpark). If you have _Big Data_ and need to
 use very many machines then you should stop reading this and go install them.
 
 I mostly made dask.bag because
 
-1.  It was very easy given the work already done on dask.array
-2.  I often only need multiprocessing + a heavy machine
-3.  I wanted something trivially pip installable that didn't use the JVM
+1. It was very easy given the work already done on dask.array
+2. I often only need multiprocessing + a heavy machine
+3. I wanted something trivially pip installable that didn't use the JVM
 
-But again, if you have *Big Data*, then this isn't for you.
+But again, if you have _Big Data_, then this isn't for you.
 
-
-Design
-------
+## Design
 
 As before, a `Bag` is just a dict holding tasks, along with a little meta data.
 
-{% highlight Python %}
+```python
 >>> d = {('x', 0): (range, 5),
 ...      ('x', 1): (range, 5),
 ...      ('x', 2): (range, 5)}
 
 >>> from dask.bag import Bag
 >>> b = Bag(d, 'x', npartitions=3)
-{% endhighlight %}
+```
 
 In this way we break up one collection
 
@@ -126,13 +116,13 @@ into three independent pieces
 
 When we abstractly operate on the large collection...
 
-{% highlight Python %}
+```python
 >>> b2 = b.map(lambda x: x * 10)
-{% endhighlight %}
+```
 
 ... we generate new tasks to operate on each of the components.
 
-{% highlight Python %}
+```python
 >>> b2.dask
 {('x', 0): (range, 5),
  ('x', 1): (range, 5),
@@ -140,20 +130,20 @@ When we abstractly operate on the large collection...
  ('bag-1', 0): (map, lambda x: x * 10, ('x', 0)),
  ('bag-1', 1): (map, lambda x: x * 10, ('x', 1)),
  ('bag-1', 2): (map, lambda x: x * 10, ('x', 2))}
-{% endhighlight %}
+```
 
 And when we ask for concrete results (the call to `list`) we spin up a
 scheduler to execute the resulting dependency graph of tasks.
 
-{% highlight Python %}
+```python
 >>> list(b2)
 [0, 10, 20, 30, 40, 0, 10, 20, 30, 40, 0, 10, 20, 30, 40]
-{% endhighlight %}
+```
 
-More complex operations yield more complex dasks.  Beware, dask code is pretty
-Lispy.  Fortunately these dasks are internal; users don't interact with them.
+More complex operations yield more complex dasks. Beware, dask code is pretty
+Lispy. Fortunately these dasks are internal; users don't interact with them.
 
-{% highlight Python %}
+```python
 >>> iseven = lambda x: x % 2 == 0
 >>> b3 = b.filter(iseven).count().dask
 {'bag-3': (sum, [('bag-2', 1), ('bag-2', 2), ('bag-2', 0)]),
@@ -163,7 +153,7 @@ Lispy.  Fortunately these dasks are internal; users don't interact with them.
                 (filter, iseven, (range, 5))),
  ('bag-2', 2): (count,
                 (filter, iseven, (range, 5)))}
-{% endhighlight %}
+```
 
 The current interface for `Bag` has the following operations:
 
@@ -174,25 +164,23 @@ The current interface for `Bag` has the following operations:
     fold            max                 topk
     foldby          mean                var
 
-Manipulations of bags create task dependency graphs.  We eventually execute
+Manipulations of bags create task dependency graphs. We eventually execute
 these graphs in parallel.
 
-
-Execution
----------
+## Execution
 
 We repurpose the threaded scheduler we used for arrays to support
-`multiprocessing` to provide parallelism even on pure Python code.  We're
-careful to avoid unnecessary data transfer.  None of the operations listed above
-requires significant communication.  Notably we don't have any concept of
-*shuffling* or scatter/gather.
+`multiprocessing` to provide parallelism even on pure Python code. We're
+careful to avoid unnecessary data transfer. None of the operations listed above
+requires significant communication. Notably we don't have any concept of
+_shuffling_ or scatter/gather.
 
 We [use dill](http://trac.mystic.cacr.caltech.edu/project/pathos/wiki/dill) to
 take care to serialize functions properly and collect/report errors, two issues
 that [plague naive use of
 `multiprocessing`](/2013/12/05/Parallelism-and-Serialization/) in Python.
 
-{% highlight Python %}
+```python
 >>> list(b.map(lambda x: x * 10))  # This works!
 [0, 10, 20, 30, 40, 0, 10, 20, 30, 40, 0, 10, 20, 30, 40]
 
@@ -203,31 +191,27 @@ integer division or modulo by zero
 
 Traceback:
     ...
-{% endhighlight %}
+```
 
 These tricks remove need for user expertise.
 
-
-Productive Sweet Spot
----------------------
+## Productive Sweet Spot
 
 I think that there is a productive sweet spot in the following configuration
 
-1.  Pure Python functions
-2.  Streaming/lazy data
-3.  Multiprocessing
-4.  A single large machine or a few machines in an informal cluster
+1. Pure Python functions
+2. Streaming/lazy data
+3. Multiprocessing
+4. A single large machine or a few machines in an informal cluster
 
 This setup is common and it's capable of handling terabyte scale workflows.
-In my brief experience people rarely take this route.  They use single-threaded
-in-memory Python until it breaks, and then seek out *Big Data Infrastructure*
+In my brief experience people rarely take this route. They use single-threaded
+in-memory Python until it breaks, and then seek out _Big Data Infrastructure_
 like Hadoop/Spark at relatively high productivity overhead.
 
-*Your workstation can scale bigger than you think.*
+_Your workstation can scale bigger than you think._
 
-
-Example
--------
+## Example
 
 Here is about a gigabyte of
 [network flow data](http://ita.ee.lbl.gov/html/contrib/UCB.home-IP-HTTP.html),
@@ -240,13 +224,13 @@ UC-Berkeley campus in 1996.
 
     846890341:80714 846890341:90331 846890341:90451 13.35.251.117:1270 207.83.232.163:80 10 0 842099995 4294967295 4294967295 64 1 38 GET 38127854093537985420..gif HTTP/1.0
 
-This is actually relatively clean.  Many of the fields are space delimited (not
+This is actually relatively clean. Many of the fields are space delimited (not
 all) and I've already compiled and run the decade old C-code needed to
 decompress it from its original format.
 
 Lets use Bag and regular expressions to parse this.
 
-{% highlight Python %}
+```python
 In [1]: from dask.bag import Bag, into
 
 In [2]: b = Bag.from_filenames('UCB-home-IP*.log')
@@ -274,12 +258,12 @@ In [4]: pattern = """
 In [5]: prog = re.compile(pattern)
 
 In [6]: records = b.map(prog.match).map(lambda m: m.groupdict())
-{% endhighlight %}
+```
 
-This returns instantly.  We only compute results when necessary.  We trigger
+This returns instantly. We only compute results when necessary. We trigger
 computation by calling `list`.
 
-{% highlight Python %}
+```python
 In [7]: list(records.take(1))
 Out[7]:
 [{'client_headers': '2',
@@ -302,14 +286,14 @@ Out[7]:
   'server_headers': '8',
   'server_ip': '83.153.38.208',
   'server_port': '80'}]
-{% endhighlight %}
+```
 
 Because bag operates lazily this small result also returns immediately.
 
 To demonstrate depth we find the ten client/server pairs with the most
 connections.
 
-{% highlight Python %}
+```python
 In [8]: counts = records.pluck(['client_ip', 'server_ip']).frequencies()
 
 In [9]: %time list(counts.topk(10, key=lambda x: x[1]))
@@ -326,16 +310,14 @@ Out[9]:
  (('55.156.159.21', '157.229.248.255'), 7533),
  (('55.156.159.21', '124.77.75.86'), 7506),
  (('55.156.159.21', '97.5.181.76'), 7501)]
-{% endhighlight %}
+```
 
+## Comparison with Spark
 
-Comparison with Spark
----------------------
-
-First, it is silly and unfair to compare with PySpark running locally.  PySpark
+First, it is silly and unfair to compare with PySpark running locally. PySpark
 offers much more in a distributed context.
 
-{% highlight Python %}
+```python
 In [1]: import pyspark
 
 In [2]: sc = pyspark.SparkContext('local')
@@ -367,32 +349,30 @@ Out[13]:
  ('55.156.159.21', '157.229.248.255'): 7533,
  ('55.156.159.21', '97.5.181.76'): 7501,
  ('97.166.76.88', '65.81.49.125'): 8155}
-{% endhighlight %}
+```
 
 So, given a compute-bound mostly embarrassingly parallel task (regexes are
 comparatively expensive) on a single machine they are comparable.
 
 Reasons you would want to use Spark
 
-*  You want to use many machines and interact with HDFS
-*  Shuffling operations
+- You want to use many machines and interact with HDFS
+- Shuffling operations
 
 Reasons you would want to use dask.bag
 
-*  Trivial installation
-*  No mucking about with JVM heap sizes or config files
-*  Nice error reporting.  Spark error reporting includes the typical giant
-   Java Stack trace that comes with any JVM solution.
-*  Easier/simpler for Python programmers to hack on.
-   The implementation is 350 lines including comments.
+- Trivial installation
+- No mucking about with JVM heap sizes or config files
+- Nice error reporting. Spark error reporting includes the typical giant
+  Java Stack trace that comes with any JVM solution.
+- Easier/simpler for Python programmers to hack on.
+  The implementation is 350 lines including comments.
 
 Again, this is really just a toy experiment to show that the dask model isn't
-just about arrays.  I absolutely do not want to throw Dask in the ring with
+just about arrays. I absolutely do not want to throw Dask in the ring with
 Spark.
 
-
-Conclusion
-----------
+## Conclusion
 
 However I do want to stress the importance of single-machine parallelism.
 Dask.bag targets this application well and leverages common hardware in a

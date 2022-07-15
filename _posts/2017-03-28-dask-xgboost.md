@@ -6,15 +6,15 @@ tagline: Playing nicely between distributed systems
 tags: [Programming, Python, scipy]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-*This work is supported by [Continuum Analytics](http://continuum.io)
+_This work is supported by [Continuum Analytics](http://continuum.io)
 the [XDATA Program](http://www.darpa.mil/program/XDATA)
 and the Data Driven Discovery Initiative from the [Moore
-Foundation](https://www.moore.org/)*
+Foundation](https://www.moore.org/)_
 
-Summary
--------
+## Summary
 
 This post talks about distributing Pandas Dataframes with Dask and then handing
 them over to distributed XGBoost for training.
@@ -23,19 +23,17 @@ More generally it discusses the value of launching multiple distributed systems
 in the same shared-memory processes and smoothly handing data back and forth
 between them.
 
--  [Notebook](https://gist.github.com/mrocklin/3696fe2398dc7152c66bf593a674e4d9)
--  [Screencast](https://youtu.be/Cc4E-PdDSro)
--  [Github issue](https://github.com/dmlc/xgboost/issues/2032)
+- [Notebook](https://gist.github.com/mrocklin/3696fe2398dc7152c66bf593a674e4d9)
+- [Screencast](https://youtu.be/Cc4E-PdDSro)
+- [Github issue](https://github.com/dmlc/xgboost/issues/2032)
 
-
-Introduction
-------------
+## Introduction
 
 XGBoost is a well-loved library for a popular class of machine learning
-algorithms, gradient boosted trees.  It is used widely in business and is one
-of the most popular solutions in Kaggle competitions.  For larger datasets or
+algorithms, gradient boosted trees. It is used widely in business and is one
+of the most popular solutions in Kaggle competitions. For larger datasets or
 faster training, XGBoost also comes with its own distributed computing system
-that lets it scale to multiple machines on a cluster.  Fantastic.  Distributed
+that lets it scale to multiple machines on a cluster. Fantastic. Distributed
 gradient boosted trees are in high demand.
 
 However before we can use distributed XGBoost we need to do three things:
@@ -45,7 +43,7 @@ However before we can use distributed XGBoost we need to do three things:
 3.  Hand data our cleaned data from a bunch of distributed Pandas dataframes to
     XGBoost workers across our cluster
 
-This ends up being surprisingly easy.  This blogpost gives a quick example
+This ends up being surprisingly easy. This blogpost gives a quick example
 using Dask.dataframe to do distributed Pandas data wrangling, then using a new
 [dask-xgboost](https://github.com/dask/dask-xgboost) package to setup an
 XGBoost cluster inside the Dask cluster and perform the handoff.
@@ -53,9 +51,7 @@ XGBoost cluster inside the Dask cluster and perform the handoff.
 After this example we'll talk about the general design and what this means for
 other distributed systems.
 
-
-Example
--------
+## Example
 
 We have a ten-node cluster with eight cores each (`m4.2xlarges` on EC2)
 
@@ -92,20 +88,21 @@ df['CRSDepTime'] = df['CRSDepTime'].clip(upper=2399)
 df, is_delayed = dask.persist(df, is_delayed)  # start work in the background
 ```
 
-This loaded a few hundred pandas dataframes from CSV data on S3.  We then had
+This loaded a few hundred pandas dataframes from CSV data on S3. We then had
 to downsample because how we are going to use XGBoost in the future seems to
-require a lot of RAM.  I am not an XGBoost expert.  Please forgive my ignorance
-here.  At the end we have two dataframes:
+require a lot of RAM. I am not an XGBoost expert. Please forgive my ignorance
+here. At the end we have two dataframes:
 
-*  `df`: Data from which we will learn if flights are delayed
-*  `is_delayed`: Whether or not those flights were delayed.
+- `df`: Data from which we will learn if flights are delayed
+- `is_delayed`: Whether or not those flights were delayed.
 
 Data scientists familiar with Pandas will probably be familiar with the code
-above.  Dask.dataframe is *very* similar to Pandas, but operates on a cluster.
+above. Dask.dataframe is _very_ similar to Pandas, but operates on a cluster.
 
 ```python
 >>> df.head()
 ```
+
 <div>
 <table border="1" class="dataframe">
   <thead>
@@ -181,8 +178,6 @@ above.  Dask.dataframe is *very* similar to Pandas, but operates on a cluster.
 </table>
 </div>
 
-
-
 ```python
 >>> is_delayed.head()
 182193    False
@@ -192,7 +187,6 @@ above.  Dask.dataframe is *very* similar to Pandas, but operates on a cluster.
 309373    False
 Name: DepDelay, dtype: bool
 ```
-
 
 ### Categorize and One Hot Encode
 
@@ -241,7 +235,7 @@ Wall time: 54.5 s
 ```
 
 Great, so we were able to train an XGBoost model on this data in about a minute
-using our ten machines.  What we get back is just a plain XGBoost Booster
+using our ten machines. What we get back is just a plain XGBoost Booster
 object.
 
 ```python
@@ -309,15 +303,13 @@ plt.show()
 <img src="/images/dask-xgboost-roc-curve.png" width="50%">
 
 We might want to play with our parameters above or try different data to
-improve our solution.  The point here isn't that we predicted airline delays
+improve our solution. The point here isn't that we predicted airline delays
 well, it was that if you are a data scientist who knows Pandas and XGBoost,
-everything we did above seemed *pretty familiar*.  There wasn't a whole lot of
-new material in the example above.  We're using the same tools as before, just
+everything we did above seemed _pretty familiar_. There wasn't a whole lot of
+new material in the example above. We're using the same tools as before, just
 at a larger scale.
 
-
-Analysis
---------
+## Analysis
 
 OK, now that we've demonstrated that this works lets talk a bit about what
 just happened and what that means generally for cooperation between distributed
@@ -326,23 +318,23 @@ services.
 ### What dask-xgboost does
 
 The [dask-xgboost](https://github.com/dask/dask-xgboost) project is pretty
-small and pretty simple (200 TLOC).  Given a Dask cluster of one central scheduler and
+small and pretty simple (200 TLOC). Given a Dask cluster of one central scheduler and
 several distributed workers it starts up an XGBoost scheduler in the same
 process running the Dask scheduler and starts up an XGBoost worker within each
-of the Dask workers.  They share the same physical processes and memory
-spaces.  Dask was built to support this kind of situation, so this is
+of the Dask workers. They share the same physical processes and memory
+spaces. Dask was built to support this kind of situation, so this is
 relatively easy.
 
 Then we ask the Dask.dataframe to fully materialize in RAM and we ask where all
-of the constituent Pandas dataframes live.  We tell each Dask worker to give
+of the constituent Pandas dataframes live. We tell each Dask worker to give
 all of the Pandas dataframes that it has to its local XGBoost worker and then
-just let XGBoost do its thing.  Dask doesn't power XGBoost, it's just
+just let XGBoost do its thing. Dask doesn't power XGBoost, it's just
 sets it up, gives it data, and lets it do it's work in the background.
 
 People often ask what machine learning capabilities Dask provides, how they
 compare with other distributed machine learning libraries like H2O or Spark's
-MLLib.  For gradient boosted trees the 200-line dask-xgboost package is the
-answer.  Dask has no need to make such an algorithm because XGBoost already
+MLLib. For gradient boosted trees the 200-line dask-xgboost package is the
+answer. Dask has no need to make such an algorithm because XGBoost already
 exists, works well and provides Dask users with a fully featured and efficient
 solution.
 
@@ -354,39 +346,36 @@ Sharing distributed processes with multiple systems can be really beneficial if
 you want to use multiple specialized services easily and avoid large monolithic
 frameworks.
 
-
 ### Connecting to Other distributed systems
 
 A while ago I wrote
 [a similar blogpost](/2017/02/11/dask-tensorflow)
 about hosting TensorFlow from Dask in exactly the same way that we've done
-here.  It was similarly easy to setup TensorFlow alongside Dask, feed it data,
+here. It was similarly easy to setup TensorFlow alongside Dask, feed it data,
 and let TensorFlow do its thing.
 
 Generally speaking this "serve other libraries" approach is how Dask operates
-when possible.  We're only able to cover the breadth of functionality that we
+when possible. We're only able to cover the breadth of functionality that we
 do today because we lean heavily on the existing open source ecosystem.
 Dask.arrays use Numpy arrays, Dask.dataframes use Pandas, and now the answer to
 gradient boosted trees with Dask is just to make it really really easy to use
-distributed XGBoost.  Ta da!  We get a fully featured solution that is
+distributed XGBoost. Ta da! We get a fully featured solution that is
 maintained by other devoted developers, and the entire connection process was
 done over a weekend (see [dmlc/xgboost
 #2032](https://github.com/dmlc/xgboost/issues/2032) for details).
 
 Since this has come out we've had requests to support other distributed systems
 like [Elemental](http://libelemental.org/) and to do general hand-offs to MPI
-computations.  If we're able to start both systems with the same set of
-processes then all of this is pretty doable.  Many of the challenges of
+computations. If we're able to start both systems with the same set of
+processes then all of this is pretty doable. Many of the challenges of
 inter-system collaboration go away when you can hand numpy arrays between the
 workers of one system to the workers of the other system within the same
 processes.
 
-
-Acknowledgements
-----------------
+## Acknowledgements
 
 Thanks to [Tianqi Chen](http://homes.cs.washington.edu/~tqchen/) and [Olivier
 Grisel](http://ogrisel.com/) for their help when [building and
-testing](https://github.com/dmlc/xgboost/issues/2032) `dask-xgboost`.  Thanks
+testing](https://github.com/dmlc/xgboost/issues/2032) `dask-xgboost`. Thanks
 to [Will Warner](http://github.com/electronwill) for his help in editing this
 post.

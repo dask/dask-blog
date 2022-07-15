@@ -7,9 +7,10 @@ draft: true
 tags: [Programming, scipy, Python]
 theme: twitter
 ---
+
 {% include JB/setup %}
 
-*Disclaimer: I (the author) have attempted to write this from a general open source perspective.  However I should mention that I am employed by Anaconda Inc and am a maintainer of a particular library mentioned below, Dask.  The reader should keep this bias in mind when consuming the following arguments.*
+_Disclaimer: I (the author) have attempted to write this from a general open source perspective. However I should mention that I am employed by Anaconda Inc and am a maintainer of a particular library mentioned below, Dask. The reader should keep this bias in mind when consuming the following arguments._
 
 This document outlines three approaches to accelerate Python at a high level:
 
@@ -20,9 +21,7 @@ This document outlines three approaches to accelerate Python at a high level:
 This is written for someone who has only modest exposure to Python and wants
 a broad overview.
 
-
-Motivation
-----------
+## Motivation
 
 People doing data intensive workloads [seem to like Python](https://stackoverflow.blog/2017/09/06/incredible-growth-python/),
 and in particular they seem to like libraries like Numpy, Pandas, and Scikit-Learn
@@ -41,9 +40,7 @@ It also discusses the pros and cons of each class
 so that people can make high level decisions that are appropriate for their situation.
 Where possible we link to other resources that discuss particular libraries in more depth.
 
-
-Scaling in: Accelerating Python in a single thread
---------------------------------------------------
+## Scaling in: Accelerating Python in a single thread
 
 The Python language was not originally designed for speed.
 It is about 2-5x slower when dealing with text and JSON-like data
@@ -58,10 +55,10 @@ but all of their internal number crunching code is written in a low-level langua
 This means that the 100-1000x slowdown you might see from using Pure Python for loops goes away,
 and you're left with as much speed as a CPU core is likely to give to you.
 
-*To be clear: the numeric Python ecosystem runs at C-speeds.*
+_To be clear: the numeric Python ecosystem runs at C-speeds._
 
 However, this only works if analysts stay within the Numpy, Pandas, and Scikit-Learn APIs.
-Unfortunately it is common to see non-expert users write Pure Python code (slow) *around* Numpy arrays or Pandas dataframes.
+Unfortunately it is common to see non-expert users write Pure Python code (slow) _around_ Numpy arrays or Pandas dataframes.
 
 ```python
 for row in my_pandas_dataframe:
@@ -72,8 +69,7 @@ for row in my_pandas_dataframe:
 Even though they are including Pandas dataframes in their code
 it doesn't mean that they are using Pandas algorithms backed by fast C code.
 
-
-*This mistake is very common and is the single largest contributor to performance issues that we see in the community.*
+_This mistake is very common and is the single largest contributor to performance issues that we see in the community._
 
 This isn't surprising.
 These libraries take skill to use well and the right way to do something may not be immediately obvious
@@ -83,7 +79,7 @@ In this situation you have two options:
 1.  Learn more about how to solve your problem within the Numpy/Pandas/Scikit-Learn system so that you leverage fast compiled code
 2.  Write fast compiled code yourself
 
-They're both good options.  Lets discuss each separately below:
+They're both good options. Lets discuss each separately below:
 
 ### Learn More
 
@@ -102,14 +98,13 @@ Here are a few good ways to accomplish this objective:
 
 So you have some pure Python code (slow) and you want to compile it to run more quickly.
 Your use case is special enough that you don't expect to find it as a canned algorithm in one of the libraries mentioned above.
-There are several options.  Lets mention a few of the more popular ones:
+There are several options. Lets mention a few of the more popular ones:
 
 1.  You can write normal C/C++/Fortran code and link it to Python.
 
     In this case you should look at cffi, Cython, ctypes (C), pybind (C++), and f2py (Fortran).
 
 2.  You can write in a compiled variant of Python, called Cython: [http://cython.org/](http://cython.org/)
-
 
     This allows you to modify your code only slightly to achieve C speeds if you are careful.
     Many of the major libraries like Pandas and Scikit-Learn use Cython extensively,
@@ -140,19 +135,16 @@ There are several options.  Lets mention a few of the more popular ones:
 
     I recommend [this tutorial by Gil Forsyth and Lorena Barba](https://www.youtube.com/watch?v=1AwG0T4gaO0).
 
-
 ### Costs and Benefits
 
-You should *always* spend some time scaling in before moving on.
+You should _always_ spend some time scaling in before moving on.
 The benefits here are often the greatest and there is rarely any administrative cost.
 I strongly recommend profiling and tuning your code before trying to scale your code to parallel systems.
 
 Writing more efficient code can also help with big data problems.
 Storing data efficiently can often reduce your memory load by an order of magnitude.
 
-
-Scaling Up: Using multi-core laptops
-------------------------------------
+## Scaling Up: Using multi-core laptops
 
 After tuning code you may find that an analysis still runs slowly,
 or that when you try it on a larger dataset you run out of memory.
@@ -163,10 +155,10 @@ This is often a more productive choice.
 When you start working with larger datasets or doing heavier computations,
 such as might arise from training complex machine learning models, you may find
 that parallelizing your code to run on multiple cores accelerates your
-innovative process.  By using parallel hardware effectively you can tackle
+innovative process. By using parallel hardware effectively you can tackle
 larger problems in less time, leading to achieving better results more quickly.
 Today people often jump from single-core execution on their laptop to massively
-parallel execution on a distributed cluster.  This skips a couple steps that are
+parallel execution on a distributed cluster. This skips a couple steps that are
 often a more productive choice:
 
 1.  Multi-core and larger-than-memory computation on a personal laptop
@@ -175,7 +167,6 @@ often a more productive choice:
 In this section we'll cover laptops, mostly from a perspective of user convenience.
 In the next section we'll cover heavy workstations,
 which are sometimes big enough to replace the need for a full cluster.
-
 
 ### Multi-core execution on laptops: the benefits of convenience
 
@@ -189,6 +180,7 @@ cluster for the following reasons:
 
     You have greater control over the software and development environment on your laptop,
     and so can iterate more quickly.
+
 3.  You can use these 4-8 cores in your office, in transit, in a coffee shop, or at home,
     without the administrative hassles of interacting with any remote or shared system.
 4.  By writing parallel code on your laptop
@@ -219,7 +211,6 @@ Common tools in Python for local parallel processing include the following:
     have built [their own systems](https://pythonhosted.org/joblib/) for parallel computing.
     You should always check the documentation on how a project recommends handling multi-core scaling.
 
-
 ### Larger-than-memory execution on laptops
 
 The many cores on your laptop don't help if your data doesn't fit in memory.
@@ -227,9 +218,9 @@ Fortunately, modern fast hard drives do.
 
 A high-end laptop in 2018 has around 32GB of memory.
 This is the size of a database table with forty columns and 100 million rows.
-*Many* companies' data fits into this space.
+_Many_ companies' data fits into this space.
 Or, even if the entire database doesn't fit,
-the working set that people tend to deal with *does*.
+the working set that people tend to deal with _does_.
 
 However, if this isn't the case,
 and the common working set is larger than main memory,
@@ -246,9 +237,9 @@ that you can read data from them as fast as your CPUs can process that data.
 This means that the effective capacity for your computation changes from 32GB of memory,
 to a terabyte of fast disk space.
 
-*Combined with modern storage formats like Parquet
+_Combined with modern storage formats like Parquet
 an analyst using the right tools
-can manipulate "Big" datasets comfortably on their laptop.*
+can manipulate "Big" datasets comfortably on their laptop._
 
 This does require some special care, and you can't just use Pandas as normal.
 But the techniques used in parallel computing
@@ -256,16 +247,13 @@ will also make it easy to read data from disk in an incremental fashion.
 Libraries like [Spark](https://spark.apache.org) or
 [Dask](https://dask.pydata.org/en/latest) mentioned above can help.
 
-
-
-Scaling Up: Large Workstations
-------------------------------
+## Scaling Up: Large Workstations
 
 Sometimes a laptop just isn't enough, even if well used.
 
 Your analysis requires an order of magnitude more computation or memory than a modern laptop can provide.
-You might consider *scaling up* further to a single heavy workstation,
-before you *scale out* to a distributed system.
+You might consider _scaling up_ further to a single heavy workstation,
+before you _scale out_ to a distributed system.
 
 <img src="https://pbs.twimg.com/media/DZOT53jWAAA-vWu.jpg:large"
      width="70%">
@@ -282,10 +270,10 @@ Let's consider some Pros and Cons of this approach:
 1.  Has orders of magnitude more computational power and memory than a laptop
 2.  Is easy to use because it still has a single environment that a user can often control directly
 3.  Is familiar to program because it looks just like a laptop, only bigger
-5.  Is easy for users to log into and share work
-6.  Is often separate from production so that users can experiment more freely
-7.  Does not suffer from the network costs of distributed systems,
-    so often *out-performs* distributed systems up to a certain data size
+4.  Is easy for users to log into and share work
+5.  Is often separate from production so that users can experiment more freely
+6.  Does not suffer from the network costs of distributed systems,
+    so often _out-performs_ distributed systems up to a certain data size
 
 **Cons:**
 
@@ -296,7 +284,6 @@ Let's consider some Pros and Cons of this approach:
     3.  They may not abide by strict software environment standards
 3.  These machines can fail, and so should not be entrusted to mission-critical services
 
-
 This set of pros and cons make large workstations a common choice for research or analytics groups.
 Most machine learning groups in universities or research labs share such a machine within the group.
 Large workstations have also been the platform of choice for the highly competitive finance industry for years.
@@ -304,16 +291,13 @@ Large workstations have also been the platform of choice for the highly competit
 This isn't where you want to run your critical work though.
 This is a very effective environment for exploratory data science.
 
-
 ### Python Tools
 
-See the section above for laptops.  The tools are the same.
+See the section above for laptops. The tools are the same.
 
+## Scaling Out
 
-Scaling Out
------------
-
-You can also *scale out* to parallelize across many machines.
+You can also _scale out_ to parallelize across many machines.
 This provides the most scalability,
 but also introduces new challenges and opportunities.
 
@@ -362,8 +346,8 @@ Dropping the barn analogy for a bit, there are some more concrete challenges:
 
 1.  You will need to find a way for your users to control their software environment across the cluster.
     For example they might want a very specific version of Scikit-Learn or Pandas.
-2.  Inter-worker communication costs can dominate some workloads, limiting the kinds of computations that you can run.  No distributed system, no matter what it promises, actually gives you a "seamless experience" on a cluster.
-3.  Your distributed system (the foreman) will limit the kinds of algorithms that you can encode.  Internally they all have limitations on the level of coordination between workers that they can handle.
+2.  Inter-worker communication costs can dominate some workloads, limiting the kinds of computations that you can run. No distributed system, no matter what it promises, actually gives you a "seamless experience" on a cluster.
+3.  Your distributed system (the foreman) will limit the kinds of algorithms that you can encode. Internally they all have limitations on the level of coordination between workers that they can handle.
 
 These limitations are not always immediately obvious,
 especially to someone thinking about the high level picture.
@@ -371,10 +355,7 @@ Expert analysts within the group are likely to have some idea on the kinds of co
 and the kinds of computations that particular distributed computational systems are able to run.
 Their advice may be crucial during this process.
 
-
-
-All of the above
-----------------
+## All of the above
 
 The three options above are complimentary and should be overlapped.
 You can write efficient compiled code that scales up onto multi-core CPUs
