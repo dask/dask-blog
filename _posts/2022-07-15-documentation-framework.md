@@ -52,6 +52,14 @@ The material on [Tutorials](https://tutorial.dask.org) is a mixture of "Tutorial
 
 [Examples](https://examples.dask.org) pretty much falls under "How-To" but there is a fair amount of setup and each example isn't split into small enough bits. They answer questions like: "How do I use dask dataframes?" and they have some more longer workflows.
 
+### Which pages are most used?
+
+From Google Analytics we can see the most commonly viewed pages.
+
+<img src="/images/docs-google-analytics.png" width="70%">
+
+It is hard to understand whether those pages are the most visible, or if they actually contain the information that people are trying to find. But either way, it conveys the importance of navigation in directing users.
+
 ## New Structure
 
 [Tutorial](https://tutorial.dask.org) will be left as is and treated as a long-form overview.
