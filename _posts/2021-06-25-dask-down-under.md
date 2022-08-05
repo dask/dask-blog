@@ -49,9 +49,9 @@ The [full playlist for the workshop is available here](https://www.youtube.com/p
 
 ### Panel discussion
 
-A panel discussion was held, bringing together a diverse group of users from novice to expert, academic to commercial. We hope this discussion will start a conversation about using Dask in Australia, how we build our community, contribute and stay in touch with the rest of the world. You can [watch it here](https://www.youtube.com/watch?v=mJTIcY1NLGg):
+A panel discussion was held, bringing together a diverse group of users from novice to expert, academic to commercial. We hope this discussion will start a conversation about using Dask in Australia, how we build our community, contribute and stay in touch with the rest of the world. You can [watch it here](https://www.youtube.com/watch?v=WlSw7rhwGrA):
 
-<iframe width="900" height="506" src="https://www.youtube.com/watch?v=mJTIcY1NLGg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="900" height="506" src="https://www.youtube.com/watch?v=WlSw7rhwGrA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 Moderator: Draga Doncila Pop\
 Panelists:
