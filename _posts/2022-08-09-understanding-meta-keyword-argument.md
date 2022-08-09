@@ -70,9 +70,7 @@ Before answering this, let's quickly discuss [Dask DataFrames](https://docs.dask
 
 A Dask DataFrame is a lazy object composed of multiple [pandas DataFrames](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html), where each pandas DataFrame is called a "partition". These are stacked along the index and Dask keeps track of these partitions using "divisions", which is a tuple representing the start and end index of each partition.
 
-<div align="center">
-  <img src="https://docs.dask.org/en/stable/_images/dask-dataframe.svg" alt="Dask DataFrame consists of multiple pandas DataFrames" width=50%/>
-</div>
+<img src="https://docs.dask.org/en/stable/_images/dask-dataframe.svg" alt="Dask DataFrame consists of multiple pandas DataFrames" width=50% />
 
 When you create a Dask DataFrame, you usually see something like the following:
 
@@ -119,9 +117,7 @@ Dask Name: dataframe-sum-agg, 5 tasks
 >>> s.visualize()
 ```
 
-<div align="center">
-  <img src="/images/understanding-meta-task-graph.png" alt="Dask task graph, starts with two partitions thatare input to a dataframe-sum-chunk task each. Their results are input to a single dataframe-sum-agg which produces the final output." width=50%/>
-</div>
+<img src="/images/understanding-meta-task-graph.png" alt="Dask task graph, starts with two partitions thatare input to a dataframe-sum-chunk task each. Their results are input to a single dataframe-sum-agg which produces the final output." width=50% />
 
 ```python
 >>> s.compute()
