@@ -10,6 +10,17 @@ theme: twitter
 
 We are excited to announce that the [Dask Kubernetes Operator](https://kubernetes.dask.org/en/latest/operator.html) is now generally available 🎉!
 
+Notable new features include:
+
+- Dask Clusters are now [native custom resources](https://kubernetes.dask.org/en/latest/operator_resources.html)
+- Clusters can be managed with `kubectl` or the [Python API](https://kubernetes.dask.org/en/latest/operator_kubecluster.html)
+- Cascaded deletions allow for proper teardown
+- Multiple [worker groups](https://kubernetes.dask.org/en/latest/operator_resources.html#daskworkergroup) enable heterogenous/tagged deployments
+- [DaskJob](https://kubernetes.dask.org/en/latest/operator_resources.html#daskjob): running dask workloads with K8s batched job infrastructure
+- Clusters can be reused between different Python processes
+- [Autoscaling](https://kubernetes.dask.org/en/latest/operator_resources.html#daskautoscaler) is handled by a custom Kubernetes controller instead of the user code
+- Scheduler and worker Pods and Services are [fully configurable](https://kubernetes.dask.org/en/latest/operator_resources.html#daskcluster)
+
 ```console
 $ kubectl get daskcluster
 NAME         AGE
