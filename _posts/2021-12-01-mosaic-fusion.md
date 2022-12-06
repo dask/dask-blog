@@ -112,6 +112,20 @@ Marvin's lightning talk on multi-view image fusion:
 The GitHub repository [MVRegFus](https://github.com/m-albert/MVRegFus) that Marvin talks about in the video is available here:
 [https://github.com/m-albert/MVRegFus](https://github.com/m-albert/MVRegFus)
 
+The [napari-lazy-openslide](https://github.com/manzt/napari-lazy-openslide) visualization plugin by [Trevor Manz](https://github.com/manzt): *"An experimental plugin to lazily load multiscale whole-slide tiff images with openslide and dask."*
+
+For further information on alternative approaches to image stitching:
+
+* ASHLAR: Alignment by Simultaneous Harmonization of Layer / Adjacency Registration
+    * [ASHLAR homepage](https://labsyspharm.github.io/ashlar/)
+    * [ASHLAR GitHub repository](https://github.com/labsyspharm/ashlar)
+    * [ASHLAR biorxiv pre-print](https://doi.org/10.1101/2021.04.20.440625)
+* Microscopy Image Stitching Tool (MIST)
+    * [MIST homepage](https://pages.nist.gov/MIST/)
+    * [MIST GitHub repository](https://github.com/usnistgov/MIST)
+    * [MIST algorithm documentation (PDF)](https://raw.githubusercontent.com/wiki/USNISTGOV/MIST/assets/mist-algorithm-documentation.pdf)
+* The [m2stitch](https://github.com/yfukai/m2stitch) python package by [Yohsuke T. Fukai](https://github.com/yfukai): *"Provides robust stitching of tiled microscope images on a regular grid"* (based on the MIST algorithm)
+
 ## Acknowledgements
 
 This computational work was done by Volker Hilsenstein, in conjunction with Marvin Albert.
