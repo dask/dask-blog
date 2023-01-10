@@ -34,7 +34,7 @@ High level graphs are useful for faster scheduling.
 Instead of sending very large task graphs between the scheduler and the workers, we can instead send the smaller high level graph representation to the worker. Reducing the amount of data that needs to be passed around allows us to improve the overall performance.
 
 You can read more about faster scheduling in [our previous blogpost](https://blog.dask.org/2020/07/21/faster-scheduling).
-More recently, Adam Breindel has written about this over on the Coiled blog ([link](https://coiled.io/dask-under-the-hood-scheduler-refactor/)).
+More recently, Adam Breindel has written about this over on the Coiled blog ([link](https://coiled.io/blog/dask-under-the-hood-scheduler-refactor/)).
 
 ### Do I need to change my code to use them?
 
@@ -42,7 +42,7 @@ No, you won't need to change anything. This work is being done under the hood in
 
 In fact, you might already be benefitting from high level graphs:
 
-> "Starting with Dask 2021.05.0, Dask DataFrame computations will start sending HighLevelGraph's directly from the client to the scheduler by default. Because of this, users should observe a much smaller delay between when they call .compute() and when the corresponding tasks begin running on workers for large DataFrame computations" https://coiled.io/dask-heartbeat-by-coiled-2021-06-10/
+> "Starting with Dask 2021.05.0, Dask DataFrame computations will start sending HighLevelGraph's directly from the client to the scheduler by default. Because of this, users should observe a much smaller delay between when they call .compute() and when the corresponding tasks begin running on workers for large DataFrame computations" https://coiled.io/blog/dask-heartbeat-by-coiled-2021-06-10/
 
 Read on for a snapshot of progress in other areas.
 
