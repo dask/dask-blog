@@ -7,7 +7,7 @@ theme: twitter
 canonical_url: https://medium.com/rapids-ai/easy-cpu-gpu-arrays-and-dataframes-run-your-dask-code-where-youd-like-e349d92351d
 ---
 
-_Original version of this post appears on https://medium.com/rapids-ai/easy-cpu-gpu-arrays-and-dataframes-run-your-dask-code-where-youd-like-e349d92351d_
+_Original version of this post appears on [Medium](https://medium.com/rapids-ai/easy-cpu-gpu-arrays-and-dataframes-run-your-dask-code-where-youd-like-e349d92351d)_
 
 It's now easy to switch between CPU (NumPy / Pandas) and GPU (CuPy / cuDF) in Dask.
 As of Dask 2022.10.0, users can optionally select the backend engine for input IO and data creation. In the short-term, the goal of the backend-configuration system is to enable Dask users to write code that will run on both CPU and GPU systems.
