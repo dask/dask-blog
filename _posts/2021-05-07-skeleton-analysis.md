@@ -84,7 +84,7 @@ Here is a violin plot showing the distribution of the distances between the star
 
 ![Violin plot comparing blood vessel thickness between a healthy and herniated lung](/images/skeleton-analysis/compare-euclidean-distance.png)
 
-*EDIT: This blogpost previously described the euclidean distance violin plot as measuring the thickness of the blood vessels. This is incorrect, and the mistake was not caught in the review process before publication. This post has been updated to correctly describe the `euclidean-distance` measuremet as the distance between the start and end of branches, as if you pulled a string taught between those points. An alternative measurement, `branch-length` describes the total branch length, including any winding twists and turns.*
+_EDIT: This blogpost previously described the euclidean distance violin plot as measuring the thickness of the blood vessels. This is incorrect, and the mistake was not caught in the review process before publication. This post has been updated to correctly describe the `euclidean-distance` measuremet as the distance between the start and end of branches, as if you pulled a string taught between those points. An alternative measurement, `branch-length` describes the total branch length, including any winding twists and turns._
 
 ## Limitations
 
