@@ -80,9 +80,11 @@ Most striking is the difference in the number of blood vessel branches.
 The herniated lung has less than 40% of the number of blood vessel branches in the healthy lung.
 
 There are also quantitative differences in the sizes of the blood vessels.
-Here is a violin plot showing the distribution of the thickeness of blood vessel branches. We can see that there are more thick blood vessel branches in the healthy lung. This is consistent with what we might expect, since the healthy lung is more well developed than the lung from the hernia model.
+Here is a violin plot showing the distribution of the distances between the start and end points of each blood vessel branch. We can see that overall the blood vessel branches start end end closer together in the herniated lung. This is consistent with what we might expect, since the healthy lung is more well developed than the lung from the hernia model and the hernia has compressed that lung into a smaller overall space.
 
 ![Violin plot comparing blood vessel thickness between a healthy and herniated lung](/images/skeleton-analysis/compare-euclidean-distance.png)
+
+*EDIT: This blogpost previously described the euclidean distance violin plot as measuring the thickness of the blood vessels. This is incorrect, and the mistake was not caught in the review process before publication. This post has been updated to correctly describe the `euclidean-distance` measuremet as the distance between the start and end of branches, as if you pulled a string taught between those points. An alternative measurement, `branch-length` describes the total branch length, including any winding twists and turns.*
 
 ## Limitations
 
