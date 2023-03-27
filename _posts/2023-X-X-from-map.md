@@ -15,13 +15,13 @@ Dask DataFrame provides dedicated IO functions for several popular tabular-data 
 The from_map API was added to Dask DataFrame in v2022.05.1 with the intention of replacing `from_delayed` as the recommended means of custom DataFrame creation. At its core, `from_map` simply converts each element of an iterable object (`inputs`) into a distinct Dask-DataFrame partition, using a common function (`func`):
 
 ```python
-dd.from_map(Callable: func, Iterable: iterable) -> dd.DataFrame
+dd.from_map(func: Callable, iterable: Iterable) -> dd.DataFrame
 ```
 
 The overall behavior is essentially the Dask-DataFrame equivalent of the standard-Python `map` function:
 
 ```python
-map(Callable: func, Iterable: iterable) -> Iterator
+map(func: Callable, iterable: Iterable) -> Iterator
 ```
 
 Note that both `from_map` and `map` actually support an arbitrary number of iterable inputs. However, we will only focus on the use of a single iterable argument in this post.
