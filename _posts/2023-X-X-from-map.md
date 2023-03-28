@@ -12,7 +12,7 @@ Dask DataFrame provides dedicated IO functions for several popular tabular-data 
 
 ## What is `from_map`?
 
-The from_map API was added to Dask DataFrame in v2022.05.1 with the intention of replacing `from_delayed` as the recommended means of custom DataFrame creation. At its core, `from_map` simply converts each element of an iterable object (`inputs`) into a distinct Dask-DataFrame partition, using a common function (`func`):
+The `from_map` API was added to Dask DataFrame in v2022.05.1 with the intention of replacing `from_delayed` as the recommended means of custom DataFrame creation. At its core, `from_map` simply converts each element of an iterable object (`inputs`) into a distinct Dask-DataFrame partition, using a common function (`func`):
 
 ```python
 dd.from_map(func: Callable, iterable: Iterable) -> dd.DataFrame
@@ -51,7 +51,7 @@ Since Dask does not yet offer a dedicated `read_feather` function (as of `dask-2
 >>> ddf
 Dask DataFrame Structure:
                    A       B  index
-npartitions=2                      
+npartitions=2
                int64  object  int64
                  ...     ...    ...
                  ...     ...    ...
@@ -71,21 +71,19 @@ Which produces the following Pandas (or cuDF) object after computation:
 2  1  z      5
 ```
 
-
 Although the same output can be achieved using the conventional `dd.from_delayed` strategy, using `from_map` is likely to improve the available opportunities for task-graph optimization within Dask.
 
 ## Performance considerations: Specifying `meta` and `divisions`
 
-Although `func` and `iterable` are the only *required* arguments to `from_map`, one can significantly improve the overall performance of a workflow by specifying optional arguments like `meta` and `divisions`.
+Although `func` and `iterable` are the only _required_ arguments to `from_map`, one can significantly improve the overall performance of a workflow by specifying optional arguments like `meta` and `divisions`.
 
 Due to the lazy nature of Dask-DataFrame, each collection is required to carry around a schema (column name and dtype information) in the form of an empty Pandas (or cuDF) object. If `meta` is not directly provided to the `from_map` function, the schema will need to be populated by eagerly materializing the first partition, which can increase the apparent latency of the `from_map` API call itself. For this reason, it is always recommended to specify an explicit `meta` argument if the expected column names and dtypes are known a priori.
 
 While passing in a `meta` argument is likely to reduce the`from_map` API call latency, passing in a `divisions` argument makes it possible to reduce the end-to-end compute time. This is because, by specifying `divisions`, we are allowing Dask DataFrame to track useful per-partition min/max statistics. Therefore, if the overall workflow involves grouping or joining on the index, Dask can avoid the need to perform unnecessary shuffling operations.
 
-
 ## Using `from_map` to implement a custom API
 
-Although it is currently difficult to automatically extract division information from the metadata of an arbitrary Feather dataset, `from_map` makes it relatively easy to implement your own highly-functional `read_feather` API using PyArrow.  For example, the following code is all that one needs to enable lazy Feather IO with both column projection and index selection:
+Although it is currently difficult to automatically extract division information from the metadata of an arbitrary Feather dataset, `from_map` makes it relatively easy to implement your own highly-functional `read_feather` API using PyArrow. For example, the following code is all that one needs to enable lazy Feather IO with both column projection and index selection:
 
 ```python
 def from_arrow(table):
@@ -94,7 +92,7 @@ def from_arrow(table):
 
     if config.get("dataframe.backend") == "cudf":
         import cudf
-        
+
         return cudf.DataFrame.from_arrow(table)
     else:
         return table.to_pandas()
@@ -128,7 +126,7 @@ def read_feather(paths, columns=None, index=None):
     meta = meta.set_index(index) if index else meta
     columns = columns or list(meta.columns)
     meta = meta[columns]
-    
+
     # Step 2: Define the `func` argument
     def func(frag, columns=None, index=None):
         # Create a Pandas DataFrame from a dataset fragment
@@ -168,14 +166,14 @@ Using the`read_feather` implementation above, it becomes both easy and efficient
 >>> ddf
 Dask DataFrame Structure:
                    A
-npartitions=2       
+npartitions=2
                int64
                  ...
                  ...
 Dask Name: func, 1 graph layer
 >>> ddf.compute()
        A
-index   
+index
 0      0
 1      0
 2      0
@@ -254,7 +252,6 @@ That is, all we need to do is change “Step 2” of our implementation to use t
 
 ## Conclusion
 
-It is now easier than ever to create a Dask-DataFrame collection from an arbitrary data source. Although the `dask.delayed` API has already enabled similar functionality for many years,  `from_map` now makes it possible to implement a custom IO function without sacrificing any of the high-level graph optimizations leveraged by the rest of the Dask-DataFrame API.
+It is now easier than ever to create a Dask-DataFrame collection from an arbitrary data source. Although the `dask.delayed` API has already enabled similar functionality for many years, `from_map` now makes it possible to implement a custom IO function without sacrificing any of the high-level graph optimizations leveraged by the rest of the Dask-DataFrame API.
 
 Start experimenting with `from_map` today, and let us know how it goes!
-
