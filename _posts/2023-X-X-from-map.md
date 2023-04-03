@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Deep Dive: Creating a Dask-DataFrame Collection with from_map
+title: Deep Dive: Creating a Dask DataFrame Collection with from_map
 author: Rick Zamora
 tags: [dataframe, IO]
 theme: twitter
@@ -8,17 +8,17 @@ theme: twitter
 
 {% include JB/setup %}
 
-Dask DataFrame provides dedicated IO functions for several popular tabular-data formats, like CSV and Parquet. If you are working with a supported format, then the corresponding function (e.g `read_csv`) is likely to be the most reliable way to create a new Dask DataFrame collection. For other workflows, `from_map` now offers a convenient way to define a DataFrame collection as an arbitrary function mapping. While these kinds of workflows have historically required users to adopt the Dask-Delayed API, `from_map` now makes custom collection creation both easier and more performant.
+[Dask DataFrame](https://docs.dask.org/en/stable/dataframe.html) provides dedicated IO functions for several popular tabular-data formats, like CSV and Parquet. If you are working with a supported format, then the corresponding function (e.g `read_csv`) is likely to be the most reliable way to create a new Dask DataFrame collection. For other workflows, [`from_map`](https://docs.dask.org/en/stable/generated/dask.dataframe.from_map.html) now offers a convenient way to define a DataFrame collection as an arbitrary function mapping. While these kinds of workflows have historically required users to adopt the Dask Delayed API, `from_map` now makes custom collection creation both easier and more performant.
 
 ## What is `from_map`?
 
-The `from_map` API was added to Dask DataFrame in v2022.05.1 with the intention of replacing `from_delayed` as the recommended means of custom DataFrame creation. At its core, `from_map` simply converts each element of an iterable object (`inputs`) into a distinct Dask-DataFrame partition, using a common function (`func`):
+The `from_map` API was added to Dask DataFrame in v2022.05.1 with the intention of replacing `from_delayed` as the recommended means of custom DataFrame creation. At its core, `from_map` simply converts each element of an iterable object (`inputs`) into a distinct Dask DataFrame partition, using a common function (`func`):
 
 ```python
 dd.from_map(func: Callable, iterable: Iterable) -> dd.DataFrame
 ```
 
-The overall behavior is essentially the Dask-DataFrame equivalent of the standard-Python `map` function:
+The overall behavior is essentially the Dask DataFrame equivalent of the standard-Python `map` function:
 
 ```python
 map(func: Callable, iterable: Iterable) -> Iterator
@@ -43,7 +43,7 @@ for i, path in enumerate(paths):
     df.to_feather(path)
 ```
 
-Since Dask does not yet offer a dedicated `read_feather` function (as of `dask-2023.3.1`), most users would assume that the only option to create a Dask-DataFrame collection is to use `dask.delayed`. The “best practice” for creating a collection in this case, however, is to wrap `pd.read_feather` or `cudf.read_feather` in a `from_map` call like so:
+Since Dask does not yet offer a dedicated `read_feather` function (as of `dask-2023.3.1`), most users would assume that the only option to create a Dask DataFrame collection is to use `dask.delayed`. The “best practice” for creating a collection in this case, however, is to wrap `pd.read_feather` or `cudf.read_feather` in a `from_map` call like so:
 
 ```python
 >>> import dask.dataframe as dd
@@ -71,19 +71,19 @@ Which produces the following Pandas (or cuDF) object after computation:
 2  1  z      5
 ```
 
-Although the same output can be achieved using the conventional `dd.from_delayed` strategy, using `from_map` is likely to improve the available opportunities for task-graph optimization within Dask.
+Although the same output can be achieved using the conventional `dd.from_delayed` strategy, using `from_map` will improve the available opportunities for task-graph optimization within Dask.
 
 ## Performance considerations: Specifying `meta` and `divisions`
 
 Although `func` and `iterable` are the only _required_ arguments to `from_map`, one can significantly improve the overall performance of a workflow by specifying optional arguments like `meta` and `divisions`.
 
-Due to the lazy nature of Dask-DataFrame, each collection is required to carry around a schema (column name and dtype information) in the form of an empty Pandas (or cuDF) object. If `meta` is not directly provided to the `from_map` function, the schema will need to be populated by eagerly materializing the first partition, which can increase the apparent latency of the `from_map` API call itself. For this reason, it is always recommended to specify an explicit `meta` argument if the expected column names and dtypes are known a priori.
+Due to the lazy nature of Dask DataFrame, each collection is required to carry around a schema (column name and dtype information) in the form of an empty Pandas (or cuDF) object. If `meta` is not directly provided to the `from_map` function, the schema will need to be populated by eagerly materializing the first partition, which can increase the apparent latency of the `from_map` API call itself. For this reason, it is always recommended to specify an explicit `meta` argument if the expected column names and dtypes are known a priori.
 
 While passing in a `meta` argument is likely to reduce the`from_map` API call latency, passing in a `divisions` argument makes it possible to reduce the end-to-end compute time. This is because, by specifying `divisions`, we are allowing Dask DataFrame to track useful per-partition min/max statistics. Therefore, if the overall workflow involves grouping or joining on the index, Dask can avoid the need to perform unnecessary shuffling operations.
 
 ## Using `from_map` to implement a custom API
 
-Although it is currently difficult to automatically extract division information from the metadata of an arbitrary Feather dataset, `from_map` makes it relatively easy to implement your own highly-functional `read_feather` API using PyArrow. For example, the following code is all that one needs to enable lazy Feather IO with both column projection and index selection:
+Although it is currently difficult to automatically extract division information from the metadata of an arbitrary Feather dataset, `from_map` makes it relatively easy to implement your own highly-functional `read_feather` API using [PyArrow](https://arrow.apache.org/docs/python/index.html). For example, the following code is all that one needs to enable lazy Feather IO with both column projection and index selection:
 
 ```python
 def from_arrow(table):
@@ -159,7 +159,7 @@ The second step is to define the underlying function (`func`) that we will use t
 
 The fourth and final step is to use the final `func`, `interable`, and `meta` information to call the `from_map` API. Note that we also use this opportunity to specify additional key-word arguments, like `columns` and `index`. In contrast to the iterable positional arguments, which are always mapped to `func`, these key-word arguments will be broadcasted.
 
-Using the`read_feather` implementation above, it becomes both easy and efficient to convert an arbitrary Feather dataset into a lazy Dask-DataFrame collection:
+Using the`read_feather` implementation above, it becomes both easy and efficient to convert an arbitrary Feather dataset into a lazy Dask DataFrame collection:
 
 ```python
 >>> ddf = read_feather(paths, columns=["A"], index="index")
@@ -252,6 +252,6 @@ That is, all we need to do is change “Step 2” of our implementation to use t
 
 ## Conclusion
 
-It is now easier than ever to create a Dask-DataFrame collection from an arbitrary data source. Although the `dask.delayed` API has already enabled similar functionality for many years, `from_map` now makes it possible to implement a custom IO function without sacrificing any of the high-level graph optimizations leveraged by the rest of the Dask-DataFrame API.
+It is now easier than ever to create a Dask DataFrame collection from an arbitrary data source. Although the `dask.delayed` API has already enabled similar functionality for many years, `from_map` now makes it possible to implement a custom IO function without sacrificing any of the high-level graph optimizations leveraged by the rest of the Dask DataFrame API.
 
-Start experimenting with `from_map` today, and let us know how it goes!
+Start experimenting with [`from_map`](https://docs.dask.org/en/stable/generated/dask.dataframe.from_map.html) today, and let us know how it goes!
