@@ -34,7 +34,7 @@ As noted above, Jekyll can be installed as a [gem](https://jekyllrb.com/docs/):
 Jekyll and ruby can also be install via conda-forge:
 
 ```
-conda create -n dask-blog -c conda-forge ruby rb-jekyll rb-nokogiri rb-jekyll-commonmark-ghpages rb-commonmarker rb-bundler
+conda create -n dask-blog -c conda-forge ruby rb-jekyll rb-nokogiri rb-jekyll-commonmark-ghpages rb-commonmarker rb-bundler gxx_linux-64
 conda activate dask-blog
 bundle install
 bundle exec jekyll serve
