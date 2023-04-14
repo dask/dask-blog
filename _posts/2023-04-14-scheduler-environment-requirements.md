@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Deep Dive: Requiring consistent environments between the client, scheduler and workers
+title: Requiring consistent environments between the client, scheduler and workers
 author: Jacob Tomlinson, Rick Zamora, Florian Jetter
 tags: [dataframe, IO]
 theme: twitter
