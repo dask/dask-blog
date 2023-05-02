@@ -3,6 +3,7 @@ layout: post
 title: Requiring consistent environments between the client, scheduler and workers
 author: Jacob Tomlinson, Rick Zamora, Florian Jetter
 tags: [dataframe, IO]
+draft: true
 theme: twitter
 ---
 
