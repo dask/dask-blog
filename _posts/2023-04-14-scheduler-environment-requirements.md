@@ -8,6 +8,8 @@ theme: twitter
 
 {% include JB/setup %}
 
+_Update May 3rd 2023: [Clarify GPU recommendations](https://github.com/dask/dask-blog/pull/166)._
+
 With the release `2023.4.0` of dask and distributed we are making a change which may require the Dask scheduler to have consistent software and hardware capabilities as the client and workers.
 
 It has always been recommended that your client and workers have a consistent software and hardware environment so that data structures and dependencies can be pickled and passed between them. However recent changes to the Dask scheduler mean that we now also require your scheduler to have the same consistent environment as everything else.
