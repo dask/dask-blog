@@ -14,7 +14,7 @@ _Original version of this post appears on [blog.coiled.io](https://blog.coiled.i
 [Dask](https://www.dask.org/) has deep integrations with other libraries in the PyData ecosystem like NumPy, pandas, Zarr, PyArrow, and more.
 Part of providing a good experience for Dask users is making sure that Dask continues to work well with this community
 of libraries as they push out new releases. This post walks through how Dask maintainers proactively ensure Dask
-continuously works with its surrounding ecosystem. 
+continuously works with its surrounding ecosystem.
 
 ## Nightly testing
 
@@ -40,7 +40,7 @@ This makes it less likely that a failing upstream build goes unnoticed.
 There are usually two different ways in which things break. Either:
 
 1. A library made an intentional change in behavior and a corresponding compatibility change needs to be made in
-Dask (the next section has an example of this case).
+   Dask (the next section has an example of this case).
 2. There was some unintentional consequence of a change made in a library that resulted in a breakage in Dask.
 
 When the latter case occurs, Dask maintainers can then engage with other library maintainers to resolve the
@@ -60,7 +60,7 @@ that Dask works well with pandas 2.0 immediately.
 
 Special thanks to [Justus Magin](https://github.com/keewis) for his work on the
 [`xarray-contrib/issue-from-pytest-log`](https://github.com/xarray-contrib/issue-from-pytest-log) GitHub action.
-We’ve found this to be really convenient for easily opening up GitHub issues when test failures occur. 
+We’ve found this to be really convenient for easily opening up GitHub issues when test failures occur.
 
 Also, thanks to [Irina Truong](https://github.com/j-bennet) ([Coiled](https://www.coiled.io/?utm_source=dask-blog&utm_medium=dask-upstream-testing)), [Patrick Hoefler](https://github.com/phofl) ([Coiled](https://www.coiled.io/?utm_source=dask-blog&utm_medium=dask-upstream-testing)),
 and [Matthew Roeschke](https://github.com/mroeschke) ([NVIDIA](https://rapids.ai/)) for their efforts ensuring pandas and Dask
