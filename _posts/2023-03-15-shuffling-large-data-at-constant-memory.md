@@ -1,12 +1,15 @@
 ---
-blogpost: true
-date: 2023-03-15
-tags: [p2p, shuffling, dask, distributed]
+layout: post
+title: Shuffling large data at constant memory in Dask
 author: Hendrik Makait
-image: 1
+tags: [p2p, shuffling, dask, distributed]
+theme: twitter
+canonical_url: https://blog.coiled.io/blog/shuffling-large-data-at-constant-memory.html
 ---
 
-# Shuffling large data at constant memory in Dask
+{% include JB/setup %}
+
+_Original version of this post appears on [blog.coiled.io](https://blog.coiled.io/blog/shuffling-large-data-at-constant-memory.html?utm_source=dask-blog&utm_medium=shuffling-large-data-at-constant-memory)_
 
 With release `2023.2.1`, `dask.dataframe` introduces a new shuffling method called P2P, making sorts, merges, and joins faster and using constant memory.
 Benchmarks show impressive improvements:
