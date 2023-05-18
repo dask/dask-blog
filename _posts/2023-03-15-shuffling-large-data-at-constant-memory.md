@@ -138,15 +138,15 @@ dataframe:
     method: tasks
 ```
 
-or when starting a Coiled cluster
+or when using a cluster manager
 
 ```python3
 import dask
-import coiled
+from dask.distributed import LocalCluster
 
 # The dataframe.shuffle.method config is available since 2023.3.1
 with dask.config.set({"dataframe.shuffle.method": "tasks"}):
-    cluster = coiled.Cluster(...)  # coiled sends current dask config automatically
+    cluster = LocalCluster(...)  # many cluster managers send current dask config automatically
 ```
 
 For more information on deactivating P2P shuffle, see the [discussion #7509](https://github.com/dask/distributed/discussions/7509).
