@@ -9,7 +9,7 @@ canonical_url: https://blog.coiled.io/blog/shuffling-large-data-at-constant-memo
 
 {% include JB/setup %}
 
-_This work was engineered and supported by [Coiled](https://coiled.io?utm_source=dask-blog&utm_medium=shuffling-large-data-at-constant-memory). In particular, thanks to [Gabe Joseph](https://github.com/gjoseph92), [Hendrik Makait](https://github.com/hendrikmakait), and [Matt Rocklin](https://matthewrocklin.com/?utm_source=dask-blog&utm_medium=shuffling-large-data-at-constant-memory). Original version of this post appears on [blog.coiled.io](https://blog.coiled.io/blog/shuffling-large-data-at-constant-memory.html?utm_source=dask-blog&utm_medium=shuffling-large-data-at-constant-memory)_
+_This work was engineered and supported by [Coiled](https://coiled.io?utm_source=dask-blog&utm_medium=shuffling-large-data-at-constant-memory). In particular, thanks to [Florian Jetter](https://github.com/fjetter), [Gabe Joseph](https://github.com/gjoseph92), [Hendrik Makait](https://github.com/hendrikmakait), and [Matt Rocklin](https://matthewrocklin.com/?utm_source=dask-blog&utm_medium=shuffling-large-data-at-constant-memory). Original version of this post appears on [blog.coiled.io](https://blog.coiled.io/blog/shuffling-large-data-at-constant-memory.html?utm_source=dask-blog&utm_medium=shuffling-large-data-at-constant-memory)_
 
 With release `2023.2.1`, `dask.dataframe` introduces a new shuffling method called P2P, making sorts, merges, and joins faster and using constant memory.
 Benchmarks show impressive improvements:
