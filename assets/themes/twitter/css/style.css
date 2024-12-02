@@ -1,5 +1,96 @@
 /* Override some defaults */
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700");
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700");
+
+:root {
+    /* Main colors */
+    --yellow: #ffc11e;
+    --white: #fff;
+    --light-grey: #f6f6f6;
+    --grey: #33363d;
+    --dark-grey: #262326;
+    --black: #080815;
+    --red: #ef1161;
+    --pst-color-navbar-link: var(--yellow);
+    --pst-color-link-hover: var(--yellow);
+    --pst-color-inline-code: var(--salmon);
+
+    /* Font Family */
+    --pst-font-family-base-system: Inter;
+    --pst-font-family-monospace-system: Inconsolata;
+    --pst-font-family-base: var(--pst-font-family-base-system);
+    --pst-font-family-heading: var(--pst-font-family-base);
+    --pst-font-family-monospace: var(--pst-font-family-monospace-system);
+}
+
+body {
+    font-family: var(--pst-font-family-base);
+    font-weight: 400;
+    line-height: 1.65;
+    background-image: url("https://assets-global.website-files.com/627ac9e2b71e64a6a0b76027/628d27e5874009e9150d8951_vector-grid-white-bg.svg");
+}
+
+div.navbar {
+    margin: 0;
+}
+
+.container {
+    width: inherit;
+    padding: 0;
+}
+
+.container ul {
+    /* for IE below version 7 use `width` instead of `max-width` */
+    max-width: 85%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+div.row ul li {
+    list-style-type: none;
+    background: var(--light-grey);
+    color: var(--black);
+    margin: 1vw;
+    padding: 2.222vw 2.778vw;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+div.row ul li a {
+    color: var(--black);
+}
+
+div.row ul li a:hover {
+    color: var(--white);
+    text-decoration: none;
+}
+
+div.row ul li i {
+    font-style: normal;
+    font-weight: 400;
+}
+
+div.row ul li:hover {
+    color: var(--white);
+    background: var(--red);
+}
+
+div.page-header {
+    background-color: var(--black);
+    background-image: url("https://assets-global.website-files.com/627ac9e2b71e64a6a0b76027/628d27e5874009e9150d8951_vector-grid-white-bg.svg");
+    color: var(--white);
+    margin: 0;
+    padding: 20px 20px 50px 155px;
+}
+
+div.page-header h1 {
+    border: 2px solid var(--red);
+    border-radius: 5px;
+    padding: 5px 20px 5px 5px;
+    max-width: fit-content;
+}
+
 /* Table taken from http://johnsardine.com/freebies/dl-html-css/simple-little-tab/ */
 table a:link {
 	color: #666;
