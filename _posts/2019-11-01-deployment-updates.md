@@ -5,8 +5,6 @@ tags: []
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Summary
 
 Over the last six months many Dask developers have worked on making Dask easier

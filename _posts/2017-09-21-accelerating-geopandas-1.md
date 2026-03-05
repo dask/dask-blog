@@ -6,8 +6,6 @@ tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.9.min.css"
       rel="stylesheet" type="text/css">
 <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.9.min.css"

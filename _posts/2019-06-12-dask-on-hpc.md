@@ -7,8 +7,6 @@ tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 We analyze large datasets on HPC systems with Dask, a parallel computing
 library that integrates well with the existing Python software ecosystem, and
 works comfortably with native HPC hardware.

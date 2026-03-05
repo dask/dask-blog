@@ -1,0 +1,16 @@
+# Read the Docs configuration file
+# See https://docs.readthedocs.com/platform/stable/config-file/v2.html for details
+
+version: 2
+
+build:
+  os: ubuntu-24.04
+  tools:
+    ruby: "3.4"
+  jobs:
+    install:
+      - gem install bundler
+      - bundle install
+    build:
+      html:
+        - bundle exec jekyll build --destination $READTHEDOCS_OUTPUT/html

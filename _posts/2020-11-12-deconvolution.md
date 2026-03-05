@@ -6,8 +6,6 @@ author: John Kirkham (NVIDIA) and Ben Zaitlen (NVIDIA)
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Summary
 
 [Last year](https://blog.dask.org/2019/08/09/image-itk) we experimented with

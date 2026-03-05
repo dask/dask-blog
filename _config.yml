@@ -113,7 +113,6 @@ JB:
 
 incremental: true
 
-github: [metadata]
 kramdown:
   input: GFM
   hard_wrap: false

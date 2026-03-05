@@ -6,8 +6,6 @@ tags: [User Survey]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 <style type="text/css">
 table td {
     background: none;

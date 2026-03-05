@@ -7,8 +7,6 @@ draft: true
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Summary
 
 Array operations with GPUs can provide considerable speedups over CPU computing,

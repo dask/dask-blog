@@ -7,8 +7,6 @@ theme: twitter
 canonical_url: https://blog.coiled.io/blog/dask-upstream-testing.html
 ---
 
-{% include JB/setup %}
-
 _Original version of this post appears on [blog.coiled.io](https://blog.coiled.io/blog/dask-upstream-testing.html?utm_source=dask-blog&utm_medium=dask-upstream-testing)_
 
 [Dask](https://www.dask.org/) has deep integrations with other libraries in the PyData ecosystem like NumPy, pandas, Zarr, PyArrow, and more.

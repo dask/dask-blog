@@ -6,8 +6,6 @@ tags: [dask, dataframe]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 _This work is supported by [Anaconda Inc](http://anaconda.com)_
 
 ## Summary

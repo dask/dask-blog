@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-mode="auto" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <title>{{ page.title }}</title>
@@ -9,16 +9,33 @@
     <meta name="author" content="{{ site.author.name }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- add option to set a canonical link-->
     {% if page.canonical_url %}
     <link rel="canonical" href="{{ page.canonical_url }}" />
     <meta property="og:url" content="{{ page.canonical_url }}" />
     {% endif %}
-    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
-    <!--[if lt IE 9]>
-      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 
+    <!-- Set theme immediately to prevent flash -->
+    <script>
+      (function () {
+        var mode = localStorage.getItem("mode") || "auto";
+        var prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        var theme = mode === "auto" ? (prefersDark ? "dark" : "light") : mode;
+        document.documentElement.dataset.mode = mode;
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+
+    <!-- Inter font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- MathJax -->
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
          tex2jax: {
@@ -27,54 +44,282 @@
          }
       });
     </script>
-
     <script
       type="text/javascript"
       src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     ></script>
 
-    <!-- Le styles -->
-    <link
-      rel="stylesheet"
-      href="/assets/themes/twitter/bootstrap/css/bootstrap-hybrid.css"
-    />
-    <link rel="stylesheet" href="/assets/themes/twitter/css/style.css" />
-
-    <!-- Le fav and touch icons -->
-    <!-- Update these with your own images
-    <link rel="shortcut icon" href="images/favicon.ico">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-  -->
-
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/themes/twitter/css/dask-blog.css" />
     <link href="/css/pygments/pygments.css" rel="stylesheet" />
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png" />
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
   </head>
 
   <body>
-    <div class="navbar">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="brand" href="{{ HOME_PATH }}">{{ site.title }}</a>
-          <ul class="nav">
-            {% assign pages_list = site.pages %} {% assign group = 'navigation'
-            %} {% include JB/pages_list %}
-          </ul>
+    <!-- Navbar -->
+    <div class="dask-navbar" role="banner">
+      <div class="nav-container">
+        <a href="https://www.dask.org/" class="brand-logo">
+          <img
+            src="https://cdn.prod.website-files.com/655926fa24195711dbf38624/655926fa24195711dbf38653_dask-header-logo.svg"
+            alt="Dask logo"
+            loading="lazy"
+          />
+        </a>
+        <button
+          class="menu-button"
+          aria-label="Toggle navigation"
+          onclick="this.parentElement.querySelector('.nav-menu').classList.toggle('is-open')"
+        >
+          &#9776;
+        </button>
+        <nav class="nav-menu" role="navigation">
+          <a href="https://www.dask.org/get-started" class="nav-link"
+            >Get Started</a
+          >
+          <div class="nav-dropdown">
+            <button class="nav-dropdown-toggle">
+              Community
+              <svg viewBox="0 0 14 14">
+                <polyline points="3 5 7 9 11 5"></polyline>
+              </svg>
+            </button>
+            <div class="nav-dropdown-menu">
+              <a
+                href="https://github.com/dask/community/issues/307"
+                target="_blank"
+                >Demo Day</a
+              >
+              <a href="https://www.dask.org/get-help">Get Help</a>
+              <a href="https://www.dask.org/powered-by">Powered By</a>
+            </div>
+          </div>
+          <a href="{{ HOME_PATH }}" class="nav-link is-active">Blog</a>
+          <!-- Theme toggle button -->
+          <button
+            class="theme-switch-button"
+            aria-label="Color mode"
+            title="Cycle color mode"
+          >
+            <span class="theme-switch" data-mode="light">
+              <!-- Sun icon (fa-sun) -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                <path
+                  fill="currentColor"
+                  d="M288 32c-17.7 0-32 14.3-32 32v32c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32zm0 320c-17.7 0-32 14.3-32 32v32c0 17.7 14.3 32 32 32s32-14.3 32-32v-32c0-17.7-14.3-32-32-32zM64 288c17.7 0 32-14.3 32-32s-14.3-32-32-32H32c-17.7 0-32 14.3-32 32s14.3 32 32 32zm480-64h-32c-17.7 0-32 14.3-32 32s14.3 32 32 32h32c17.7 0 32-14.3 32-32s-14.3-32-32-32zM130.5 97.5c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l22.6 22.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-22.6-22.6zm316.8 271.6c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l22.6 22.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-22.6-22.6zM130.5 414.6l22.6-22.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-22.6 22.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0zm316.8-271.6l22.6-22.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L401.9 98c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0zM288 160a96 96 0 1 0 0 192 96 96 0 1 0 0-192z"
+                />
+              </svg>
+            </span>
+            <span class="theme-switch" data-mode="dark">
+              <!-- Moon icon (fa-moon) -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                <path
+                  fill="currentColor"
+                  d="M223.5 32C100 32 0 132.3 0 256s100 224 223.5 224c60.6 0 115.5-24.2 155.8-63.4 5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6-96.9 0-175.5-78.8-175.5-176 0-65.8 36-123.1 89.3-153.3 6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
+                />
+              </svg>
+            </span>
+            <span class="theme-switch" data-mode="auto">
+              <!-- Circle half stroke icon (fa-circle-half-stroke) -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path
+                  fill="currentColor"
+                  d="M448 256c0-106-86-192-192-192V448c106 0 192-86 192-192zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"
+                />
+              </svg>
+            </span>
+          </button>
+          <a
+            href="https://docs.dask.org/en/stable/"
+            target="_blank"
+            class="nav-button"
+            >Docs</a
+          >
+        </nav>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="site-content">{{ content }}</div>
+
+    <!-- Footer -->
+    <div class="dask-footer">
+      <div class="footer-container">
+        <div class="footer-grid">
+          <div class="footer-logo-col">
+            <a href="https://www.dask.org/" class="footer-logo">
+              <img
+                src="https://cdn.prod.website-files.com/655926fa24195711dbf38624/655926fa24195711dbf38653_dask-header-logo.svg"
+                alt="Dask logo"
+                loading="lazy"
+              />
+            </a>
+            <div class="social-icons">
+              <a
+                href="https://github.com/dask/dask"
+                target="_blank"
+                class="social-icon"
+                aria-label="GitHub"
+              >
+                <svg viewBox="0 0 24 24" fill="white">
+                  <path
+                    d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="https://twitter.com/dask_dev"
+                target="_blank"
+                class="social-icon"
+                aria-label="Twitter"
+              >
+                <svg viewBox="0 0 24 24" fill="white">
+                  <path
+                    d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="https://www.youtube.com/c/Dask-dev"
+                target="_blank"
+                class="social-icon"
+                aria-label="YouTube"
+              >
+                <svg viewBox="0 0 24 24" fill="white">
+                  <path
+                    d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="https://stackoverflow.com/questions/tagged/dask"
+                target="_blank"
+                class="social-icon"
+                aria-label="Stack Overflow"
+              >
+                <svg viewBox="0 0 24 24" fill="white">
+                  <path
+                    d="M15.725 0l-1.72 1.277 6.39 8.588 1.72-1.277L15.725 0zm-3.94 3.418l-1.369 1.644 8.225 6.85 1.369-1.644-8.225-6.85zm-3.15 4.65l-.905 1.94 9.702 4.517.905-1.94-9.702-4.518zm-1.85 4.86l-.44 2.093 10.473 2.2.44-2.092-10.473-2.2zM1.89 15.47V24h19.19v-8.53h-2.133v6.397H4.021v-6.396H1.89zm4.265 2.133v2.13h10.66v-2.13H6.154z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="https://dask.discourse.group"
+                target="_blank"
+                class="social-icon"
+                aria-label="Discourse"
+              >
+                <svg viewBox="0 0 24 24" fill="white">
+                  <path
+                    d="M12.103 0C18.666 0 24 5.485 24 11.997c0 6.51-5.33 11.99-11.9 11.99L0 24V11.79C0 5.28 5.532 0 12.103 0zm.116 4.563a7.395 7.395 0 00-6.337 3.57 7.247 7.247 0 00-.148 7.22L4.4 19.61l4.794-1.074a7.424 7.424 0 008.136-1.39 7.256 7.256 0 001.737-7.58 7.375 7.375 0 00-6.84-5.004h-.008z"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div>
+            <div class="footer-col-title">Get Started</div>
+            <div class="footer-line"></div>
+            <a
+              href="https://docs.dask.org/en/stable/"
+              target="_blank"
+              class="footer-link"
+              >Latest Docs</a
+            >
+          </div>
+          <div>
+            <div class="footer-col-title">Community</div>
+            <div class="footer-line"></div>
+            <a href="https://www.dask.org/get-help" class="footer-link"
+              >Get Help</a
+            >
+            <a href="https://www.dask.org/powered-by" class="footer-link"
+              >Powered By</a
+            >
+            <a
+              href="https://github.com/dask/community/issues/307"
+              target="_blank"
+              class="footer-link"
+              >Demo Day</a
+            >
+          </div>
+          <div>
+            <div class="footer-col-title">Blog</div>
+            <div class="footer-line"></div>
+            <a href="{{ HOME_PATH }}" class="footer-link">Dask Blog</a>
+            <a
+              href="https://github.com/dask/dask-blog/blob/gh-pages/README.md"
+              target="_blank"
+              class="footer-link"
+              >Contribute</a
+            >
+          </div>
+          <div>
+            <div class="footer-col-title">Brand</div>
+            <div class="footer-line"></div>
+            <a href="https://www.dask.org/brand-guide" class="footer-link"
+              >Brand Guidelines</a
+            >
+          </div>
+        </div>
+        <div class="footer-copyright">
+          Copyright &copy; {{ 'now' | date: "%Y" }} Dask core developers.
+          New-BSD Licensed. &middot;
+          <a href="{{ BASE_PATH }}/atom.xml">Atom Feed</a>
         </div>
       </div>
     </div>
 
-    <div class="container">
-      <div class="content">{{ content }}</div>
+    <!-- Theme switcher script -->
+    <script>
+      (function () {
+        var prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
 
-      <footer>
-        <p>
-          &copy; <a href="https://dask.org">Dask Developers</a> 2018.
-          <a href="{{BASE_PATH}}/atom.xml">Atom Feed</a>
-        </p>
-      </footer>
-    </div>
-    <!-- /container -->
+        function setTheme(mode) {
+          if (mode !== "light" && mode !== "dark" && mode !== "auto") {
+            mode = "auto";
+          }
+          var theme =
+            mode === "auto" ? (prefersDark.matches ? "dark" : "light") : mode;
+          document.documentElement.dataset.mode = mode;
+          document.documentElement.dataset.theme = theme;
+          localStorage.setItem("mode", mode);
+          localStorage.setItem("theme", theme);
+
+          // Re-listen for OS changes only in auto mode
+          prefersDark.onchange =
+            mode === "auto"
+              ? function () {
+                  setTheme("auto");
+                }
+              : null;
+        }
+
+        function cycleMode() {
+          var currentMode = localStorage.getItem("mode") || "auto";
+          // Ensure next mode after "auto" is visually different
+          var modeList = prefersDark.matches
+            ? ["auto", "light", "dark"]
+            : ["auto", "dark", "light"];
+          var next = modeList.indexOf(currentMode) + 1;
+          if (next >= modeList.length) next = 0;
+          setTheme(modeList[next]);
+        }
+
+        // Apply saved mode
+        setTheme(localStorage.getItem("mode") || "auto");
+
+        // Attach click handlers
+        document
+          .querySelectorAll(".theme-switch-button")
+          .forEach(function (el) {
+            el.addEventListener("click", cycleMode);
+          });
+      })();
+    </script>
 
     {% include JB/analytics %}
   </body>

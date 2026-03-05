@@ -7,8 +7,6 @@ tags: [GPU, array, CuPy]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Summary
 
 We perform Singular Value Decomposition (SVD) calculations on large datasets.

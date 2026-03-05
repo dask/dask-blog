@@ -7,8 +7,6 @@ theme: twitter
 canonical_url: https://docs.coiled.io/blog/dask-dataframe-is-fast.html
 ---
 
-{% include JB/setup %}
-
 <meta content="Dask DataFrame is faster and more reliable, especially for TBs of data. This is due to engineering improvements like adding a query optimizer, integrating with Apache Arrow, and more efficient data shuffling." name="description" />
 
 _This work was engineered and supported by [Coiled](https://coiled.io/?utm_source=dask-blog&utm_medium=dask-expr) and [NVIDIA](https://www.nvidia.com/). Thanks to [Patrick Hoefler](https://github.com/phofl) and [Rick Zamora](https://github.com/rjzamora), in particular. Original version of this post appears on [docs.coiled.io](https://docs.coiled.io/blog/dask-dataframe-is-fast.html?utm_source=dask-blog&utm_medium=dask-is-fast)_

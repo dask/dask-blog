@@ -6,8 +6,6 @@ tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Summary
 
 <img src="https://kafka.apache.org/images/logo.png"

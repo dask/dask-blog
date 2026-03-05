@@ -6,8 +6,6 @@ tags: [Dask Summit, life science]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Executive Summary
 
 The Dask life science workshop ran as part of the 2021 Dask Summit. Lightning talks from this workshop are [available here](https://www.youtube.com/playlist?list=PLJ0vO2F_f6OBAY6hjRHM_mIQ9yh32mWr0), and you can read on for a summary of the event.

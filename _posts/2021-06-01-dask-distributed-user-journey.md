@@ -7,8 +7,6 @@ tags: [Distributed, Tools, Organisations]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 This week was the 2021 Dask Summit and [one of the workshops](https://summit.dask.org/schedule/presentation/20/deploying-dask/) that we ran covered many deployment options for Dask Distributed.
 
 We covered local deployments, SSH, Hadoop, Kubernetes, the Cloud and managed services, but one question that came up a few times was "where do I start?".

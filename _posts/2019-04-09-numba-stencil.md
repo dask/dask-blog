@@ -6,8 +6,6 @@ tags: [dask, numba]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 In this post we explore four array computing technologies, and how they
 work together to achieve powerful results.
 

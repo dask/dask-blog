@@ -8,8 +8,6 @@ tags: [Programming, scipy, Python, dask]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## tl;dr
 
 We highlight the people who thanklessly perform work on an open source software

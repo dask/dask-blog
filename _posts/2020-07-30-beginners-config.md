@@ -7,8 +7,6 @@ tags: [distributed, config]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 _Configuring a Dask cluster can seem daunting at first, but the good news is that the Dask project has a lot of built in heuristics that try its best to anticipate and adapt to your workload based on the machine it is deployed on and the work it receives. Possibly for a long time you can get away with not configuring anything special at all. That being said, if you are looking for some tips to move on from using Dask locally, or have a Dask cluster that you are ready to optimize with some more in-depth configuration, these tips and tricks will help guide you and link you to the best Dask docs on the topic!_
 
 ## How to host a distributed Dask cluster

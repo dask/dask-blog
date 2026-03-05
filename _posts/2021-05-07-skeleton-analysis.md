@@ -6,8 +6,6 @@ tags: [imaging, life science, skan, skeleton analysis]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Executive Summary
 
 In this blogpost, we show how to modify a skeleton network analysis with Dask to work with constrained RAM (eg: on your laptop). This makes it more accessible: it can run on a small laptop, instead of requiring access to a supercomputing cluster. Example code is also [provided here](https://github.com/GenevieveBuckley/distributed-skeleton-analysis/blob/main/distributed-skeleton-analysis-with-dask.ipynb).

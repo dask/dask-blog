@@ -6,8 +6,6 @@ tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 This weekend at the SciPy 2017 sprints I worked alongside Scikit-image
 developers to investigate parallelizing scikit-image with Dask.
 

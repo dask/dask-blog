@@ -6,8 +6,6 @@ tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 I'm pleased to announce a release of
 [Dask](http://dask.readthedocs.io/en/latest/)'s distributed scheduler,
 [dask.distributed](http://distributed.readthedocs.io/en/latest/), version

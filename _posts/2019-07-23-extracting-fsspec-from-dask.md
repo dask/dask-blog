@@ -7,8 +7,6 @@ draft: false
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## TL;DR
 
 `fsspec`, the new base for file system operations in Dask, Intake, s3fs, gcsfs and others,

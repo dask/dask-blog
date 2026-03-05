@@ -7,8 +7,6 @@ theme: twitter
 author: Mike McCarty (Capital One Center for Machine Learning) and Matthew Rocklin (Coiled Computing)
 ---
 
-{% include JB/setup %}
-
 In late February members of the Dask community gathered together in Washington, DC.
 This was a mix of open source project maintainers
 and active users from a broad range of institutions.

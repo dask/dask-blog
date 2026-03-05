@@ -7,8 +7,6 @@ theme: twitter
 author: Matthew Rocklin
 ---
 
-{% include JB/setup %}
-
 People often ask me _"How many people use Dask?"_
 
 As with any non-invasive open source software, the answer to this is

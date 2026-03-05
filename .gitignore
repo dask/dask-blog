@@ -4,3 +4,6 @@ _site/
 .jekyll-metadata
 Gemfile.lock
 .DS_Store
+
+.claude/settings.local.json
+.playwright-cli/

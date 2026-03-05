@@ -7,8 +7,6 @@ tags: [dask, dataframe]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Groupby Aggregations with Dask
 
 In this post we'll dive into how Dask computes groupby aggregations. These are commonly used operations for ETL and analysis in which we split data into groups, apply a function to each group independently, and then combine the results back together. In the PyData/R world this is often referred to as the split-apply-combine strategy (first coined by [Hadley Wickham](https://www.jstatsoft.org/article/view/v040i01)) and is used widely throughout the [Pandas ecosystem](https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html).

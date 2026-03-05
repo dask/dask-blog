@@ -7,8 +7,6 @@ theme: twitter
 canonical_url: https://xarray.dev/blog/dask-detrending
 ---
 
-{% include JB/setup %}
-
 _This post was originally published on the [Xarray blog](https://xarray.dev/blog/dask-detrending)._
 
 Running large-scale GroupBy-Map patterns with Xarray that are backed by [Dask arrays](https://docs.dask.org/en/stable/array.html) is

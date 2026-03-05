@@ -6,8 +6,6 @@ tags: [dataframe, IO]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 _Update May 3rd 2023: [Clarify GPU recommendations](https://github.com/dask/dask-blog/pull/166)._
 
 With the release `2023.4.0` of dask and distributed we are making a change which may require the Dask scheduler to have consistent software and hardware capabilities as the client and workers.

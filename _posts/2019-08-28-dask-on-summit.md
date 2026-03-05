@@ -6,8 +6,6 @@ tags: [HPC]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 Dask is deployed on traditional HPC machines with increasing frequency.
 In the past week I've personally helped four different groups get set up.
 This is a surprisingly individual process,

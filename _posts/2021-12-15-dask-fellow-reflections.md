@@ -6,8 +6,6 @@ tags: [life science]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Summary
 
 [Genevieve Buckley](https://github.com/GenevieveBuckley/) was hired as a Dask Life Science Fellow in 2021 [funded by CZI](https://chanzuckerberg.com/eoss/proposals/). The goal was to improve Dask, with a [specific focus on the life science community](https://blog.dask.org/2021/03/04/the-life-science-community). This blogpost contains another progress update, and some personal reflections looking back over this year.

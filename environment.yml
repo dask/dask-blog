@@ -1,0 +1,8 @@
+name: dask-blog
+channels:
+  - conda-forge
+dependencies:
+  - ruby
+  - c-compiler
+  - cxx-compiler
+  - make

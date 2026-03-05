@@ -6,8 +6,6 @@ tags: [python, scipy, scikit-image, dask-image]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Executive Summary
 
 This post explores simple workflows to load large stacks of image data with Dask array.

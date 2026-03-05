@@ -4,41 +4,30 @@ A collection of working notes about [Dask](https://dask.org)
 
 ## Build Locally
 
-This blog uses Jekyll, which is built on Ruby. You will need Ruby to build
-locally.
+This blog uses Jekyll, which is built on Ruby. An `environment.yml` file is
+provided to set up the required Ruby toolchain from conda-forge.
 
-Do this once on your machine (assuming you have `ruby` and `gem`, Ruby's
-package manager)
+Create and activate the conda environment:
 
 ```
-gem install bundler
+conda env create -f environment.yml
+conda activate dask-blog
+```
+
+Install the Ruby dependencies:
+
+```
 bundle install
 ```
 
-Then do this from the root of this project directory whenever you want to
-build-and-host your docs:
+Then build the site or serve it locally with live reload:
 
 ```
 bundle exec jekyll serve
 ```
 
 That should also watch for changes and rebuild automatically. Built pages live
-in `_site/`.
-
-## Installing Jekyll
-
-As noted above, Jekyll can be installed as a [gem](https://jekyllrb.com/docs/):
-
-> gem install jekyll bundle
-
-Jekyll and ruby can also be install via conda-forge:
-
-```
-conda create -n dask-blog -c conda-forge ruby rb-jekyll rb-nokogiri rb-jekyll-commonmark-ghpages rb-commonmarker rb-bundler gxx_linux-64
-conda activate dask-blog
-bundle install
-bundle exec jekyll serve
-```
+in `_site/`. To build without serving, use `bundle exec jekyll build`.
 
 ## Add a new page
 

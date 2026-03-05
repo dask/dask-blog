@@ -7,8 +7,6 @@ tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Executive Summary
 
 In recent years Python's array computing ecosystem has grown organically to support

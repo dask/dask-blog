@@ -5,8 +5,6 @@ author: Genevieve Buckley
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Executive Summary
 
 This blogpost explains some of the difficulties associated with distributed computation and ragged or irregularly shaped outputs. We present a recommended method for using Dask in these circumstances.

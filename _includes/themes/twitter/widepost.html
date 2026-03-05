@@ -1,15 +1,13 @@
-<div class="page-header">
-  <div class="row">
-    <div class="col-md-12">
-      <h1>{{ page.title }} <small>{{ page.tagline }}</small></h1>
-    </div>
+<div class="blog-container">
+  <div class="post-header">
+    <h1>{{ page.title }}</h1>
+    {% if page.tagline %}
+    <p class="post-tagline">{{ page.tagline }}</p>
+    {% endif %}
   </div>
-</div>
 
-<div class="row">
-  <div class="col-md-12">
-    {{ content }}
-    <hr />
-    {% include JB/comments %}
-  </div>
+  <div class="post-body">{{ content }}</div>
+
+  <hr />
+  {% include JB/comments %}
 </div>

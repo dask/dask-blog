@@ -7,8 +7,6 @@ tags: [GPU, array, cupy]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 The following code creates and manipulates 2 TB of randomly generated data.
 
 ```python

@@ -1,17 +1,16 @@
-<div class="page-header">
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-      <h1>{{ page.title }} <small>{{ page.tagline }}</small></h1>
-      {% if page.author %}
-      <p><i>By {{ page.author }} </i></p>
+<div class="blog-container">
+  <div class="blog-content">
+    <div class="post-header">
+      <h1>{{ page.title }}</h1>
+      {% if page.tagline %}
+      <p class="post-tagline">{{ page.tagline }}</p>
+      {% endif %} {% if page.author %}
+      <p class="post-meta">By {{ page.author }}</p>
       {% endif %}
     </div>
-  </div>
-</div>
 
-<div class="row">
-  <div class="col-md-8 col-md-offset-2">
-    {{ content }}
+    <div class="post-body">{{ content }}</div>
+
     <hr />
     {% include JB/comments %}
   </div>

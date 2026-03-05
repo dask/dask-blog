@@ -5,8 +5,6 @@ author: Matthew Rocklin
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 Dask is moving fast these days. Sometimes we break things as a result.
 
 Historically this hasn't been a problem, according to our survey last year

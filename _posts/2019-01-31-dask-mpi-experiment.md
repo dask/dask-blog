@@ -7,8 +7,6 @@ tags: [MPI]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Executive Summary
 
 We present an experiment on how to pass data from a loosely coupled parallel

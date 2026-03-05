@@ -6,8 +6,6 @@ tags: [performance]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Summary
 
 Confused about choosing [a good chunk size](https://docs.dask.org/en/latest/array-best-practices.html#select-a-good-chunk-size) for Dask arrays?

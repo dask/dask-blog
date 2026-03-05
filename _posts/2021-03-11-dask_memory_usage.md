@@ -6,8 +6,6 @@ tags: [memory, dask, distributed, profiling, ram]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 Using too much computing resources can get expensive when you're scaling up in the cloud.
 
 To give a real example, I was working on the image processing pipeline for a spatial gene sequencing device, which could report not just which genes were being expressed but also where they were in a 3D volume of cells.

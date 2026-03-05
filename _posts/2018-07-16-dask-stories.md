@@ -6,8 +6,6 @@ tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 _This work is supported by [Anaconda Inc](http://anaconda.com)_
 
 People often ask general questions like "Who uses Dask?" or more specific

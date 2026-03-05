@@ -7,8 +7,6 @@ theme: twitter
 tags: [scipy, Python, Programming, dask]
 ---
 
-{% include JB/setup %}
-
 _This work is supported by [Continuum Analytics](http://continuum.io)
 and the [XDATA Program](http://www.darpa.mil/program/XDATA)
 as part of the [Blaze Project](http://blaze.pydata.org)_

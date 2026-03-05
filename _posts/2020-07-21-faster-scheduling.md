@@ -7,8 +7,6 @@ tags: []
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Summary
 
 This post discusses Dask overhead costs for task scheduling,

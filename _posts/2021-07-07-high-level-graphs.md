@@ -5,8 +5,6 @@ author: Genevieve Buckley
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 ## Executive Summary
 
 There is a lot of work happening in Dask right now on high level graphs. We'd like to share a snapshot of current work in this area. This post is for people interested in technical details of behind the scenes work improving performance in Dask. You don't need to know anything about it in order to use Dask.

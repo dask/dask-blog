@@ -6,8 +6,6 @@ tags: [Programming, Python, scipy, dask]
 theme: twitter
 ---
 
-{% include JB/setup %}
-
 _This work is supported by [Anaconda Inc](http://anaconda.com)_
 
 **tl;dr:** _Pickle isn't slow, it's a protocol. Protocols are important for
