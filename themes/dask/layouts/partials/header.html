@@ -1,0 +1,15 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-inner">
+    <a class="navbar-brand" href="{{ "/" | relURL }}">
+      <img src="{{ "images/dask-logo.svg" | relURL }}" alt="Dask" height="28">
+    </a>
+    <ul class="navbar-nav">
+      <li><a href="{{ "/" | relURL }}">Blog</a></li>
+      <li><a href="{{ "/tag/" | relURL }}">Tags</a></li>
+      <li><a class="nav-button" href="https://www.dask.org" rel="noopener">Docs</a></li>
+      <li>
+        {{- partial "theme-toggle.html" . -}}
+      </li>
+    </ul>
+  </div>
+</nav>

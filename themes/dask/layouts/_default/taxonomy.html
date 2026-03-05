@@ -1,0 +1,24 @@
+{{ define "main" }}
+<div class="container">
+  <div class="page-header">
+    <h1>Posts tagged "{{ .Title }}"</h1>
+  </div>
+  <ul class="post-list">
+    {{- range .Pages }}
+    <li>
+      <span class="post-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></span>
+      <div class="post-meta-line">
+        <span class="post-date">{{ .Date.Format "January 2, 2006" }}</span>
+        {{- with .Params.tags }}
+        <span class="post-tags">
+          {{- range . }}
+          <a class="tag-pill" href="{{ "/tag/" | relURL }}{{ . | urlize }}/">{{ . }}</a>
+          {{- end }}
+        </span>
+        {{- end }}
+      </div>
+    </li>
+    {{- end }}
+  </ul>
+</div>
+{{ end }}

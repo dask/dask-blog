@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ .Site.Title }}</title>
+  <link href="{{ .Permalink }}" rel="self" type="application/atom+xml"/>
+  <link href="{{ .Site.BaseURL }}"/>
+  <updated>{{ now.Format "2006-01-02T15:04:05Z" }}</updated>
+  <id>{{ .Site.BaseURL }}</id>
+  <author>
+    <name>Dask Contributors</name>
+  </author>
+  {{- range first 20 (where .Site.RegularPages "Section" "posts") }}
+  <entry>
+    <title>{{ .Title }}</title>
+    <link href="{{ .Permalink }}" rel="alternate" type="text/html"/>
+    <id>{{ .Permalink }}</id>
+    <published>{{ .Date.Format "2006-01-02T15:04:05Z" }}</published>
+    <updated>{{ .Lastmod.Format "2006-01-02T15:04:05Z" }}</updated>
+    {{- with .Params.author }}
+    <author><name>{{ . }}</name></author>
+    {{- end }}
+    <summary type="html">{{ .Summary | html }}</summary>
+  </entry>
+  {{- end }}
+</feed>

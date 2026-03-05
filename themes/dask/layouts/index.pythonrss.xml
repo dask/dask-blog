@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ .Site.Title }} — Python</title>
+    <link>{{ .Site.BaseURL }}</link>
+    <description>Dask posts tagged Python</description>
+    <atom:link href="{{ .Permalink }}" rel="self" type="application/rss+xml"/>
+    {{- range first 20 (where (where .Site.RegularPages "Section" "posts") ".Params.tags" "intersect" (slice "python" "Python")) }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
+      <guid>{{ .Permalink }}</guid>
+      <description>{{ .Summary | html }}</description>
+    </item>
+    {{- end }}
+  </channel>
+</rss>

@@ -1,0 +1,28 @@
+{{ define "main" }}
+<article class="container{{ if eq (.Params.layout_style) "wide" }} wide{{ end }}">
+  <header class="post-header">
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.tagline }}
+    <p class="post-tagline">{{ . }}</p>
+    {{- end }}
+    <div class="post-meta">
+      {{- with .Params.author }}
+      <span>{{ . | safeHTML }}</span> &middot;
+      {{- end }}
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+      {{- with .Params.tags }}
+      &middot;
+      <span class="post-tags">
+        {{- range . }}
+        <a class="tag-pill" href="{{ "/tag/" | relURL }}{{ . | urlize }}/">{{ . }}</a>
+        {{- end }}
+      </span>
+      {{- end }}
+    </div>
+  </header>
+  <div class="post-content">
+    {{ .Content }}
+  </div>
+  {{- partial "comments.html" . -}}
+</article>
+{{ end }}

@@ -1,0 +1,60 @@
+baseURL = "https://blog.dask.org"
+languageCode = "en-us"
+title = "Dask Working Notes"
+theme = "dask"
+buildFuture = false
+buildDrafts = false
+enableGitInfo = true
+
+[permalinks]
+  posts = "/:year/:month/:day/:title/"
+
+[taxonomies]
+  tag = "tag"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+    [markup.goldmark.extensions]
+      [markup.goldmark.extensions.passthrough]
+        enable = true
+        [markup.goldmark.extensions.passthrough.delimiters]
+          block = [["$$", "$$"], ["\\[", "\\]"]]
+          inline = [["$", "$"], ["\\(", "\\)"]]
+  [markup.highlight]
+    style = "pygments"
+    noClasses = false
+
+[mediaTypes]
+  [mediaTypes."application/atom+xml"]
+    suffixes = ["xml"]
+
+[params]
+  description = "Writing about Scaling Python"
+  disqusShortname = "dask-blog"
+  gtmID = "GTM-P4GQM59"
+
+[outputFormats]
+  [outputFormats.ATOM]
+    mediaType = "application/atom+xml"
+    baseName = "atom"
+    isPlainText = true
+  [outputFormats.PythonRSS]
+    mediaType = "application/rss+xml"
+    baseName = "feed.python"
+    isPlainText = true
+  [outputFormats.ScipyRSS]
+    mediaType = "application/rss+xml"
+    baseName = "feed.scipy"
+    isPlainText = true
+  [outputFormats.SympyRSS]
+    mediaType = "application/rss+xml"
+    baseName = "feed.sympy"
+    isPlainText = true
+
+[outputs]
+  home = ["HTML", "ATOM", "PythonRSS", "ScipyRSS", "SympyRSS"]
+
+[sitemap]
+  filename = "sitemap.xml"

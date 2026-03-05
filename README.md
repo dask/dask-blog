@@ -4,45 +4,19 @@ A collection of working notes about [Dask](https://dask.org)
 
 ## Build Locally
 
-This blog uses Jekyll, which is built on Ruby. You will need Ruby to build
-locally.
+This blog uses [Hugo](https://gohugo.io/). You will need Hugo (extended edition) installed to build locally.
 
-Do this once on your machine (assuming you have `ruby` and `gem`, Ruby's
-package manager)
+Install Hugo following the [official instructions](https://gohugo.io/installation/), then run:
 
 ```
-gem install bundler
-bundle install
+hugo server
 ```
 
-Then do this from the root of this project directory whenever you want to
-build-and-host your docs:
-
-```
-bundle exec jekyll serve
-```
-
-That should also watch for changes and rebuild automatically. Built pages live
-in `_site/`.
-
-## Installing Jekyll
-
-As noted above, Jekyll can be installed as a [gem](https://jekyllrb.com/docs/):
-
-> gem install jekyll bundle
-
-Jekyll and ruby can also be install via conda-forge:
-
-```
-conda create -n dask-blog -c conda-forge ruby rb-jekyll rb-nokogiri rb-jekyll-commonmark-ghpages rb-commonmarker rb-bundler gxx_linux-64
-conda activate dask-blog
-bundle install
-bundle exec jekyll serve
-```
+The site will be available at `http://localhost:1313/` and will auto-reload on changes. Built pages are written to `public/`.
 
 ## Add a new page
 
-Content lives in `_posts` as individual markdown files. These markdown files
+Content lives in `content/posts/` as individual markdown files. These markdown files
 have a few expectations on them.
 
 1.  They should be named according to the date of publication like the
@@ -62,15 +36,12 @@ have a few expectations on them.
 
     ```
     ---
-    layout: post
     title: Your Title
+    date: YYYY-MM-DD
     author: Your Name
     tagline: an optional tagline
-    tags: [A, list, of tags]
-    theme: twitter
+    tag: [A, list, of tags]
     ---
-
-    {% include JB/setup %}
     ```
 
     You can copy-paste this from any existing post
@@ -82,7 +53,7 @@ have a few expectations on them.
     draft: true
     ```
 
-4.  Images should go in the `images/` directory and be referred to as
+4.  Images should go in the `static/images/` directory and be referred to as
     `/images/my-image.svg` with normal HTML or markdown syntax like the
     following:
 
@@ -104,10 +75,6 @@ pre-commit run --all-files
 
 ## Publish on Github Pages
 
-Github runs Jekyll by default. No additional work is needed for deployment,
-just push to the `gh-pages` branch and things should be up in a few minutes.
+The blog is built and deployed via GitHub Actions. Push to the `gh-pages` branch and the site will be built and deployed automatically.
 
-The blog is also rebuilt nightly via a GitHub Actions cron job. This allows
-post authors to set the post date in the future for publishing later. Jekyll
-will only build posts dated in the past. This should make scheduling a little
-easier.
+The blog is also rebuilt nightly via a GitHub Actions cron job. This allows post authors to set the post date in the future for publishing later. Hugo will only build posts dated in the past. This should make scheduling a little easier.

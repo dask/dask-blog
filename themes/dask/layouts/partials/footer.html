@@ -1,0 +1,49 @@
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-col">
+        <a class="footer-brand" href="{{ "/" | relURL }}">
+          <img src="{{ "images/dask-logo.svg" | relURL }}" alt="Dask" height="24">
+        </a>
+        <p class="footer-description">Working notes from the Dask community about scaling Python.</p>
+        <div class="footer-social">
+          <a href="https://github.com/dask" rel="noopener" aria-label="GitHub">
+            <img src="{{ "images/github.svg" | relURL }}" alt="GitHub" width="32" height="32">
+          </a>
+          <a href="https://twitter.com/daborker" rel="noopener" aria-label="Twitter">
+            <img src="{{ "images/twitter.svg" | relURL }}" alt="Twitter" width="32" height="32">
+          </a>
+          <a href="https://www.youtube.com/@daborker" rel="noopener" aria-label="YouTube">
+            <img src="{{ "images/youtube.svg" | relURL }}" alt="YouTube" width="32" height="32">
+          </a>
+          <a href="https://stackoverflow.com/questions/tagged/dask" rel="noopener" aria-label="Stack Overflow">
+            <img src="{{ "images/stackoverflow.svg" | relURL }}" alt="Stack Overflow" width="32" height="32">
+          </a>
+          <a href="https://discourse.dask.org" rel="noopener" aria-label="Discourse">
+            <img src="{{ "images/discourse.svg" | relURL }}" alt="Discourse" width="32" height="32">
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Links</h4>
+        <ul>
+          <li><a href="{{ "/" | relURL }}">Blog</a></li>
+          <li><a href="{{ "/tag/" | relURL }}">Tags</a></li>
+          <li><a href="{{ "atom.xml" | absURL }}">Atom Feed</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://www.dask.org" rel="noopener">dask.org</a></li>
+          <li><a href="https://github.com/dask/dask" rel="noopener">GitHub</a></li>
+          <li><a href="https://discourse.dask.org" rel="noopener">Discourse</a></li>
+          <li><a href="https://stackoverflow.com/questions/tagged/dask" rel="noopener">Stack Overflow</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copyright">&copy; {{ now.Year }} Dask core developers. New-BSD Licensed</span>
+    </div>
+  </div>
+</footer>
