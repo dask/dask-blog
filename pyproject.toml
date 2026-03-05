@@ -1,0 +1,11 @@
+[project]
+name = "dask-blog"
+version = "0.0.0"
+requires-python = ">=3.10"
+dependencies = [
+    "sphinx>=8.0",
+    "sphinx-autobuild",
+    "ablog>=0.11",
+    "dask-sphinx-theme",
+    "myst-parser>=4.0",
+]

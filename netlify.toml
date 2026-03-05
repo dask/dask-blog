@@ -1,0 +1,8 @@
+[build]
+  publish = "_build/dirhtml"
+  command = """
+    uv run sphinx-build -b dirhtml . _build/dirhtml
+  """
+
+[build.environment]
+  PYTHON_VERSION = "3.13"

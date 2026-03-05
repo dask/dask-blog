@@ -4,95 +4,59 @@ A collection of working notes about [Dask](https://dask.org)
 
 ## Build Locally
 
-This blog uses Jekyll, which is built on Ruby. You will need Ruby to build
-locally.
+This blog uses [Sphinx](https://www.sphinx-doc.org/) with
+[ABlog](https://ablog.readthedocs.io/) and requires Python 3.10+.
 
-Do this once on your machine (assuming you have `ruby` and `gem`, Ruby's
-package manager)
+Start the development server with auto-reload:
 
-```
-gem install bundler
-bundle install
+```console
+uv run sphinx-autobuild -b dirhtml . _build/dirhtml
 ```
 
-Then do this from the root of this project directory whenever you want to
-build-and-host your docs:
+This opens the site at <http://localhost:8000> and watches for changes.
 
-```
-bundle exec jekyll serve
-```
+To build a static copy:
 
-That should also watch for changes and rebuild automatically. Built pages live
-in `_site/`.
-
-## Installing Jekyll
-
-As noted above, Jekyll can be installed as a [gem](https://jekyllrb.com/docs/):
-
-> gem install jekyll bundle
-
-Jekyll and ruby can also be install via conda-forge:
-
-```
-conda create -n dask-blog -c conda-forge ruby rb-jekyll rb-nokogiri rb-jekyll-commonmark-ghpages rb-commonmarker rb-bundler gxx_linux-64
-conda activate dask-blog
-bundle install
-bundle exec jekyll serve
+```console
+uv run sphinx-build -b dirhtml . _build/dirhtml
 ```
 
-## Add a new page
+Built pages live in `_build/dirhtml/`.
 
-Content lives in `_posts` as individual markdown files. These markdown files
-have a few expectations on them.
+## Add a new post
 
-1.  They should be named according to the date of publication like the
-    following:
+Posts live in year-based directories as individual Markdown files:
 
-    ```
-    YYYY-MM-DD-brief-title-url.md
-    ```
+```
+YYYY/MM/DD/brief-title-url.md
+```
 
-    like
+For example:
 
-    ```
-    2018-12-31-dask-in-the-new-year.md
-    ```
+```
+2024/05/30/dask-is-fast.md
+```
 
-2.  They should have the following front-matter
+Each post needs the following front matter:
 
-    ```
-    ---
-    layout: post
-    title: Your Title
-    author: Your Name
-    tagline: an optional tagline
-    tags: [A, list, of tags]
-    theme: twitter
-    ---
+```yaml
+---
+blogpost: true
+date: May 30, 2024
+title: Your Title
+author: Your Name
+tags: dask, topic1, topic2
+---
+```
 
-    {% include JB/setup %}
-    ```
-
-    You can copy-paste this from any existing post
-
-3.  You can also optionally add the following element to the front-matter to
-    avoid placing this article in the table of contents and on RSS feeds.
-
-    ```
-    draft: true
-    ```
-
-4.  Images should go in the `images/` directory and be referred to as
-    `/images/my-image.svg` with normal HTML or markdown syntax like the
-    following:
-
-    ```html
-    <img src="/images/my-image.svg" />
-    ```
+Images should go in the `images/` directory and be referenced as
+`/images/my-image.svg`.
 
 ## Formatting
 
-This project uses [prettier](https://prettier.io/) and [markdownlint](https://github.com/DavidAnson/markdownlint) to auto-format and lint files.
+This project uses [prettier](https://prettier.io/) and
+[markdownlint](https://github.com/DavidAnson/markdownlint) to auto-format and
+lint files.
 
 You can use [pre-commit](https://pre-commit.com/) to run this automatically:
 
@@ -102,12 +66,8 @@ pre-commit install
 pre-commit run --all-files
 ```
 
-## Publish on Github Pages
+## Deployment
 
-Github runs Jekyll by default. No additional work is needed for deployment,
-just push to the `gh-pages` branch and things should be up in a few minutes.
-
-The blog is also rebuilt nightly via a GitHub Actions cron job. This allows
-post authors to set the post date in the future for publishing later. Jekyll
-will only build posts dated in the past. This should make scheduling a little
-easier.
+The site is deployed to GitHub Pages via GitHub Actions. Push to the `gh-pages`
+branch and deployment happens automatically. A nightly cron job rebuilds the
+site, so posts with future dates will appear when their date arrives.

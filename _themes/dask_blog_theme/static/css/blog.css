@@ -1,0 +1,566 @@
+/* ==========================================================================
+   Dask Blog Theme — blog.css
+   Extends dask-sphinx-theme with blog-specific styles matching dask.org
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Fonts
+   -------------------------------------------------------------------------- */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Inconsolata:wght@400;700&display=swap");
+
+/* --------------------------------------------------------------------------
+   Brand Colors & CSS Custom Properties
+   -------------------------------------------------------------------------- */
+html[data-theme="light"] {
+  --pst-color-primary: #ffc11e;
+  --pst-color-primary-text: #080815;
+  --pst-color-link: #1f5aff;
+  --pst-color-link-hover: #183d72;
+  --pst-font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --pst-font-family-heading: "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --pst-font-family-monospace: "Inconsolata", "SFMono-Regular", Menlo, Consolas,
+    monospace;
+
+  --dask-gold: #ffc11e;
+  --dask-gold-hover: #f6ba19;
+  --dask-dark: #080815;
+  --dask-charcoal: #262326;
+  --dask-dark-slate: #33363d;
+  --dask-light-grey: #f6f6f6;
+  --dask-medium-grey: #ebeaee;
+  --dask-salmon: #fc6e6b;
+  --dask-blue: #1f5aff;
+  --dask-navy: #183d72;
+  --dask-green: #17955c;
+  --dask-white: #fff;
+
+  --dask-card-bg: #fff;
+  --dask-card-border: var(--dask-medium-grey);
+  --dask-card-shadow: rgba(0, 0, 0, 0.06);
+  --dask-text-muted: #6b7280;
+  --dask-body-bg: #fff;
+}
+
+html[data-theme="dark"] {
+  --pst-color-primary: #ffc11e;
+  --pst-color-primary-text: #ffc11e;
+  --pst-color-link: #ffc11e;
+  --pst-color-link-hover: #ffd561;
+  --pst-font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --pst-font-family-heading: "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --pst-font-family-monospace: "Inconsolata", "SFMono-Regular", Menlo, Consolas,
+    monospace;
+
+  --dask-gold: #ffc11e;
+  --dask-gold-hover: #ffd561;
+  --dask-dark: #e8e8e8;
+  --dask-charcoal: #262326;
+  --dask-dark-slate: #33363d;
+  --dask-light-grey: #1a1a2e;
+  --dask-medium-grey: #2d2d3f;
+  --dask-salmon: #fc6e6b;
+  --dask-blue: #6b8fff;
+  --dask-navy: #8ab4f8;
+  --dask-green: #4ade80;
+  --dask-white: #f0f0f0;
+
+  --dask-card-bg: #1e1e2e;
+  --dask-card-border: #3d3d50;
+  --dask-card-shadow: rgba(0, 0, 0, 0.3);
+  --dask-text-muted: #9ca3af;
+  --dask-body-bg: #121220;
+}
+
+/* --------------------------------------------------------------------------
+   Navbar — dask.org marketing style
+   -------------------------------------------------------------------------- */
+.dask-nav.container-fluid {
+  background-color: var(--dask-charcoal);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2100;
+  height: 60px;
+}
+
+.dask-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 100%;
+}
+
+.dask-nav li {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.dask-nav li a {
+  color: var(--dask-white);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0 1rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 3px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.dask-nav li a:hover {
+  border-bottom-color: var(--dask-gold);
+  color: var(--dask-white);
+}
+
+.dask-nav li.active a {
+  border-bottom-color: var(--dask-gold);
+}
+
+.dask-nav li.logo {
+  margin-right: 1rem;
+}
+
+.dask-nav li.logo a {
+  padding: 0;
+  border-bottom: none;
+}
+
+.dask-nav li.logo img {
+  height: 30px;
+  width: auto;
+}
+
+/* Dropdown menu */
+.dask-nav-dropdown {
+  position: relative;
+}
+
+ul.dask-nav-dropdown-menu {
+  display: none !important;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--dask-charcoal);
+  min-width: 180px;
+  padding: 0.5rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  flex-direction: column;
+  height: auto;
+  z-index: 2200;
+}
+
+.dask-nav-dropdown:hover > ul.dask-nav-dropdown-menu {
+  display: flex !important;
+}
+
+.dask-nav-dropdown-menu li {
+  height: auto;
+}
+
+.dask-nav-dropdown-menu li a {
+  height: auto;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.85rem;
+  border-bottom: none;
+  white-space: nowrap;
+}
+
+.dask-nav-dropdown-menu li a:hover {
+  background-color: rgba(255, 193, 30, 0.1);
+  border-bottom: none;
+}
+
+/* Mobile nav toggle */
+.dask-nav-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.hamburger-icon {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--dask-white);
+  position: relative;
+}
+
+.hamburger-icon::before,
+.hamburger-icon::after {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--dask-white);
+  position: absolute;
+  left: 0;
+}
+
+.hamburger-icon::before {
+  top: -7px;
+}
+
+.hamburger-icon::after {
+  top: 7px;
+}
+
+/* --------------------------------------------------------------------------
+   Offset body for fixed navbar
+   -------------------------------------------------------------------------- */
+.bd-container {
+  padding-top: 60px;
+}
+
+/* Hide the pydata-sphinx-theme header — we use our own navbar */
+.bd-header {
+  display: none !important;
+}
+
+/* Hide sphinx-book-theme download/fullscreen buttons — not relevant for a blog */
+.dropdown-download-buttons,
+.btn-fullscreen-button {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   Footer — dask.org style
+   -------------------------------------------------------------------------- */
+
+/* Hide the default pydata/sphinx-book-theme footer — we use our own */
+.bd-footer,
+footer.bd-footer-content,
+.footer-item {
+  display: none !important;
+}
+
+.dask-footer {
+  background-color: var(--dask-dark-slate);
+  color: var(--dask-white);
+  padding: 3rem 2rem 1.5rem;
+  margin-top: 3rem;
+}
+
+.dask-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+}
+
+.dask-footer-col h4 {
+  color: var(--dask-gold);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 1rem;
+}
+
+.dask-footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dask-footer-col li {
+  margin-bottom: 0.5rem;
+}
+
+.dask-footer-col a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.dask-footer-col a:hover {
+  color: var(--dask-gold);
+}
+
+.dask-footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dask-footer-social {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.dask-footer-social a {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.25rem;
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+.dask-footer-social a:hover {
+  color: var(--dask-gold);
+}
+
+.dask-footer-copyright {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+}
+
+/* --------------------------------------------------------------------------
+   Post Listing — Card Style
+   -------------------------------------------------------------------------- */
+.postlist {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.postlist li {
+  background: var(--dask-card-bg);
+  border: 1px solid var(--dask-card-border);
+  border-radius: 6px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px var(--dask-card-shadow);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.postlist li:hover {
+  box-shadow: 0 4px 12px var(--dask-card-shadow);
+  border-color: var(--dask-gold);
+}
+
+.postlist li a {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--pst-color-primary-text);
+  text-decoration: none;
+}
+
+.postlist li a:hover {
+  color: var(--dask-gold);
+}
+
+.postlist .postlist-date {
+  color: var(--dask-text-muted);
+  font-size: 0.85rem;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* Excerpt text */
+.postlist li p {
+  color: var(--pst-color-text-base);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0.75rem 0 0;
+}
+
+/* "Read more..." link */
+.postlist li .readmore {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: var(--dask-blue);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+html[data-theme="dark"] .postlist li .readmore {
+  color: var(--dask-gold);
+}
+
+.postlist li .readmore:hover {
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Typography
+   -------------------------------------------------------------------------- */
+body {
+  font-family: var(--pst-font-family-base);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--pst-font-family-heading);
+  font-weight: 700;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--pst-font-family-monospace);
+}
+
+/* Inline code styling */
+code.literal {
+  color: var(--dask-salmon);
+  background: var(--dask-light-grey);
+  padding: 0.15em 0.35em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Link styling — yellow underline on hover */
+.bd-article a:not(.headerlink):not(.btn) {
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.bd-article a:not(.headerlink):not(.btn):hover {
+  border-bottom-color: var(--dask-gold);
+}
+
+/* --------------------------------------------------------------------------
+   ABlog Widgets — Sidebar
+   -------------------------------------------------------------------------- */
+.ablog-sidebar .card {
+  border: none;
+  background: transparent;
+}
+
+.ablog-sidebar .card-header {
+  background: transparent;
+  border-bottom: 2px solid var(--dask-gold);
+  padding-left: 0;
+  font-weight: 700;
+}
+
+/* Tag cloud */
+.ablog-sidebar .tag-cloud a {
+  color: var(--pst-color-text-base);
+  transition: color 0.2s ease;
+}
+
+.ablog-sidebar .tag-cloud a:hover {
+  color: var(--dask-gold);
+}
+
+/* --------------------------------------------------------------------------
+   Wide post layout
+   -------------------------------------------------------------------------- */
+body.wide-post .bd-article {
+  max-width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   General Layout Adjustments
+   -------------------------------------------------------------------------- */
+
+/* Content area max-width */
+.bd-article-container {
+  max-width: 1200px;
+}
+
+/* Hide the sphinx-book-theme print-only title — we use h1 from content */
+.onlyprint {
+  display: none !important;
+}
+
+/* Homepage title styling */
+.bd-article h1:first-of-type {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive — Tablet & Mobile
+   -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+  .dask-footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .dask-nav ul {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background-color: var(--dask-charcoal);
+    flex-direction: column;
+    padding: 1rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .dask-nav ul.mobile-open {
+    display: flex;
+  }
+
+  .dask-nav li {
+    height: auto;
+  }
+
+  .dask-nav li a {
+    padding: 0.75rem 2rem;
+    border-bottom: none;
+  }
+
+  .dask-nav li a:hover {
+    background-color: rgba(255, 193, 30, 0.1);
+    border-bottom: none;
+  }
+
+  .dask-nav-mobile-toggle {
+    display: block;
+  }
+
+  .dask-nav-dropdown-menu {
+    position: static;
+    box-shadow: none;
+    padding-left: 1rem;
+  }
+
+  .dask-nav-dropdown:hover .dask-nav-dropdown-menu {
+    display: flex;
+  }
+
+  .dask-footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dask-footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .postlist li {
+    padding: 1rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Mobile nav toggle script support
+   -------------------------------------------------------------------------- */

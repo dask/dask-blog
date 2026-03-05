@@ -1,0 +1,151 @@
+{# Skip dask_sphinx_theme's layout to avoid its doc-focused navbar. We inherit
+the theme's CSS/assets via theme.conf, but extend sphinx_book_theme's layout
+directly for template blocks. #} {%- set favicon_url = favicon_url or
+('_static/' + ('images/favicon.svg')) %} {%- extends
+"sphinx_book_theme/layout.html" %} {%- block content %}
+<!-- Google Tag Manager (noscript) -->
+<noscript
+  ><iframe
+    src="https://www.googletagmanager.com/ns.html?id={{ theme_google_tag_manager_id }}"
+    height="0"
+    width="0"
+    style="display: none; visibility: hidden"
+  ></iframe
+></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<nav class="dask-nav container-fluid">
+  <ul>
+    <li class="logo">
+      <a href="https://www.dask.org">
+        <img
+          class="caption"
+          src="{{ pathto('_static/images/dask-horizontal-white.svg', 1) }}"
+          alt="Dask"
+        />
+      </a>
+    </li>
+
+    <li>
+      <a href="https://www.dask.org/get-started">Get Started</a>
+    </li>
+
+    <li class="dask-nav-dropdown">
+      <a href="#" class="dask-nav-dropdown-toggle">Community</a>
+      <ul class="dask-nav-dropdown-menu">
+        <li>
+          <a href="https://docs.dask.org/en/stable/community.html">Get Help</a>
+        </li>
+        <li><a href="https://www.dask.org/powered-by">Powered By</a></li>
+      </ul>
+    </li>
+
+    <li class="active">
+      <a href="https://blog.dask.org">Blog</a>
+    </li>
+
+    <li>
+      <a href="https://docs.dask.org/en/stable/">Docs</a>
+    </li>
+  </ul>
+
+  <button class="dask-nav-mobile-toggle" aria-label="Toggle navigation">
+    <span class="hamburger-icon"></span>
+  </button>
+</nav>
+
+{{ super() }} {%- endblock %} {# Override footer with dask.org-style
+multi-column layout #} {%- block footer %}
+<!-- Google Tag Manager -->
+<script>
+  (function (w, d, s, l, i) {
+    w[l] = w[l] || [];
+    w[l].push({
+      "gtm.start": new Date().getTime(),
+      event: "gtm.js",
+    });
+    var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s),
+      dl = l != "dataLayer" ? "&l=" + l : "";
+    j.async = true;
+    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+    f.parentNode.insertBefore(j, f);
+  })(
+    window,
+    document,
+    "script",
+    "dataLayer",
+    "{{ theme_google_tag_manager_id }}"
+  );
+</script>
+<!-- End Google Tag Manager -->
+
+<footer class="dask-footer">
+  <div class="dask-footer-grid">
+    <div class="dask-footer-col">
+      <h4>Get Started</h4>
+      <ul>
+        <li><a href="https://docs.dask.org/en/stable/">Documentation</a></li>
+        <li>
+          <a href="https://docs.dask.org/en/stable/install.html">Install</a>
+        </li>
+        <li><a href="https://examples.dask.org/">Examples</a></li>
+      </ul>
+    </div>
+
+    <div class="dask-footer-col">
+      <h4>Community</h4>
+      <ul>
+        <li>
+          <a href="https://docs.dask.org/en/stable/community.html">Get Help</a>
+        </li>
+        <li><a href="https://www.dask.org/powered-by">Powered By</a></li>
+        <li>
+          <a href="https://docs.dask.org/en/latest/ecosystem.html">Ecosystem</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dask-footer-col">
+      <h4>Blog</h4>
+      <ul>
+        <li><a href="https://blog.dask.org">Dask Blog</a></li>
+        <li><a href="https://github.com/dask/dask-blog">Contribute</a></li>
+      </ul>
+    </div>
+
+    <div class="dask-footer-col">
+      <h4>Brand</h4>
+      <ul>
+        <li><a href="https://www.dask.org/brand-guide">Brand Guidelines</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="dask-footer-bottom">
+    <div class="dask-footer-social">
+      <a href="https://github.com/dask" aria-label="GitHub">
+        <i class="fa-brands fa-github"></i>
+      </a>
+      <a href="https://twitter.com/daborashed" aria-label="X / Twitter">
+        <i class="fa-brands fa-x-twitter"></i>
+      </a>
+      <a href="https://www.youtube.com/c/daborashed" aria-label="YouTube">
+        <i class="fa-brands fa-youtube"></i>
+      </a>
+      <a
+        href="https://stackoverflow.com/questions/tagged/dask"
+        aria-label="Stack Overflow"
+      >
+        <i class="fa-brands fa-stack-overflow"></i>
+      </a>
+      <a href="https://dask.discourse.group/" aria-label="Discourse">
+        <i class="fa-brands fa-discourse"></i>
+      </a>
+    </div>
+    <div class="dask-footer-copyright">
+      Copyright &copy; {{ copyright }} New-BSD Licensed.
+    </div>
+  </div>
+</footer>
+{%- endblock %}
